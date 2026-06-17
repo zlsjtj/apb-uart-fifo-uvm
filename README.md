@@ -1,16 +1,78 @@
 # APB UART FIFO UVM Lab
 
-This repository is a small SystemVerilog/UVM lab project for an APB-controlled
-UART model with asynchronous FIFO buffers.
+This repository is a small SystemVerilog/UVM verification lab for an
+APB-controlled UART model with asynchronous FIFO buffers.
 
-The project is rebuilt in small steps:
+The goal is to show a complete but still understandable verification flow:
+RTL, interfaces, UVM agents, scoreboard, coverage, directed/random tests,
+regression scripts, and a short set of notes about what was checked.
 
-1. RTL blocks
-2. simulation top and interfaces
-3. APB and UART UVM agents
-4. scoreboard, coverage, and tests
-5. scripts, sample logs, and verification notes
+## Directory Layout
 
-The UART model is intentionally lightweight. It is meant for practicing UVM
-testbench structure and APB peripheral verification, not for replacing a
-production UART IP.
+```text
+rtl/                DUT and SVA
+tb/interfaces/      APB and UART interfaces
+tb/uvm/             UVM items, agents, env, scoreboard, coverage, tests
+tb/top/             Simulation top
+scripts/            Local regression entry points
+reports/            Regression summary and sample logs
+docs/               Verification and coverage notes
+```
+
+## Register Map
+
+| Address | Name | Description |
+| --- | --- | --- |
+| `0x00` | CTRL | bit0 enable, bit1 loopback, bit2 irq_en |
+| `0x04` | STATUS | FIFO empty/full, frame error, irq state |
+| `0x08` | BAUD | Read/write configuration register |
+| `0x0c` | TXDATA | Write TX FIFO |
+| `0x10` | RXDATA | Read RX FIFO |
+
+## Model Scope
+
+This is a verification practice DUT, not a production UART IP.
+
+- `BAUD` is currently a register-level configuration field. It is not wired
+  into a real baud-rate divider yet.
+- UART TX/RX use one `uart_clk` cycle per serial bit. There is no 16x
+  oversampling, parity, or configurable stop-bit support.
+- APB uses a zero-wait-state `pready=1` response.
+- Functional coverage is implemented in UVM covergroups, but merged UCDB/HTML
+  reporting is still listed as follow-up work.
+
+## Run
+
+On Windows with ModelSim/Questa in `PATH`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1
+```
+
+Run a smaller subset:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_reg_test,uart_loopback_test
+```
+
+## Tests
+
+| Test | Main check |
+| --- | --- |
+| `uart_reg_test` | Reset values, register read/write, illegal access |
+| `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
+| `uart_external_rx_test` | External UART RX frame and APB readback |
+| `uart_fifo_full_test` | TX FIFO full and overflow error path |
+| `uart_bad_access_test` | TXDATA read, empty RXDATA read, bad write address |
+| `uart_random_test` | Random data, random gaps, status interleaving |
+| `uart_recover_test` | Disable and re-enable recovery path |
+
+Latest local result: [`reports/regression_summary.md`](reports/regression_summary.md)
+
+Sample loopback log excerpt:
+[`reports/sample_logs/uart_loopback_test_2.log`](reports/sample_logs/uart_loopback_test_2.log)
+
+## Notes
+
+- Coverage notes: [`docs/coverage_summary.md`](docs/coverage_summary.md)
+- Debug notes: [`docs/debug_notes.md`](docs/debug_notes.md)
