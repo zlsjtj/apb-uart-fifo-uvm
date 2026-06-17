@@ -121,7 +121,12 @@ foreach ($row in $rows) {
 
 $summary += ""
 $summary += "Passed $passed/$($rows.Count) tests."
-$summary | Set-Content -Encoding UTF8 reports/regression_summary.md
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllLines(
+  (Join-Path (Get-Location) "reports/regression_summary.md"),
+  $summary,
+  $utf8NoBom
+)
 
 if ($passed -ne $rows.Count) {
   exit 1

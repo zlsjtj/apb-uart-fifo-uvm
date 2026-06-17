@@ -1,4 +1,4 @@
-﻿# Regression Summary
+# Regression Summary
 
 - Simulator: `questa`
 - Time: `2026-06-17 11:18:36`
