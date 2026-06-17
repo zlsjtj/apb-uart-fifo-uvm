@@ -1,6 +1,10 @@
 `timescale 1ns/1ps
 
 module tb_apb_uart;
+  import uvm_pkg::*;
+  import uart_pkg::*;
+  `include "uvm_macros.svh"
+
   logic pclk;
   logic presetn;
   logic uart_clk;
@@ -64,7 +68,17 @@ module tb_apb_uart;
   initial begin
     apb_vif.idle_bus();
     uart_vif.idle_line();
-    #500ns;
-    $finish;
   end
+
+  initial begin
+    uvm_config_db#(virtual apb_if)::set(null, "uvm_test_top.env.apb.*", "vif", apb_vif);
+    uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top.env.uart.*", "vif", uart_vif);
+    run_test();
+  end
+
+  initial begin
+    #2ms;
+    `uvm_fatal("TIMEOUT", "simulation timeout")
+  end
+
 endmodule

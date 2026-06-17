@@ -21,4 +21,6 @@ package uart_pkg;
   `include "uart_scoreboard.svh"
   `include "uart_coverage.svh"
   `include "uart_env.svh"
+  `include "uart_sequences.svh"
+  `include "uart_tests.svh"
 endpackage
