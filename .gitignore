@@ -5,6 +5,7 @@ csrc/
 vc_hdrs.h
 *.key
 *.log
+!reports/sample_logs/*.log
 *.vcd
 *.fsdb
 *.wlf

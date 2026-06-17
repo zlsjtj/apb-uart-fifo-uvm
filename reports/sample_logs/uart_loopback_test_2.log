@@ -1,0 +1,17 @@
+# Command
+vsim -c tb_apb_uart +UVM_TESTNAME=uart_loopback_test -sv_seed 2 -coverage -assertdebug -do "run -all; coverage save reports/uart_loopback_test_2.ucdb; quit -f"
+
+# Key UVM lines
+UVM_INFO @ 0: reporter [RNTST] Running test uart_loopback_test...
+UVM_INFO tb/uvm/uart_scoreboard.svh(94) @ 8310000: uvm_test_top.env.sb [SB_SUMMARY] checked TX=6 RX=6
+
+# UVM Report Summary
+UVM_INFO    : 5
+UVM_WARNING : 0
+UVM_ERROR   : 0
+UVM_FATAL   : 0
+
+# Simulator result
+Time: 8310 ns
+Errors: 0
+Warnings: 0
