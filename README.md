@@ -55,6 +55,14 @@ Run a smaller subset:
 powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_reg_test,uart_loopback_test
 ```
 
+Capture a VCD for the loopback path:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_loopback_test -Seed 2 -DumpLoopbackVcd
+```
+
+The VCD is written under `reports/` and is ignored by git.
+
 ## Tests
 
 | Test | Main check |

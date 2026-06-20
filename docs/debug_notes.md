@@ -29,6 +29,16 @@ Relevant files:
 The scoreboard tracks APB TX writes, UART TX frames, and APB RX reads. In the
 sample run, it reported `checked TX=6 RX=6`.
 
+For waveform debug, the regression script can dump the key APB and UART signals
+for this test:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_loopback_test -Seed 2 -DumpLoopbackVcd
+```
+
+The generated VCD is intentionally not committed because it is a local debug
+artifact.
+
 ## FIFO Checks
 
 The asynchronous FIFO uses binary pointers, Gray-coded pointers, and two-flop

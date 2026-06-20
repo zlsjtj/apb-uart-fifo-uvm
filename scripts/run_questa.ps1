@@ -10,7 +10,8 @@ param(
   ),
   [int]$Seed = 1,
   [string]$Top = "tb_apb_uart",
-  [string]$Filelist = "filelist.f"
+  [string]$Filelist = "filelist.f",
+  [switch]$DumpLoopbackVcd
 )
 
 $ErrorActionPreference = "Stop"
@@ -78,6 +79,26 @@ foreach ($test in $Tests) {
   $ucdbPath = "reports/${test}_${seedValue}.ucdb"
   $do = "run -all; coverage save $ucdbPath; quit -f"
 
+  if ($DumpLoopbackVcd -and ($test -eq "uart_loopback_test")) {
+    $vcdPath = "reports/${test}_${seedValue}.vcd"
+    $vcdSignals = @(
+      "/tb_apb_uart/presetn",
+      "/tb_apb_uart/apb_vif/psel",
+      "/tb_apb_uart/apb_vif/penable",
+      "/tb_apb_uart/apb_vif/pwrite",
+      "/tb_apb_uart/apb_vif/paddr",
+      "/tb_apb_uart/apb_vif/pwdata",
+      "/tb_apb_uart/apb_vif/prdata",
+      "/tb_apb_uart/apb_vif/pslverr",
+      "/tb_apb_uart/uart_vif/rx_i",
+      "/tb_apb_uart/uart_vif/tx_o",
+      "/tb_apb_uart/u_dut/tx_push",
+      "/tb_apb_uart/u_dut/rx_pop",
+      "/tb_apb_uart/u_dut/rx_empty"
+    ) -join " "
+    $do = "vcd file $vcdPath; vcd add $vcdSignals; run -all; coverage save $ucdbPath; quit -f"
+  }
+
   vsim -c $Top "+UVM_TESTNAME=$test" -sv_seed $seedValue -coverage -assertdebug -do $do -l $logPath | Out-Host
   $runStatus = $LASTEXITCODE
   $parsed = Parse-UvmLog $logPath
@@ -103,7 +124,7 @@ foreach ($test in $Tests) {
   $index += 1
 }
 
-$passed = ($rows | Where-Object { $_.Status -eq "PASS" }).Count
+$passed = @($rows | Where-Object { $_.Status -eq "PASS" }).Count
 $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $summary = @(
   "# Regression Summary",
