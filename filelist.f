@@ -1,11 +1,11 @@
 +incdir+tb/uvm
 +incdir+tb/interfaces
 rtl/async_fifo.sv
+rtl/async_fifo_sva.sv
 rtl/uart_tx.sv
 rtl/uart_rx.sv
 rtl/apb_uart.sv
 rtl/apb_uart_sva.sv
-rtl/async_fifo_sva.sv
 tb/interfaces/apb_if.sv
 tb/interfaces/uart_if.sv
 tb/uvm/uart_pkg.sv

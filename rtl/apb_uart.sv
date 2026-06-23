@@ -160,6 +160,22 @@ module apb_uart #(
     .rd_empty (tx_empty)
   );
 
+  async_fifo_sva #(
+    .DATA_WIDTH(8),
+    .ADDR_WIDTH(FIFO_ADDR_WIDTH)
+  ) u_tx_fifo_sva (
+    .wr_clk   (pclk),
+    .wr_rst_n (presetn),
+    .wr_en    (tx_push),
+    .wr_data  (pwdata[7:0]),
+    .wr_full  (tx_full),
+    .rd_clk   (uart_clk),
+    .rd_rst_n (uart_rst_n),
+    .rd_en    (tx_rd_en),
+    .rd_data  (tx_fifo_rdata),
+    .rd_empty (tx_empty)
+  );
+
   assign tx_rd_en = enable_uart_clk && tx_ready && !tx_empty;
 
   uart_tx u_uart_tx (
@@ -189,6 +205,22 @@ module apb_uart #(
     .DATA_WIDTH(8),
     .ADDR_WIDTH(FIFO_ADDR_WIDTH)
   ) u_rx_fifo (
+    .wr_clk   (uart_clk),
+    .wr_rst_n (uart_rst_n),
+    .wr_en    (rx_wr_en),
+    .wr_data  (rx_data),
+    .wr_full  (rx_full),
+    .rd_clk   (pclk),
+    .rd_rst_n (presetn),
+    .rd_en    (rx_pop),
+    .rd_data  (rx_fifo_rdata),
+    .rd_empty (rx_empty)
+  );
+
+  async_fifo_sva #(
+    .DATA_WIDTH(8),
+    .ADDR_WIDTH(FIFO_ADDR_WIDTH)
+  ) u_rx_fifo_sva (
     .wr_clk   (uart_clk),
     .wr_rst_n (uart_rst_n),
     .wr_en    (rx_wr_en),

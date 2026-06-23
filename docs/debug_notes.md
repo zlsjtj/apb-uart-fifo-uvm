@@ -51,9 +51,9 @@ traffic and boundary behavior:
 The SVA file also checks that accepted writes do not occur while full and
 accepted reads do not occur while empty.
 
-## Known Warning
+## Assertion Hookup
 
-ModelSim 10.4 reports a warning for the compilation-unit `bind` in
-`rtl/async_fifo_sva.sv`. The current regression has no assertion failures. A
-future cleanup could move the bind into a dedicated assertion package or compile
-with a named compilation unit.
+The FIFO assertions are instantiated next to the TX and RX FIFO instances in
+`rtl/apb_uart.sv`. This keeps the assertion hookup explicit and avoids the
+ModelSim warning that appears when a `bind` statement is left in compilation-unit
+scope.
