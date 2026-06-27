@@ -32,24 +32,27 @@ class uart_driver extends uvm_driver #(uart_item);
 
   task drive_frame(uart_item tr);
     repeat (tr.gap_cycles) begin
-      @(vif.drv_cb);
-      vif.drv_cb.rx_i <= 1'b1;
+      wait_tick();
     end
 
-    @(vif.drv_cb);
     vif.drv_cb.rx_i <= 1'b0;
+    wait_tick();
 
     for (int i = 0; i < 8; i++) begin
-      @(vif.drv_cb);
       vif.drv_cb.rx_i <= tr.data[i];
+      wait_tick();
     end
 
-    @(vif.drv_cb);
     vif.drv_cb.rx_i <= 1'b1;
-
-    @(vif.drv_cb);
-    vif.drv_cb.rx_i <= 1'b1;
+    wait_tick();
+    wait_tick();
 
     `uvm_info("UART_DRV", tr.convert2string(), UVM_HIGH)
+  endtask
+
+  task wait_tick();
+    do begin
+      @(vif.drv_cb);
+    end while (!vif.drv_cb.bit_tick);
   endtask
 endclass

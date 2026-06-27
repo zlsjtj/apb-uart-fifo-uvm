@@ -21,19 +21,25 @@ class uart_monitor extends uvm_component;
 
     forever begin
       @(vif.mon_cb);
-      if (vif.uart_rst_n && vif.mon_cb.tx_o == 1'b0) begin
+      if (vif.uart_rst_n && vif.mon_cb.bit_tick && vif.mon_cb.tx_o == 1'b0) begin
         tr = uart_item::type_id::create("tr", this);
 
         for (int i = 0; i < 8; i++) begin
-          @(vif.mon_cb);
+          wait_tick();
           tr.data[i] = vif.mon_cb.tx_o;
         end
 
-        @(vif.mon_cb);
+        wait_tick();
         tr.frame_err = (vif.mon_cb.tx_o != 1'b1);
         ap.write(tr);
         `uvm_info("UART_MON", tr.convert2string(), UVM_HIGH)
       end
     end
+  endtask
+
+  task wait_tick();
+    do begin
+      @(vif.mon_cb);
+    end while (!vif.mon_cb.bit_tick);
   endtask
 endclass

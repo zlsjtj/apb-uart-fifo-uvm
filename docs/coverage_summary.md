@@ -28,6 +28,7 @@ The current regression is aimed at these scenarios:
 | Scenario | Test |
 | --- | --- |
 | Register reset and read/write | `uart_reg_test` |
+| BAUD-controlled loopback timing | `uart_baud_loopback_test` |
 | Illegal APB address and read-only write | `uart_reg_test`, `uart_bad_access_test` |
 | APB TX write to UART TX output | `uart_loopback_test`, `uart_random_test` |
 | UART loopback to APB RX readback | `uart_loopback_test`, `uart_random_test` |

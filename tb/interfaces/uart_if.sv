@@ -7,17 +7,20 @@ interface uart_if (
 
   logic rx_i;
   logic tx_o;
+  logic bit_tick;
 
   clocking drv_cb @(posedge uart_clk);
     default input #1step output #1ns;
     output rx_i;
     input  tx_o;
+    input  bit_tick;
   endclocking
 
   clocking mon_cb @(posedge uart_clk);
     default input #1step output #1ns;
     input rx_i;
     input tx_o;
+    input bit_tick;
   endclocking
 
   task automatic idle_line();

@@ -46,6 +46,10 @@ module apb_uart #(
   logic [2:0]  ctrl_uart_q1, ctrl_uart_q2;
   logic        enable_uart_clk;
   logic        loopback_uart_clk;
+  logic [31:0] baud_uart_q1, baud_uart_q2;
+  logic [31:0] baud_cnt;
+  logic [31:0] baud_divisor;
+  logic        baud_tick;
 
   logic        tx_ready;
   logic        tx_rd_en;
@@ -143,6 +147,29 @@ module apb_uart #(
   assign enable_uart_clk   = ctrl_uart_q2[0];
   assign loopback_uart_clk = ctrl_uart_q2[1];
   assign serial_rx         = loopback_uart_clk ? tx_o : rx_i;
+  assign baud_divisor      = (baud_uart_q2 == 0) ? 32'd1 : baud_uart_q2;
+
+  always_ff @(posedge uart_clk or negedge uart_rst_n) begin
+    if (!uart_rst_n) begin
+      baud_uart_q1 <= 32'd16;
+      baud_uart_q2 <= 32'd16;
+      baud_cnt     <= 32'd0;
+      baud_tick    <= 1'b0;
+    end else begin
+      baud_uart_q1 <= baud_reg;
+      baud_uart_q2 <= baud_uart_q1;
+      baud_tick    <= 1'b0;
+
+      if (!enable_uart_clk) begin
+        baud_cnt <= 32'd0;
+      end else if (baud_cnt >= (baud_divisor - 1)) begin
+        baud_cnt  <= 32'd0;
+        baud_tick <= 1'b1;
+      end else begin
+        baud_cnt <= baud_cnt + 32'd1;
+      end
+    end
+  end
 
   async_fifo #(
     .DATA_WIDTH(8),
@@ -176,12 +203,13 @@ module apb_uart #(
     .rd_empty (tx_empty)
   );
 
-  assign tx_rd_en = enable_uart_clk && tx_ready && !tx_empty;
+  assign tx_rd_en = enable_uart_clk && baud_tick && tx_ready && !tx_empty;
 
   uart_tx u_uart_tx (
     .clk     (uart_clk),
     .rst_n   (uart_rst_n),
     .enable  (enable_uart_clk),
+    .bit_tick_i (baud_tick),
     .data_i  (tx_fifo_rdata),
     .valid_i (tx_rd_en),
     .ready_o (tx_ready),
@@ -192,6 +220,7 @@ module apb_uart #(
     .clk         (uart_clk),
     .rst_n       (uart_rst_n),
     .enable      (enable_uart_clk),
+    .bit_tick_i  (baud_tick),
     .rx_i        (serial_rx),
     .data_o      (rx_data),
     .valid_o     (rx_valid),

@@ -65,6 +65,8 @@ module tb_apb_uart;
     .irq_o   (irq_o)
   );
 
+  assign uart_vif.bit_tick = u_dut.baud_tick;
+
   initial begin
     apb_vif.idle_bus();
     uart_vif.idle_line();

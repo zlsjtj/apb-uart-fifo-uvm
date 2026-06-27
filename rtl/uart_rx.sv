@@ -2,6 +2,7 @@ module uart_rx (
   input  logic       clk,
   input  logic       rst_n,
   input  logic       enable,
+  input  logic       bit_tick_i,
   input  logic       rx_i,
   output logic [7:0] data_o,
   output logic       valid_o,
@@ -38,35 +39,37 @@ module uart_rx (
         valid_o <= 1'b0;
       end
 
-      unique case (state)
-        RX_IDLE: begin
-          frame_err_o <= 1'b0;
-          if (!valid_o && rx_i == 1'b0) begin
-            bit_cnt <= 3'd0;
-            state   <= RX_DATA;
+      if (bit_tick_i) begin
+        unique case (state)
+          RX_IDLE: begin
+            frame_err_o <= 1'b0;
+            if ((!valid_o || ready_i) && rx_i == 1'b0) begin
+              bit_cnt <= 3'd0;
+              state   <= RX_DATA;
+            end
           end
-        end
 
-        RX_DATA: begin
-          shifter[bit_cnt] <= rx_i;
-          if (bit_cnt == 3'd7) begin
-            state <= RX_STOP;
-          end else begin
-            bit_cnt <= bit_cnt + 3'd1;
+          RX_DATA: begin
+            shifter[bit_cnt] <= rx_i;
+            if (bit_cnt == 3'd7) begin
+              state <= RX_STOP;
+            end else begin
+              bit_cnt <= bit_cnt + 3'd1;
+            end
           end
-        end
 
-        RX_STOP: begin
-          frame_err_o <= (rx_i != 1'b1);
-          if (ready_i && rx_i == 1'b1) begin
-            data_o  <= shifter;
-            valid_o <= 1'b1;
+          RX_STOP: begin
+            frame_err_o <= (rx_i != 1'b1);
+            if (ready_i && rx_i == 1'b1) begin
+              data_o  <= shifter;
+              valid_o <= 1'b1;
+            end
+            state <= RX_IDLE;
           end
-          state <= RX_IDLE;
-        end
 
-        default: state <= RX_IDLE;
-      endcase
+          default: state <= RX_IDLE;
+        endcase
+      end
     end
   end
 

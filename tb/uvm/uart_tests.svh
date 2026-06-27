@@ -49,6 +49,23 @@ class uart_loopback_test extends uart_base_test;
   endtask
 endclass
 
+class uart_baud_loopback_test extends uart_base_test;
+  `uvm_component_utils(uart_baud_loopback_test)
+
+  function new(string name = "uart_baud_loopback_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_baud_loopback_seq seq;
+    phase.raise_objection(this);
+    seq = uart_baud_loopback_seq::type_id::create("seq");
+    seq.start(env.apb.seqr);
+    #2us;
+    phase.drop_objection(this);
+  endtask
+endclass
+
 class uart_random_test extends uart_base_test;
   `uvm_component_utils(uart_random_test)
 

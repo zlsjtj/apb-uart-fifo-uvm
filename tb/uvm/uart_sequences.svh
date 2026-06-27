@@ -117,6 +117,7 @@ class uart_loopback_seq extends uart_base_apb_seq;
   task body();
     bit [31:0] data;
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h3, 4);
 
     foreach (pattern[i]) begin
@@ -127,6 +128,35 @@ class uart_loopback_seq extends uart_base_apb_seq;
       apb_read(ADDR_RXDATA, data, (i == 0) ? 360 : 45);
       if (data[7:0] != pattern[i]) begin
         `uvm_error("LOOPBACK", $sformatf("read 0x%02h expected 0x%02h", data[7:0], pattern[i]))
+      end
+    end
+  endtask
+endclass
+
+class uart_baud_loopback_seq extends uart_base_apb_seq;
+  `uvm_object_utils(uart_baud_loopback_seq)
+
+  bit [7:0] pattern[$];
+
+  function new(string name = "uart_baud_loopback_seq");
+    super.new(name);
+    pattern = '{8'h3c, 8'ha5, 8'h7e};
+  endfunction
+
+  task body();
+    bit [31:0] data;
+
+    apb_write(ADDR_BAUD, 32'd4, 2);
+    apb_write(ADDR_CTRL, 32'h3, 4);
+
+    foreach (pattern[i]) begin
+      apb_write(ADDR_TXDATA, pattern[i], i + 1);
+    end
+
+    foreach (pattern[i]) begin
+      apb_read(ADDR_RXDATA, data, (i == 0) ? 900 : 220);
+      if (data[7:0] != pattern[i]) begin
+        `uvm_error("BAUD_LOOPBACK", $sformatf("read 0x%02h expected 0x%02h", data[7:0], pattern[i]))
       end
     end
   endtask
@@ -154,8 +184,8 @@ class uart_random_apb_seq extends uart_base_apb_seq;
       `uvm_fatal("RAND", "failed to randomize uart_random_apb_seq")
     end
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h3, 4);
-    apb_write(ADDR_BAUD, $urandom_range(1, 32), 1);
 
     for (int i = 0; i < num_bytes; i++) begin
       val = $urandom_range(0, 255);
@@ -187,6 +217,7 @@ class uart_fifo_full_seq extends uart_base_apb_seq;
     bit        saw_full_err;
     bit [31:0] data;
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h1, 4);
 
     for (int i = 0; i < 24; i++) begin
@@ -216,6 +247,7 @@ class uart_bad_access_seq extends uart_base_apb_seq;
     bit [31:0] data;
     bit        slverr;
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h1, 2);
 
     apb_read_status(ADDR_TXDATA, data, 1, slverr);
@@ -242,6 +274,7 @@ class uart_rx_read_seq extends uart_base_apb_seq;
   task body();
     bit [31:0] data;
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h1, 4);
 
     foreach (pattern[i]) begin
@@ -286,6 +319,7 @@ class uart_disable_recover_seq extends uart_base_apb_seq;
   task body();
     bit [31:0] data;
 
+    apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h0, 4);
     apb_write(ADDR_TXDATA, 32'ha5, 2);
     apb_write(ADDR_CTRL, 32'h3, 8);

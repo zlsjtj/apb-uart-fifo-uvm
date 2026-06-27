@@ -33,9 +33,8 @@ docs/               Verification and coverage notes
 
 This is a verification practice DUT, not a production UART IP.
 
-- `BAUD` is currently a register-level configuration field. It is not wired
-  into a real baud-rate divider yet.
-- UART TX/RX use one `uart_clk` cycle per serial bit. There is no 16x
+- `BAUD` controls a simplified UART bit tick in the `uart_clk` domain.
+- UART TX/RX still use a simple tick-based serial model. There is no 16x
   oversampling, parity, or configurable stop-bit support.
 - APB uses a zero-wait-state `pready=1` response.
 - Functional coverage is implemented in UVM covergroups, but merged UCDB/HTML
@@ -69,6 +68,7 @@ The VCD is written under `reports/` and is ignored by git.
 | --- | --- |
 | `uart_reg_test` | Reset values, register read/write, illegal access |
 | `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
+| `uart_baud_loopback_test` | Loopback with `BAUD=4` to check bit tick timing |
 | `uart_external_rx_test` | External UART RX frame and APB readback |
 | `uart_fifo_full_test` | TX FIFO full and overflow error path |
 | `uart_bad_access_test` | TXDATA read, empty RXDATA read, bad write address |

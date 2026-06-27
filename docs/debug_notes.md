@@ -39,6 +39,13 @@ powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_loop
 The generated VCD is intentionally not committed because it is a local debug
 artifact.
 
+## Baud Tick
+
+`BAUD` is synchronized into the `uart_clk` domain and used to generate a
+single-cycle `baud_tick`. The TX and RX models advance one serial bit per tick.
+Most regression tests set `BAUD=1` to keep runtime short; `uart_baud_loopback_test`
+uses `BAUD=4` to check that a slower tick still passes through the loopback path.
+
 ## FIFO Checks
 
 The asynchronous FIFO uses binary pointers, Gray-coded pointers, and two-flop
