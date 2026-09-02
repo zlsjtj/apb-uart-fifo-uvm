@@ -1,0 +1,158 @@
+Coverage Report Summary Data by DU
+
+=================================================================================
+=== Design Unit: work.apb_if
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           28        18        10      64.2
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                    158        58       100      36.7
+
+=================================================================================
+=== Design Unit: work.apb_uart
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           47        47         0     100.0
+    Branches                        34        33         1      97.0
+    FEC Condition Terms              4         4         0     100.0
+    FEC Expression Terms            24        23         1      95.8
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                    668       228       440      34.1
+
+=================================================================================
+=== Design Unit: work.apb_uart_sva
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                            1         1         0     100.0
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             5         5         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                    120        68        52      56.6
+
+=================================================================================
+=== Design Unit: work.async_fifo
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           29        29         0     100.0
+    Branches                        10        10         0     100.0
+    FEC Condition Terms              2         1         1      50.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                    168       154        14      91.6
+
+=================================================================================
+=== Design Unit: work.async_fifo_sva
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                            0         0         0     100.0
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     48        48         0     100.0
+
+=================================================================================
+=== Design Unit: work.reset_if
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           28        28         0     100.0
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                      8         8         0     100.0
+
+=================================================================================
+=== Design Unit: work.tb_apb_uart
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           32        31         1      96.8
+    Branches                         2         0         2       0.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                    266        10       256       3.7
+
+=================================================================================
+=== Design Unit: work.uart_if
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           10        10         0     100.0
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     10        10         0     100.0
+
+=================================================================================
+=== Design Unit: work.uart_pkg
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                         1072       552       520      51.4
+    Branches                       746       103       643      13.8
+    FEC Condition Terms             35        17        18      48.5
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                      0         0         0     100.0
+
+=================================================================================
+=== Design Unit: work.uart_rx
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           23        22         1      95.6
+    Branches                        17        16         1      94.1
+    FEC Condition Terms              7         4         3      57.1
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                        90.0
+        States                       3         3         0     100.0
+        Transitions                  5         4         1      80.0
+    Toggle Bins                     57        57         0     100.0
+
+=================================================================================
+=== Design Unit: work.uart_tx
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           20        19         1      95.0
+    Branches                        12        11         1      91.6
+    FEC Condition Terms              2         1         1      50.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       2         2         0     100.0
+        Transitions                  3         3         0     100.0
+    Toggle Bins                     58        56         2      96.5
+
+
+Total Coverage By Design Unit (filtered view): 61.4%

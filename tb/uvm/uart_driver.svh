@@ -21,6 +21,8 @@ class uart_driver extends uvm_driver #(uart_item);
 
     vif.idle_line();
     wait (vif.uart_rst_n == 1'b1);
+    // Match the DUT's two-stage synchronous reset release in uart_clk.
+    repeat (3) @(posedge vif.uart_clk);
 
     forever begin
       seq_item_port.get_next_item(tr);
@@ -43,8 +45,12 @@ class uart_driver extends uvm_driver #(uart_item);
       wait_tick();
     end
 
-    vif.drv_cb.rx_i <= 1'b1;
+    vif.drv_cb.rx_i <= tr.frame_err ? 1'b0 : 1'b1;
     wait_tick();
+
+    // Return to the idle level after the stop-bit interval. This also keeps a
+    // deliberately bad stop bit from being mistaken for a second start bit.
+    vif.drv_cb.rx_i <= 1'b1;
     wait_tick();
 
     `uvm_info("UART_DRV", tr.convert2string(), UVM_HIGH)

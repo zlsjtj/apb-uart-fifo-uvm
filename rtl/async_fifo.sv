@@ -25,8 +25,8 @@ module async_fifo #(
   logic [PTR_WIDTH-1:0] wgray, wgray_next;
   logic [PTR_WIDTH-1:0] rgray, rgray_next;
 
-  logic [PTR_WIDTH-1:0] rgray_wclk_q1, rgray_wclk_q2;
-  logic [PTR_WIDTH-1:0] wgray_rclk_q1, wgray_rclk_q2;
+  (* ASYNC_REG = "TRUE" *) logic [PTR_WIDTH-1:0] rgray_wclk_q1, rgray_wclk_q2;
+  (* ASYNC_REG = "TRUE" *) logic [PTR_WIDTH-1:0] wgray_rclk_q1, wgray_rclk_q2;
 
   function automatic logic [PTR_WIDTH-1:0] bin2gray(input logic [PTR_WIDTH-1:0] bin);
     return (bin >> 1) ^ bin;

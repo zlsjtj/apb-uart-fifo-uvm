@@ -1,0 +1,168 @@
+param(
+  [int[]]$Seeds = @(101, 201, 301),
+  [int]$PclkHalfNs = 5,
+  [int]$UartHalfNs = 20,
+  [int]$PclkPhaseNs = 0,
+  [int]$UartPhaseNs = 0,
+  [string]$OutputDir = "reports/final_regression"
+)
+
+$ErrorActionPreference = "Stop"
+
+function Require-Tool($Name) {
+  if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
+    throw "Required tool '$Name' was not found in PATH."
+  }
+}
+
+function Write-Utf8File([string]$Path, [string[]]$Lines) {
+  $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+  [System.IO.File]::WriteAllLines((Join-Path (Get-Location) $Path), $Lines, $utf8NoBom)
+}
+
+function Read-RegressionRows([string]$SummaryPath) {
+  $rows = @()
+  foreach ($line in (Get-Content -Encoding UTF8 $SummaryPath)) {
+    if ($line -match '^\|\s*([A-Za-z0-9_]+)\s*\|\s*(\d+)\s*\|\s*(PASS|FAIL)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|') {
+      $rows += [pscustomobject]@{
+        Test = $Matches[1]
+        Seed = [int]$Matches[2]
+        Status = $Matches[3]
+        Errors = [int]$Matches[4]
+        Fatals = [int]$Matches[5]
+        Warnings = [int]$Matches[6]
+      }
+    }
+  }
+  return $rows
+}
+
+Require-Tool "vlog"
+Require-Tool "vsim"
+Require-Tool "vcover"
+Require-Tool "git"
+
+& (Join-Path $PSScriptRoot "run_cdc_structural_check.ps1")
+
+if ($Seeds.Count -eq 0) {
+  throw "At least one seed is required."
+}
+if ((@($Seeds | Select-Object -Unique).Count) -ne $Seeds.Count) {
+  throw "Seed values must be unique."
+}
+
+New-Item -ItemType Directory -Force $OutputDir | Out-Null
+
+$allRows = @()
+$runScript = Join-Path $PSScriptRoot "run_questa.ps1"
+foreach ($seed in $Seeds) {
+  & $runScript -Seed $seed -PclkHalfNs $PclkHalfNs -UartHalfNs $UartHalfNs `
+    -PclkPhaseNs $PclkPhaseNs -UartPhaseNs $UartPhaseNs
+  if ($LASTEXITCODE -ne 0) {
+    throw "Regression failed for base seed $seed."
+  }
+
+  $seedSummary = "reports/regression_summary.md"
+  $rows = @(Read-RegressionRows $seedSummary)
+  if (($rows.Count -ne 13) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
+    throw "Regression summary for base seed $seed is incomplete or contains failures."
+  }
+
+  $seedCopy = Join-Path $OutputDir "seed_${seed}_summary.md"
+  Copy-Item $seedSummary $seedCopy -Force
+  $allRows += $rows
+}
+
+$now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$summaryPath = Join-Path $OutputDir "final_regression_summary.md"
+$summary = @(
+  "# Final Regression Summary",
+  "",
+  "- Time: ``$now``",
+  "- Base seeds: ``$($Seeds -join ', ')``",
+  "- Clock config: ``pclk_half=${PclkHalfNs}ns pclk_phase=${PclkPhaseNs}ns uart_half=${UartHalfNs}ns uart_phase=${UartPhaseNs}ns``",
+  "- Total runs: $($allRows.Count)",
+  "",
+  "| Test | Seed | Status | Errors | Fatals | Warnings |",
+  "| --- | ---: | --- | ---: | ---: | ---: |"
+)
+foreach ($row in $allRows) {
+  $summary += "| $($row.Test) | $($row.Seed) | $($row.Status) | $($row.Errors) | $($row.Fatals) | $($row.Warnings) |"
+}
+$summary += ""
+$summary += "Passed $(@($allRows | Where-Object { $_.Status -eq 'PASS' }).Count)/$($allRows.Count) runs."
+Write-Utf8File $summaryPath $summary
+
+$coverageDir = Join-Path $OutputDir "coverage"
+& (Join-Path $PSScriptRoot "merge_coverage.ps1") -SummaryPath $summaryPath -OutputDir $coverageDir
+if ($LASTEXITCODE -ne 0) {
+  throw "Coverage merge failed."
+}
+
+$sourcePaths = @(
+  "filelist.f",
+  "scripts/run_questa.ps1",
+  "scripts/merge_coverage.ps1",
+  "scripts/run_final_regression.ps1",
+  "scripts/run_mutation_check.ps1",
+  "scripts/run_cdc_structural_check.ps1"
+)
+$sourcePaths += Get-ChildItem -Path "rtl", "tb" -Recurse -File |
+  Where-Object { $_.Extension -in @(".sv", ".svh") } |
+  ForEach-Object { $_.FullName }
+$sourcePaths = @($sourcePaths | Sort-Object -Unique)
+
+$sourceManifestPath = Join-Path $OutputDir "source_manifest.md"
+$sourceManifest = @(
+  "# Source Manifest",
+  "",
+  "- Time: ``$now``",
+  "- Hash algorithm: ``SHA-256``",
+  "",
+  "| File | SHA-256 |",
+  "| --- | --- |"
+)
+foreach ($sourcePath in $sourcePaths) {
+  $hash = (Get-FileHash -Algorithm SHA256 $sourcePath).Hash.ToLowerInvariant()
+  $fullPath = (Resolve-Path $sourcePath).Path
+  $relativePath = $fullPath.Substring((Get-Location).Path.Length).TrimStart([char[]]@('\', '/'))
+  $sourceManifest += "| ``$relativePath`` | ``$hash`` |"
+}
+Write-Utf8File $sourceManifestPath $sourceManifest
+
+$gitHead = (& git rev-parse HEAD).Trim()
+$gitState = @(& git status --short)
+$vlogVersion = @(& vlog -version 2>&1 | Select-Object -First 1) -join " "
+$seedLiteral = "@(" + (($Seeds | ForEach-Object { $_.ToString() }) -join ", ") + ")"
+$manifestPath = Join-Path $OutputDir "final_regression_manifest.md"
+$manifest = @(
+  "# Final Regression Manifest",
+  "",
+  "- Time: ``$now``",
+  "- Baseline git commit: ``$gitHead``",
+  "- Working tree clean: ``$($gitState.Count -eq 0)``",
+  "- Simulator: ``$vlogVersion``",
+  "- UVM: ``UVM-1.1d built-in; Questa UVM-1.2.2 reported by simulation log``",
+  "- Command: ``& .\scripts\run_final_regression.ps1 -Seeds $seedLiteral``",
+  "- Regression summary: ``$summaryPath``",
+  "- Coverage directory: ``$coverageDir``",
+  "- CDC structural report: ``reports/cdc_structural_summary.md``",
+  "- Source hashes: ``$sourceManifestPath``",
+  "",
+  "## Working tree status"
+)
+if ($gitState.Count -eq 0) {
+  $manifest += ""
+  $manifest += "Clean. The baseline commit identifies the simulated source tree."
+} else {
+  $manifest += ""
+  $manifest += "The working tree was not clean. The commit is a baseline only; use source_manifest.md to identify the exact simulated files."
+  $manifest += ""
+  $manifest += '```text'
+  $manifest += $gitState
+  $manifest += '```'
+}
+Write-Utf8File $manifestPath $manifest
+
+Write-Host "Final regression passed: $($allRows.Count)/$($allRows.Count) runs"
+Write-Host "Evidence manifest: $manifestPath"

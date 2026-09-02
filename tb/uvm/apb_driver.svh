@@ -19,6 +19,9 @@ class apb_driver extends uvm_driver #(apb_item);
 
     vif.idle_bus();
     wait (vif.presetn == 1'b1);
+    // The DUT deasserts its pclk-domain resets synchronously through a
+    // two-stage pipeline. Do not issue a transfer during that settling time.
+    repeat (3) @(posedge vif.pclk);
 
     forever begin
       seq_item_port.get_next_item(tr);

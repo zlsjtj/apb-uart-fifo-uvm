@@ -1,0 +1,64 @@
+
+ASSERTION RESULTS:
+-------------------------------------------------------
+Name                 File(Line)           Failure Pass
+                                          Count   Count
+-------------------------------------------------------
+/tb_apb_uart/u_dut/u_tx_fifo_sva/no_overflow_write
+                     rtl/async_fifo_sva.sv(19)       0 10884
+/tb_apb_uart/u_dut/u_tx_fifo_sva/no_underflow_read
+                     rtl/async_fifo_sva.sv(23)       0  2718
+/tb_apb_uart/u_dut/u_tx_fifo_sva/write_side_flags_known
+                     rtl/async_fifo_sva.sv(27)       0 10884
+/tb_apb_uart/u_dut/u_tx_fifo_sva/read_side_flags_known
+                     rtl/async_fifo_sva.sv(31)       0  2718
+/tb_apb_uart/u_dut/u_tx_fifo_sva/read_data_known_when_accepted
+                     rtl/async_fifo_sva.sv(35)       0    47
+/tb_apb_uart/u_dut/u_tx_fifo_sva/write_data_known_when_accepted
+                     rtl/async_fifo_sva.sv(39)       0    48
+/tb_apb_uart/u_dut/u_rx_fifo_sva/no_overflow_write
+                     rtl/async_fifo_sva.sv(19)       0  2718
+/tb_apb_uart/u_dut/u_rx_fifo_sva/no_underflow_read
+                     rtl/async_fifo_sva.sv(23)       0 10884
+/tb_apb_uart/u_dut/u_rx_fifo_sva/write_side_flags_known
+                     rtl/async_fifo_sva.sv(27)       0  2718
+/tb_apb_uart/u_dut/u_rx_fifo_sva/read_side_flags_known
+                     rtl/async_fifo_sva.sv(31)       0 10884
+/tb_apb_uart/u_dut/u_rx_fifo_sva/read_data_known_when_accepted
+                     rtl/async_fifo_sva.sv(35)       0    48
+/tb_apb_uart/u_dut/u_rx_fifo_sva/write_data_known_when_accepted
+                     rtl/async_fifo_sva.sv(39)       0    48
+/tb_apb_uart/u_apb_uart_sva/apb_setup_to_access
+                     rtl/apb_uart_sva.sv(40)       0   197
+/tb_apb_uart/u_apb_uart_sva/apb_access_has_ready
+                     rtl/apb_uart_sva.sv(44)       0   197
+/tb_apb_uart/u_apb_uart_sva/apb_addr_stable_in_access
+                     rtl/apb_uart_sva.sv(48)       0   197
+/tb_apb_uart/u_apb_uart_sva/invalid_addr_reports_error
+                     rtl/apb_uart_sva.sv(52)       0     2
+/tb_apb_uart/u_apb_uart_sva/status_write_reports_error
+                     rtl/apb_uart_sva.sv(56)       0     1
+/tb_apb_uart/u_apb_uart_sva/rejected_tx_write_reports_error
+                     rtl/apb_uart_sva.sv(61)       0     8
+/tb_apb_uart/u_apb_uart_sva/rejected_tx_write_has_no_push
+                     rtl/apb_uart_sva.sv(66)       0     8
+/tb_apb_uart/u_apb_uart_sva/accepted_tx_write_pushes
+                     rtl/apb_uart_sva.sv(71)       0    48
+/tb_apb_uart/u_apb_uart_sva/empty_rx_read_reports_error
+                     rtl/apb_uart_sva.sv(76)       0     2
+/tb_apb_uart/u_apb_uart_sva/rx_write_reports_error
+                     rtl/apb_uart_sva.sv(80)       0     1
+/tb_apb_uart/u_apb_uart_sva/rejected_rx_access_has_no_pop
+                     rtl/apb_uart_sva.sv(85)       0     3
+/tb_apb_uart/u_apb_uart_sva/invalid_addr_has_no_fifo_side_effect
+                     rtl/apb_uart_sva.sv(89)       0     2
+/tb_apb_uart/u_apb_uart_sva/baud_div_not_zero_after_write
+                     rtl/apb_uart_sva.sv(93)       0     1
+/tb_apb_uart/u_apb_uart_sva/irq_is_known
+                     rtl/apb_uart_sva.sv(97)       0 10904
+/tb_apb_uart/u_apb_uart_sva/irq_matches_rx_state
+                     rtl/apb_uart_sva.sv(101)       0 10904
+/tb_apb_uart/u_apb_uart_sva/bad_frame_not_written
+                     rtl/apb_uart_sva.sv(129)       0    16
+/tb_apb_uart/u_apb_uart_sva/rx_full_blocks_write
+                     rtl/apb_uart_sva.sv(137)       0    17

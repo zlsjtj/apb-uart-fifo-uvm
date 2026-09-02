@@ -37,8 +37,10 @@ This is a verification practice DUT, not a production UART IP.
 - UART TX/RX still use a simple tick-based serial model. There is no 16x
   oversampling, parity, or configurable stop-bit support.
 - APB uses a zero-wait-state `pready=1` response.
+- External resets assert asynchronously. Each APB/UART/FIFO reset is released
+  through a two-stage synchronizer in its destination clock domain.
 - Functional coverage is implemented in UVM covergroups, but merged UCDB/HTML
-  reporting is still listed as follow-up work.
+  reporting is generated from the current regression summary.
 
 ## Run
 
@@ -54,6 +56,14 @@ Run a smaller subset:
 powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_reg_test,uart_loopback_test
 ```
 
+Run the reset/CDC test with a non-integer clock ratio and shifted phases:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 `
+  -Tests uart_reset_cdc_test -Seed 52 `
+  -PclkHalfNs 7 -UartHalfNs 11 -PclkPhaseNs 2 -UartPhaseNs 5
+```
+
 Capture a VCD for the loopback path:
 
 ```powershell
@@ -62,6 +72,45 @@ powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_loop
 
 The VCD is written under `reports/` and is ignored by git.
 
+Merge coverage for the exact tests listed in the latest regression summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/merge_coverage.ps1
+```
+
+Text reports are written under `reports/coverage/`; the generated HTML entry
+point is `reports/coverage/html/index.html`.
+
+Run the isolated TX-data mutation check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_mutation_check.ps1
+```
+
+This command passes only when the injected bit error is reported by the
+scoreboard. It uses `work_mutation` and does not replace the normal simulation
+library. See [`docs/bug_closure_case.md`](docs/bug_closure_case.md).
+
+Freeze the three-seed final evidence package (39 simulations plus merged UCDB):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
+```
+
+The package is written to `reports/final_regression/` and includes per-seed
+summaries, source SHA-256 values, coverage reports, and a reproducibility
+manifest. See [`docs/final_regression_evidence.md`](docs/final_regression_evidence.md).
+
+Run the CDC structural audit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_cdc_structural_check.ps1
+```
+
+The audit checks project CDC structures and writes
+`reports/cdc_structural_summary.md`. It does not replace commercial CDC signoff;
+see [`docs/cdc_analysis.md`](docs/cdc_analysis.md).
+
 ## Tests
 
 | Test | Main check |
@@ -69,9 +118,14 @@ The VCD is written under `reports/` and is ignored by git.
 | `uart_reg_test` | Reset values, register read/write, illegal access |
 | `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
 | `uart_baud_loopback_test` | Loopback with `BAUD=4` to check bit tick timing |
+| `uart_baud_timing_test` | Independent TX bit-width checks for BAUD=0/1/4/8 |
+| `uart_irq_test` | IRQ enable/disable, pending RX data, assert and clear behavior |
+| `uart_frame_error_test` | Bad stop-bit rejection, frame-error status, and recovery |
 | `uart_external_rx_test` | External UART RX frame and APB readback |
+| `uart_rx_fifo_full_test` | RX FIFO full, extra-frame drop, drain, and recovery |
+| `uart_reset_cdc_test` | Mid-traffic dual reset, independent resets, and recovery |
 | `uart_fifo_full_test` | TX FIFO full and overflow error path |
-| `uart_bad_access_test` | TXDATA read, empty RXDATA read, bad write address |
+| `uart_bad_access_test` | TXDATA read, RXDATA empty/read-only errors, bad address |
 | `uart_random_test` | Random data, random gaps, status interleaving |
 | `uart_recover_test` | Disable and re-enable recovery path |
 
@@ -83,4 +137,8 @@ Sample loopback log excerpt:
 ## Notes
 
 - Coverage notes: [`docs/coverage_summary.md`](docs/coverage_summary.md)
+- Coverage closure: [`docs/coverage_closure.md`](docs/coverage_closure.md)
 - Debug notes: [`docs/debug_notes.md`](docs/debug_notes.md)
+- Mutation case: [`docs/bug_closure_case.md`](docs/bug_closure_case.md)
+- Final regression evidence: [`docs/final_regression_evidence.md`](docs/final_regression_evidence.md)
+- CDC analysis: [`docs/cdc_analysis.md`](docs/cdc_analysis.md)

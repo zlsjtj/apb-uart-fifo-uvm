@@ -1,4 +1,7 @@
 work/
+work_mutation/
+work_*/
+transcript
 simv
 simv.daidir/
 csrc/
@@ -15,5 +18,7 @@ logs/*.log
 reports/*.ucdb
 reports/*.vdb
 reports/*.vcd
+reports/coverage/html/
+reports/final_regression/coverage/html/
 __pycache__/
 *.pyc

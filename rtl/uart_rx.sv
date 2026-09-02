@@ -42,7 +42,6 @@ module uart_rx (
       if (bit_tick_i) begin
         unique case (state)
           RX_IDLE: begin
-            frame_err_o <= 1'b0;
             if ((!valid_o || ready_i) && rx_i == 1'b0) begin
               bit_cnt <= 3'd0;
               state   <= RX_DATA;
@@ -59,6 +58,8 @@ module uart_rx (
           end
 
           RX_STOP: begin
+            // Keep a bad-frame indication visible until reset, disable, or a
+            // later well-formed frame completes.
             frame_err_o <= (rx_i != 1'b1);
             if (ready_i && rx_i == 1'b1) begin
               data_o  <= shifter;

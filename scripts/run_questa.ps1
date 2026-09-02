@@ -3,7 +3,12 @@ param(
     "uart_reg_test",
     "uart_loopback_test",
     "uart_baud_loopback_test",
+    "uart_baud_timing_test",
+    "uart_irq_test",
+    "uart_frame_error_test",
     "uart_external_rx_test",
+    "uart_rx_fifo_full_test",
+    "uart_reset_cdc_test",
     "uart_fifo_full_test",
     "uart_bad_access_test",
     "uart_random_test",
@@ -12,6 +17,10 @@ param(
   [int]$Seed = 1,
   [string]$Top = "tb_apb_uart",
   [string]$Filelist = "filelist.f",
+  [int]$PclkHalfNs = 5,
+  [int]$UartHalfNs = 20,
+  [int]$PclkPhaseNs = 0,
+  [int]$UartPhaseNs = 0,
   [switch]$DumpLoopbackVcd
 )
 
@@ -78,7 +87,7 @@ foreach ($test in $Tests) {
   $seedValue = $Seed + $index
   $logPath = "logs/${test}_${seedValue}.log"
   $ucdbPath = "reports/${test}_${seedValue}.ucdb"
-  $do = "run -all; coverage save $ucdbPath; quit -f"
+  $do = "coverage save -onexit $ucdbPath; run -all; quit -f"
 
   if ($DumpLoopbackVcd -and ($test -eq "uart_loopback_test")) {
     $vcdPath = "reports/${test}_${seedValue}.vcd"
@@ -97,10 +106,10 @@ foreach ($test in $Tests) {
       "/tb_apb_uart/u_dut/rx_pop",
       "/tb_apb_uart/u_dut/rx_empty"
     ) -join " "
-    $do = "vcd file $vcdPath; vcd add $vcdSignals; run -all; coverage save $ucdbPath; quit -f"
+    $do = "coverage save -onexit $ucdbPath; vcd file $vcdPath; vcd add $vcdSignals; run -all; quit -f"
   }
 
-  vsim -c $Top "+UVM_TESTNAME=$test" -sv_seed $seedValue -coverage -assertdebug -do $do -l $logPath | Out-Host
+  vsim -c $Top "+UVM_TESTNAME=$test" "+PCLK_HALF_NS=$PclkHalfNs" "+UART_HALF_NS=$UartHalfNs" "+PCLK_PHASE_NS=$PclkPhaseNs" "+UART_PHASE_NS=$UartPhaseNs" -sv_seed $seedValue -coverage -assertdebug -do $do -l $logPath | Out-Host
   $runStatus = $LASTEXITCODE
   $parsed = Parse-UvmLog $logPath
 
@@ -132,6 +141,7 @@ $summary = @(
   "",
   "- Simulator: ``questa``",
   "- Time: ``$now``",
+  "- Clock config: ``pclk_half=${PclkHalfNs}ns pclk_phase=${PclkPhaseNs}ns uart_half=${UartHalfNs}ns uart_phase=${UartPhaseNs}ns``",
   "",
   "| Test | Seed | Status | Errors | Fatals | Warnings | Log |",
   "| --- | ---: | --- | ---: | ---: | ---: | --- |"
