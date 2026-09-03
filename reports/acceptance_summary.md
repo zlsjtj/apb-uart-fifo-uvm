@@ -1,10 +1,10 @@
 # Acceptance Summary
 
-- Time: `2026-09-03 17:02:56`
+- Time: `2026-09-03 17:42:20`
 - Result: **PASS**
-- Elapsed seconds: `435.6`
+- Elapsed seconds: `436.4`
 - Final-regression seeds: `101, 201, 301`
-- Stress seeds: `731, 751`
+- Stress profiles: `skew_7_11, skew_9_13`
 
 | Step | Result |
 | --- | --- |

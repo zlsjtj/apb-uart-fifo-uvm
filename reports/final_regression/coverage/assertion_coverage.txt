@@ -1,8 +1,8 @@
 
 ASSERTION RESULTS:
 -------------------------------------------------------
-Name                 File(Line)           Failure Pass
-                                          Count   Count
+Name                 File(Line)           Failure Pass 
+                                          Count   Count 
 -------------------------------------------------------
 /tb_apb_uart/u_dut/u_tx_fifo_sva/no_overflow_write
                      rtl/async_fifo_sva.sv(19)       0 38217

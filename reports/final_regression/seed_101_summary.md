@@ -1,7 +1,7 @@
 # Regression Summary
 
 - Simulator: `questa`
-- Time: `2026-09-03 16:57:34`
+- Time: `2026-09-03 17:47:27`
 - Clock config: `pclk_half=5ns pclk_phase=0ns uart_half=20ns uart_phase=0ns`
 
 | Test | Seed | Status | Errors | Fatals | Warnings | Log |

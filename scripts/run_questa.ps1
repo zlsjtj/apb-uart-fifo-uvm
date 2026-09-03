@@ -1,22 +1,6 @@
 param(
-  [string[]]$Tests = @(
-    "uart_reg_test",
-    "uart_config_latency_test",
-    "uart_ral_test",
-    "uart_loopback_test",
-    "uart_baud_loopback_test",
-    "uart_baud_timing_test",
-    "uart_irq_test",
-    "uart_frame_error_test",
-    "uart_external_rx_test",
-    "uart_external_rx_baud_test",
-    "uart_rx_fifo_full_test",
-    "uart_reset_cdc_test",
-    "uart_fifo_full_test",
-    "uart_bad_access_test",
-    "uart_random_test",
-    "uart_recover_test"
-  ),
+  [string[]]$Tests = @(),
+  [string]$PlanPath = "config/verification_plan.psd1",
   [int]$Seed = 1,
   [string]$Top = "tb_apb_uart",
   [string]$Filelist = "filelist.f",
@@ -28,6 +12,17 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-not (Test-Path $PlanPath)) {
+  throw "Verification plan '$PlanPath' was not found."
+}
+$verificationPlan = Import-PowerShellDataFile $PlanPath
+if ($Tests.Count -eq 0) {
+  $Tests = @($verificationPlan.RegressionTests)
+}
+if ($Tests.Count -eq 0) {
+  throw "No tests were selected."
+}
 
 function Require-Tool($Name) {
   if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {

@@ -14,7 +14,7 @@
 
 | RQ | 需求 | 现有测试或序列 | 现有检查 | 现有覆盖/证据 | 当前状态 | 主要缺口与下一步 |
 | --- | --- | --- | --- | --- | --- | --- |
-| RQ-01 | CTRL、BAUD 的复位值、读写和非法访问正确 | `uart_reg_test`、`uart_ral_test` | 普通 sequence 检查错误访问；RAL 前门读写和 mirror 检查 CTRL/STATUS/BAUD；SVA 检查 APB 时序与非法地址 | 寄存器模型结构检查 14/14；三组 RAL 用例通过；地址、读写和错误 coverpoint 全覆盖 | 已完成 | RAL 明确建模 RW/RO/WO 和 BAUD=0 归一化；外部复位后由测试显式调用 `regmodel.reset()`，该边界需保留 |
+| RQ-01 | CTRL、BAUD 的复位值、读写和非法访问正确 | `uart_reg_test`、`uart_ral_test` | 普通 sequence 检查错误访问；RAL 前门读写和 mirror 检查 CTRL/STATUS/BAUD；SVA 检查 APB 时序与非法地址 | 寄存器模型结构检查 16/16；三组 RAL 用例通过；地址、读写和错误 coverpoint 全覆盖 | 已完成 | RAL 明确建模 RW/RO/WO 和 BAUD=0 归一化；统一 reset monitor 被动驱动 mirror reset，测试不再手工修正 |
 | RQ-02 | APB 写 TXDATA 后按顺序从 TX 串行输出 | `uart_loopback_test`、`uart_random_test`、`uart_baud_timing_test` | TX monitor 根据引脚、UART 时钟和生效 BAUD 独立解码，不读取 DUT `bit_tick`；scoreboard 比较 APB 写入和 TX 帧 | UART 数据 coverpoint；BAUD=0/1/4/8 位宽检查；默认与错相时钟 loopback 均通过 | 已完成 | 若扩展为生产级 UART，再增加半位起始确认、过采样和容差检查 |
 | RQ-03 | 外部 RX 与 loopback 数据能按顺序从 RXDATA 读回 | `uart_external_rx_test`、`uart_external_rx_baud_test`、`uart_loopback_test`、`uart_frame_error_test`、`uart_rx_fifo_full_test` | 独立 RX 引脚 monitor 解码输入帧；driver 按公开时钟参数独立生成时序；predictor 处理错误帧、FIFO 容量和目标域 loopback 配置；scoreboard 只比较 APB RXDATA | UART 数据 coverpoint；BAUD=1/4 外部 RX、相位偏移、坏帧恢复和 RX 满边界均通过 | 已完成 | 当前 monitor 按简化 DUT 的单倍 bit tick 解码；若扩展到 16 倍过采样，需要同步升级参考采样算法 |
 | RQ-04 | TX/RX FIFO 的满、空、溢出、下溢和恢复行为明确 | `uart_fifo_full_test`、`uart_rx_fifo_full_test`、`uart_bad_access_test` | scoreboard 检查 RX 顺序与满时丢弃；SVA 区分 APB 请求与 `tx_push`/`rx_pop`，检查满写、空读和只读写拒绝时无 FIFO 副作用 | RX 空/部分/满状态、满/清除转换及四类拒绝访问 cover property 均已覆盖 | 已完成 | 保留满、空和恢复用例；若修改 FIFO 接口语义，需要同步更新请求与接受操作断言 |
@@ -29,7 +29,7 @@
 
 | 文件 | 当前作用 | 主要对应 RQ | 后续改动方向 |
 | --- | --- | --- | --- |
-| `rtl/apb_uart_reg_pkg.sv`、`rtl/apb_uart.sv`、`rtl/reset_sync.sv` | 统一寄存器定义、APB-UART DUT、FIFO 连接、BAUD/控制跨域与复位路径 | RQ-01、04、05、06、07 | 地址、位定义和复位值由 package 统一维护；CTRL/BAUD 使用请求应答邮箱，各目标域复位异步断言、同步释放 |
+| `rtl/apb_uart_reg_pkg.sv`、`rtl/apb_uart*.sv`、`rtl/uart_baud_gen.sv`、`rtl/reset_sync.sv` | 统一寄存器定义、APB寄存器、配置CDC、串行核、FIFO连接与复位路径 | RQ-01、04、05、06、07 | 地址和复位值由 package 维护；寄存器、CDC、baud、serial 分层，顶层只负责集成 |
 | `rtl/async_fifo.sv` | 双时钟异步 FIFO | RQ-04、07 | Gray 指针同步器已标注 `ASYNC_REG`；仍需商业工具完成库和约束层面的检查 |
 | `rtl/async_fifo_sva.sv` | FIFO 基础断言 | RQ-04、08 | 区分请求与接受操作，补拒绝操作无副作用的断言和 cover property |
 | `rtl/apb_uart_sva.sv` | APB 及 IRQ 基础断言 | RQ-01、05、08 | 补 IRQ、STATUS、错误响应和 BAUD 行为的断言 |
@@ -58,10 +58,11 @@
 | T-08（已完成）：冻结正式回归证据 | RQ-10 | 3 组 seed、48/48 PASS；报告包含版本、工具、命令、seed、48-UCDB 合并覆盖率、工作区状态和源码 SHA-256 |
 | T-09（已完成）：CDC 结构审计与修正 | RQ-07 | CTRL/BAUD 原子配置邮箱、RX full/frame error 同步、FIFO/邮箱同步器标注；22/22 结构规则通过，48/48 回归通过 |
 | T-10（本轮完成）：P0 复位释放收口 | RQ-07、09、10 | APB、UART 与 FIFO 两侧均采用异步断言、两级同步释放；三组错相/异比定向测试通过，新增复位断言与 cover 全部命中 |
-| T-11（已完成）：P1 统一寄存器模型 | RQ-01、10 | 单一寄存器定义 package；轻量 RAL、adapter、predictor 接入 APB agent；访问策略和复位镜像检查通过；结构检查 14/14 |
-| T-12（已完成）：P2 提高检查独立性 | RQ-03、06、08、10 | 独立 RX monitor；参考 predictor 与纯比较 scoreboard；UART 域配置生效事件和时延测试；IRQ 控制 mutation；P2 结构检查 11/11 |
+| T-11（已完成）：P1 统一寄存器模型 | RQ-01、10 | 单一寄存器定义 package；轻量 RAL、adapter、predictor 接入 APB agent；访问策略和复位镜像检查通过；当前结构检查 16/16 |
+| T-12（已完成）：P2 提高检查独立性 | RQ-03、06、08、10 | 独立 RX monitor；参考 predictor 与纯比较 scoreboard；UART 域配置生效事件和时延测试；IRQ 控制 mutation；当前 P2 结构检查 15/15 |
 | T-13（已完成）：架构解耦与统一验收 | RQ-02、03、07、08、10 | TX/RX monitor 不依赖 DUT bit_tick；统一 env config；FIFO 深度参数共享；sequence/test 分片；virtual sequence 和一键 acceptance |
-| T-14（本轮完成）：独立时序与探针边界收口 | RQ-03、06、07、08、10 | UART driver 不读取 DUT bit_tick；BAUD=4 相位偏移外部 RX；公共接口与白盒 probe 分离；复杂场景迁入 virtual sequence；baud-tick mutation 被检出；21/21 架构规则、48/48 正常回归、10/10 压力子集和 4/4 mutation 通过 |
+| T-14（已完成）：独立时序与探针边界收口 | RQ-03、06、07、08、10 | UART driver 不读取 DUT bit_tick；BAUD=4 相位偏移外部 RX；公共接口与白盒 probe 分离；复杂场景迁入 virtual sequence；baud-tick mutation 被检出；该轮 21/21 架构规则、48/48 正常回归、10/10 压力子集和 4/4 mutation 通过 |
+| T-15（本轮完成）：P0—P4 架构闭环 | RQ-01、03、06、07、08、09、10 | 黑盒串行 monitor 不读取 probe；统一 reset 事件驱动四类消费者；RTL 按寄存器/CDC/baud/serial 拆分；单一声明式测试计划；17/17 RTL 门禁及机器可读 waiver；37/37 架构规则、16/16 RAL、22/22 CDC、15/15 P2、48/48 主回归、10/10 压力和 4/4 mutation 通过 |
 
 ## 4. 更新规则
 

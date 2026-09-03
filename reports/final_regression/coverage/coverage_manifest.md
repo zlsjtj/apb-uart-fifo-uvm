@@ -1,6 +1,6 @@
 # Coverage Merge Manifest
 
-- Time: `2026-09-03 17:01:22`
+- Time: `2026-09-03 17:51:14`
 - Regression summary: `reports\final_regression\final_regression_summary.md`
 - Tests merged: 48
 - Merged UCDB: `reports\final_regression\coverage\regression_merged.ucdb`
@@ -9,6 +9,7 @@
 - Code report: `reports\final_regression\coverage\code_coverage.txt`
 - Assertion report: `reports\final_regression\coverage\assertion_coverage.txt`
 - By-design-unit report: `reports\final_regression\coverage\dut_bydu_coverage.txt`
+- RTL-only gate: `reports\final_regression\coverage\rtl_coverage_gate.md`
 
 | Test | Seed | UCDB |
 | --- | ---: | --- |

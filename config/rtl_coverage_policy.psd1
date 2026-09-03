@@ -1,0 +1,49 @@
+@{
+  Gates = @(
+    @{ Module = 'apb_uart';             Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'apb_uart_regs';        Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'apb_uart_regs';        Metric = 'Branches';   Minimum = 90.0 }
+    @{ Module = 'apb_uart_cfg_cdc';     Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'apb_uart_cfg_cdc';     Metric = 'Branches';   Minimum = 90.0 }
+    @{ Module = 'apb_uart_serial_core'; Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'uart_baud_gen';        Metric = 'Statements'; Minimum = 95.0 }
+    @{
+      Module = 'uart_baud_gen'
+      Metric = 'Branches'
+      Minimum = 85.0
+      WaiverIds = @('RTL-COV-W004')
+    }
+    @{ Module = 'async_fifo';           Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'async_fifo';           Metric = 'Branches';   Minimum = 95.0 }
+    @{ Module = 'reset_sync';           Metric = 'Statements'; Minimum = 100.0 }
+    @{ Module = 'uart_rx';              Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'uart_rx';              Metric = 'Branches';   Minimum = 90.0 }
+    @{ Module = 'uart_rx';              Metric = 'FSM';        Minimum = 85.0 }
+    @{ Module = 'uart_tx';              Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'uart_tx';              Metric = 'Branches';   Minimum = 90.0 }
+    @{ Module = 'uart_tx';              Metric = 'FSM';        Minimum = 95.0 }
+  )
+
+  Waivers = @(
+    @{
+      Id = 'RTL-COV-W001'
+      Scope = 'RTL toggle coverage'
+      Reason = '宽寄存器和总线高位在固定8N1教学场景中没有逐位翻转要求，toggle仅作观察指标。'
+    }
+    @{
+      Id = 'RTL-COV-W002'
+      Scope = 'uart_tx/uart_rx defensive default transitions'
+      Reason = '枚举状态机的非法状态需要人为破坏编码，不属于正常功能回归。'
+    }
+    @{
+      Id = 'RTL-COV-W003'
+      Scope = 'short-circuit condition combinations'
+      Reason = '无独立功能含义的短路真值组合不设门禁，由功能覆盖、分支和断言补充说明。'
+    }
+    @{
+      Id = 'RTL-COV-W004'
+      Scope = 'uart_baud_gen divisor zero defensive branch'
+      Reason = 'APB寄存器层会把BAUD=0规范化为1，因此集成回归无法把0送到波特率子模块；保留子模块本地防御并将唯一不可达分支显式豁免。'
+    }
+  )
+}

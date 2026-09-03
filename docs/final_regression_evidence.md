@@ -22,7 +22,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
 
 2026-09-03 在验证架构收口后的正式回归为 48/48 PASS。所有用例的 warning、error、fatal 均为 0。逐项结果见 `reports/final_regression/final_regression_summary.md`，每组 seed 的原始摘要也单独保存在同一目录。
 
-48 个 UCDB 已统一合并。合并结果为：功能覆盖率 100%（65/65 个计划 bin）、断言覆盖率 100%（42/42 条均有有效尝试且无失败）、cover property 100%（14/14 命中）。详细文本报告位于 `reports/final_regression/coverage/`。
+48 个 UCDB 已统一合并。合并结果为：功能覆盖率 100%（65/65 个计划 bin）、断言覆盖率 100%（42/42 条均有有效尝试且无失败）、cover property 100%（14/14 命中），RTL-only 门禁 17/17。详细文本、JSON 和 HTML 报告位于 `reports/final_regression/coverage/`。
 
 ## 3. 版本与可复现性
 

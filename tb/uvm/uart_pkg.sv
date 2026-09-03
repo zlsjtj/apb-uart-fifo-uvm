@@ -10,13 +10,18 @@ package uart_pkg;
   `uvm_analysis_imp_decl(_apb_pred)
   `uvm_analysis_imp_decl(_tx_pred)
   `uvm_analysis_imp_decl(_rx_line_pred)
-  `uvm_analysis_imp_decl(_cfg_pred)
+  `uvm_analysis_imp_decl(_reset_pred)
+  `uvm_analysis_imp_decl(_reset_sb)
+  `uvm_analysis_imp_decl(_reset_cov)
+  `uvm_analysis_imp_decl(_reset_ral)
   `uvm_analysis_imp_decl(_apb_cov)
   `uvm_analysis_imp_decl(_uart_cov)
 
   `include "uart_env_cfg.svh"
+  `include "uart_serial_cfg.svh"
   `include "apb_item.svh"
   `include "uart_reg_model.svh"
+  `include "uart_reset_monitor.svh"
   `include "uart_item.svh"
   `include "apb_sequencer.svh"
   `include "apb_driver.svh"

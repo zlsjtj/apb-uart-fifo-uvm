@@ -48,7 +48,7 @@ scoreboard 只负责比较：
 
 ## 4. 区分 APB 写入和 UART 域生效
 
-CTRL、BAUD 在 APB 域写入后，通过请求/应答邮箱跨到 UART 域。P2 在 UART 域配置真正装载时增加单周期 `cfg_apply_uart`，并同时暴露已经生效的 CTRL、BAUD 值。配置 monitor 只在这个事件出现时发布新配置，predictor 也以它作为有效配置边界。
+CTRL、BAUD 在 APB 域写入后，通过请求/应答邮箱跨到 UART 域。P2 在 UART 域配置真正装载时增加单周期 `cfg_apply_uart`，并同时暴露已经生效的 CTRL、BAUD 值。当前架构中，配置 monitor 只用于白盒 CDC 时延观察；predictor 和串行 monitor 的运行配置来自 APB monitor 看到的成功写事务，不把 DUT 内部生效值当作数据检查标准答案。
 
 `uart_config_latency_test` 单独记录两个时刻：
 
@@ -69,8 +69,8 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 
 ## 6. 本地验证结果
 
-- P2 结构检查：11/11 PASS；
-- 寄存器模型结构检查：14/14 PASS；
+- P2 结构检查：15/15 PASS；
+- 寄存器模型结构检查：16/16 PASS；
 - CDC 结构检查：22/22 PASS；
 - P2 关键定向测试：5/5 PASS；
 - 非整数时钟比和错相定向测试：3/3 PASS；
@@ -78,7 +78,7 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 - IRQ 控制 mutation：PASS，已检出；
 - FIFO full 控制 mutation：PASS，已检出；
 - 三组完整回归：48/48 PASS，warning、error、fatal 均为 0；
-- 合并 48 个 UCDB：功能覆盖 65/65，断言 42/42，cover property 14/14。
+- 合并 48 个 UCDB：功能覆盖 65/65，断言 42/42，cover property 14/14，RTL-only 门禁 17/17。
 
 详细证据分别保存在 `reports/p2_structural_summary.md`、`reports/config_latency_summary.md`、`reports/mutation_matrix.md` 和 `reports/final_regression/`。
 

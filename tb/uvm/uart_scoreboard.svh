@@ -5,7 +5,7 @@ class uart_scoreboard extends uvm_component;
   uvm_analysis_imp_tx_sb   #(uart_item, uart_scoreboard) tx_export;
   uvm_analysis_imp_exp_tx_sb #(uart_item, uart_scoreboard) exp_tx_export;
   uvm_analysis_imp_exp_rx_sb #(uart_item, uart_scoreboard) exp_rx_export;
-  virtual reset_if reset_vif;
+  uvm_analysis_imp_reset_sb #(uart_reset_item, uart_scoreboard) reset_export;
 
   bit [7:0] exp_tx_q[$];
   bit [7:0] exp_rx_q[$];
@@ -21,24 +21,16 @@ class uart_scoreboard extends uvm_component;
     tx_export  = new("tx_export", this);
     exp_tx_export = new("exp_tx_export", this);
     exp_rx_export = new("exp_rx_export", this);
+    reset_export = new("reset_export", this);
   endfunction
 
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif)) begin
-      `uvm_fatal("NORESETVIF", "reset_if is not set")
-    end
-  endfunction
-
-  task run_phase(uvm_phase phase);
-    forever begin
-      @(negedge reset_vif.presetn or negedge reset_vif.uart_rst_n);
+  function void write_reset_sb(uart_reset_item tr);
+    if (tr.asserted) begin
       exp_tx_q.delete();
       exp_rx_q.delete();
       reset_flushes++;
-      wait (reset_vif.presetn && reset_vif.uart_rst_n);
     end
-  endtask
+  endfunction
 
   function void write_apb_sb(apb_item tr);
     if (tr.addr == ADDR_RXDATA && tr.kind == apb_item::APB_READ && !tr.slverr) begin

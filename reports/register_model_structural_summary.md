@@ -1,8 +1,8 @@
 # Register Model Structural Summary
 
-- Time: `2026-09-03 16:55:41`
+- Time: `2026-09-03 17:51:45`
 - Result: `PASS`
-- Checks: `14/14`
+- Checks: `16/16`
 
 | Check | Result |
 | --- | --- |
@@ -20,3 +20,5 @@
 | Typed APB predictor is instantiated | PASS |
 | APB monitor feeds the predictor | PASS |
 | RAL access and reset test exists | PASS |
+| RAL mirror reset is driven by the unified reset observer | PASS |
+| Tests do not manually repair the RAL mirror | PASS |

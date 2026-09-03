@@ -13,13 +13,17 @@ function Test-ForbiddenPattern([string]$Path, [string]$Pattern, [string]$Name) {
 $checks = @()
 $checks += Test-RequiredPattern "tb/uvm/uart_rx_monitor.svh" 'class\s+uart_rx_monitor' "Independent RX-pin monitor exists"
 $checks += Test-RequiredPattern "tb/uvm/uart_rx_monitor.svh" 'tr\.data\[i\]\s*=\s*vif\.mon_cb\.rx_i' "RX monitor decodes observed pin samples"
+$checks += Test-RequiredPattern "tb/uvm/uart_monitor.svh" 'uart_serial_cfg' "TX monitor uses the APB-observed serial model"
+$checks += Test-RequiredPattern "tb/uvm/uart_rx_monitor.svh" 'uart_serial_cfg' "RX monitor uses the APB-observed serial model"
+$checks += Test-ForbiddenPattern "tb/uvm/uart_monitor.svh" 'uart_probe_if|probe_vif|baud_uart_cfg|ctrl_uart_cfg' "TX monitor is independent of white-box probes"
+$checks += Test-ForbiddenPattern "tb/uvm/uart_rx_monitor.svh" 'uart_probe_if|probe_vif|baud_uart_cfg|ctrl_uart_cfg' "RX monitor is independent of white-box probes"
 $checks += Test-RequiredPattern "tb/uvm/uart_agent.svh" 'uart_rx_monitor::type_id::create' "UART agent builds the RX monitor"
 $checks += Test-ForbiddenPattern "tb/uvm/uart_env.svh" 'uart\.drv\.ap\.connect\(sb' "Scoreboard does not trust driver transactions"
 $checks += Test-ForbiddenPattern "tb/uvm/uart_driver.svh" 'uvm_analysis_port' "UART driver publishes no expected-result stream"
 $checks += Test-RequiredPattern "tb/uvm/uart_predictor.svh" 'class\s+uart_predictor' "Reference predictor is separate from scoreboard"
 $checks += Test-RequiredPattern "tb/uvm/uart_env.svh" 'pred\.exp_tx_ap\.connect\(sb\.exp_tx_export\)' "Expected TX stream connects predictor to scoreboard"
 $checks += Test-RequiredPattern "tb/uvm/uart_env.svh" 'pred\.exp_rx_ap\.connect\(sb\.exp_rx_export\)' "Expected RX stream connects predictor to scoreboard"
-$checks += Test-RequiredPattern "rtl/apb_uart.sv" 'cfg_apply_uart' "UART-domain configuration apply event exists"
+$checks += Test-RequiredPattern "rtl/apb_uart_cfg_cdc.sv" 'cfg_apply_uart' "UART-domain configuration apply event exists"
 $checks += Test-RequiredPattern "tb/uvm/tests/uart_base_reg_tests.svh" 'class\s+uart_config_latency_test' "APB-write versus UART-apply timing test exists"
 $checks += Test-RequiredPattern "scripts/run_control_mutation_check.ps1" 'UART_MUTATE_IRQ_STUCK_LOW' "IRQ control mutation check exists"
 

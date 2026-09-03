@@ -1,12 +1,16 @@
 param(
   [int[]]$Seeds = @(101, 201, 301),
-  [int]$StressSeed = 731,
-  [int]$StressSeed2 = 751
+  [string]$PlanPath = "config/verification_plan.psd1"
 )
 
 $ErrorActionPreference = "Stop"
 $started = Get-Date
 $steps = @()
+$verificationPlan = Import-PowerShellDataFile $PlanPath
+$stressProfiles = @($verificationPlan.StressProfiles)
+if ($stressProfiles.Count -lt 2) {
+  throw "Verification plan must define at least two stress profiles."
+}
 
 function Run-Step([string]$Name, [scriptblock]$Action) {
   Write-Host "[ACCEPTANCE] $Name"
@@ -25,17 +29,21 @@ Run-Step "Architecture structural audit" {
   & (Join-Path $PSScriptRoot "run_architecture_check.ps1")
 }
 Run-Step "Three-seed final regression and coverage merge" {
-  & (Join-Path $PSScriptRoot "run_final_regression.ps1") -Seeds $Seeds
+  & (Join-Path $PSScriptRoot "run_final_regression.ps1") -Seeds $Seeds -PlanPath $PlanPath
 }
 Run-Step "Skewed non-integer clock regression" {
+  $profile = $stressProfiles[0]
   & (Join-Path $PSScriptRoot "run_questa.ps1") `
-    -Tests uart_config_latency_test,uart_loopback_test,uart_external_rx_test,uart_external_rx_baud_test,uart_reset_cdc_test `
-    -Seed $StressSeed -PclkHalfNs 7 -UartHalfNs 11 -PclkPhaseNs 2 -UartPhaseNs 5
+    -PlanPath $PlanPath -Tests $profile.Tests -Seed $profile.Seed `
+    -PclkHalfNs $profile.PclkHalfNs -UartHalfNs $profile.UartHalfNs `
+    -PclkPhaseNs $profile.PclkPhaseNs -UartPhaseNs $profile.UartPhaseNs
 }
 Run-Step "Second skewed clock regression" {
+  $profile = $stressProfiles[1]
   & (Join-Path $PSScriptRoot "run_questa.ps1") `
-    -Tests uart_config_latency_test,uart_frame_error_test,uart_external_rx_baud_test,uart_rx_fifo_full_test,uart_reset_cdc_test `
-    -Seed $StressSeed2 -PclkHalfNs 9 -UartHalfNs 13 -PclkPhaseNs 4 -UartPhaseNs 1
+    -PlanPath $PlanPath -Tests $profile.Tests -Seed $profile.Seed `
+    -PclkHalfNs $profile.PclkHalfNs -UartHalfNs $profile.UartHalfNs `
+    -PclkPhaseNs $profile.PclkPhaseNs -UartPhaseNs $profile.UartPhaseNs
 }
 Run-Step "Four-case mutation suite" {
   & (Join-Path $PSScriptRoot "run_mutation_suite.ps1")
@@ -48,7 +56,7 @@ $summary = @(
   "- Result: **PASS**",
   "- Elapsed seconds: ``$elapsed``",
   "- Final-regression seeds: ``$($Seeds -join ', ')``",
-  "- Stress seeds: ``$StressSeed, $StressSeed2``", "",
+  "- Stress profiles: ``$($stressProfiles.Name -join ', ')``", "",
   "| Step | Result |", "| --- | --- |"
 )
 foreach ($step in $steps) {

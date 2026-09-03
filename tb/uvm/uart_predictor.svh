@@ -4,11 +4,11 @@ class uart_predictor extends uvm_component;
   uvm_analysis_imp_apb_pred #(apb_item, uart_predictor) apb_export;
   uvm_analysis_imp_tx_pred #(uart_item, uart_predictor) tx_export;
   uvm_analysis_imp_rx_line_pred #(uart_item, uart_predictor) rx_line_export;
-  uvm_analysis_imp_cfg_pred #(uart_cfg_item, uart_predictor) cfg_export;
+  uvm_analysis_imp_reset_pred #(uart_reset_item, uart_predictor) reset_export;
   uvm_analysis_port #(uart_item) exp_tx_ap;
   uvm_analysis_port #(uart_item) exp_rx_ap;
-  virtual reset_if reset_vif;
   uart_env_cfg cfg;
+  uart_serial_cfg serial_cfg;
 
   bit loopback_effective;
   int unsigned predicted_rx_occupancy;
@@ -21,35 +21,39 @@ class uart_predictor extends uvm_component;
     apb_export = new("apb_export", this);
     tx_export = new("tx_export", this);
     rx_line_export = new("rx_line_export", this);
-    cfg_export = new("cfg_export", this);
+    reset_export = new("reset_export", this);
     exp_tx_ap = new("exp_tx_ap", this);
     exp_rx_ap = new("exp_rx_ap", this);
   endfunction
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif)) begin
-      `uvm_fatal("NORESETVIF", "reset_if is not set")
-    end
     if (!uvm_config_db#(uart_env_cfg)::get(this, "", "env_cfg", cfg)) begin
       `uvm_fatal("NOCFG", "uart_env_cfg is not set")
     end
-  endfunction
-
-  task run_phase(uvm_phase phase);
-    forever begin
-      @(negedge reset_vif.presetn or negedge reset_vif.uart_rst_n);
-      loopback_effective = 1'b0;
-      predicted_rx_occupancy = 0;
-      wait (reset_vif.presetn && reset_vif.uart_rst_n);
+    if (!uvm_config_db#(uart_serial_cfg)::get(this, "", "serial_cfg", serial_cfg)) begin
+      `uvm_fatal("NOSERIALCFG", "uart_serial_cfg is not set")
     end
-  endtask
+  endfunction
 
   function void write_apb_pred(apb_item tr);
     uart_item exp;
 
     if (tr.slverr) begin
       return;
+    end
+
+    if (tr.kind == apb_item::APB_WRITE) begin
+      if (tr.addr == UART_ADDR_CTRL) begin
+        serial_cfg.ctrl = tr.data[2:0] & UART_CTRL_MASK[2:0];
+        loopback_effective = serial_cfg.ctrl[UART_CTRL_LOOPBACK_BIT];
+        serial_cfg.apb_updates++;
+        cfg_updates++;
+      end else if (tr.addr == UART_ADDR_BAUD) begin
+        serial_cfg.baud = (tr.data == 0) ? UART_BAUD_MIN : tr.data;
+        serial_cfg.apb_updates++;
+        cfg_updates++;
+      end
     end
 
     if ((tr.kind == apb_item::APB_WRITE) && (tr.addr == UART_ADDR_TXDATA)) begin
@@ -82,9 +86,17 @@ class uart_predictor extends uvm_component;
     predict_rx(tr, "external RX pin");
   endfunction
 
-  function void write_cfg_pred(uart_cfg_item tr);
-    loopback_effective = tr.ctrl[UART_CTRL_LOOPBACK_BIT];
-    cfg_updates++;
+  function void write_reset_pred(uart_reset_item tr);
+    if (!tr.asserted) begin
+      return;
+    end
+    predicted_rx_occupancy = 0;
+    if (tr.kind[1]) begin
+      serial_cfg.reset_to_defaults();
+      loopback_effective = 1'b0;
+    end else begin
+      loopback_effective = serial_cfg.ctrl[UART_CTRL_LOOPBACK_BIT];
+    end
   endfunction
 
   function void predict_rx(uart_item observed, string source);

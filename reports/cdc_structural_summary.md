@@ -1,6 +1,6 @@
 # CDC Structural Check Summary
 
-- Time: `2026-09-03 16:55:41`
+- Time: `2026-09-03 17:51:45`
 - Commercial CDC tool available: `False`
 - Scope: RTL structural rules only; this is not a replacement for signoff CDC analysis.
 - Result: 22/22 checks passed.
@@ -24,7 +24,7 @@
 | Legacy per-bit CTRL/BAUD synchronizers removed | PASS | legacy structure absent |
 | RX full status synchronizer is marked | PASS | required structure found |
 | Frame error status synchronizer is marked | PASS | required structure found |
-| STATUS uses synchronized UART-domain flags | PASS | required structure found |
+| STATUS uses synchronized UART-domain flags supplied by the top level | PASS | required structure found |
 | FIFO read-pointer synchronizer is marked | PASS | required structure found |
 | FIFO write-pointer synchronizer is marked | PASS | required structure found |
 | FIFO Gray-code conversion is present | PASS | required structure found |

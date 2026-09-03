@@ -1,6 +1,6 @@
 # IRQ Control Mutation Summary
 
-- Time: `2026-09-03 17:02:45`
+- Time: `2026-09-03 17:42:06`
 - Mutation: force IRQ output low (`UART_MUTATE_IRQ_STUCK_LOW`)
 - Test: `uart_irq_test`
 - Seed: `81`

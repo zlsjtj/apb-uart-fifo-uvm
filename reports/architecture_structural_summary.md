@@ -1,8 +1,8 @@
 # Architecture Structural Summary
 
-- Time: `2026-09-03 16:55:41`
+- Time: `2026-09-03 17:51:45`
 - Result: `PASS`
-- Checks: `21/21`
+- Checks: `37/37`
 
 | Check | Result |
 | --- | --- |
@@ -11,8 +11,10 @@
 | UART driver does not use DUT bit_tick | PASS |
 | Public UART interface contains no white-box probe signals | PASS |
 | White-box probe interface exists | PASS |
-| TX monitor uses effective BAUD configuration | PASS |
-| RX monitor uses effective BAUD configuration | PASS |
+| TX monitor uses APB-observed runtime configuration | PASS |
+| RX monitor uses APB-observed runtime configuration | PASS |
+| TX monitor is a black-box serial observer | PASS |
+| RX monitor is a black-box serial observer | PASS |
 | Shared environment configuration exists | PASS |
 | Predictor has no hard-coded FIFO depth | PASS |
 | Predictor derives FIFO depth from configuration | PASS |
@@ -27,3 +29,17 @@
 | One-command acceptance entry point exists | PASS |
 | FIFO control mutation check exists | PASS |
 | Baud-tick mutation check exists | PASS |
+| Unified reset monitor exists | PASS |
+| Reset observer automatically resets the RAL mirror | PASS |
+| Predictor consumes the shared reset event | PASS |
+| Scoreboard consumes the shared reset event | PASS |
+| Coverage consumes the shared reset event | PASS |
+| Top level delegates APB registers | PASS |
+| Top level delegates configuration CDC | PASS |
+| Top level delegates UART serial logic | PASS |
+| Serial core delegates baud generation | PASS |
+| Declarative regression test list exists | PASS |
+| Declarative stress profiles exist | PASS |
+| Final regression contains no hard-coded run count | PASS |
+| RTL-only coverage policy exists | PASS |
+| Machine-readable RTL coverage gate exists | PASS |

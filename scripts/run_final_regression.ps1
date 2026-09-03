@@ -4,6 +4,7 @@ param(
   [int]$UartHalfNs = 20,
   [int]$PclkPhaseNs = 0,
   [int]$UartPhaseNs = 0,
+  [string]$PlanPath = "config/verification_plan.psd1",
   [string]$OutputDir = "reports/final_regression"
 )
 
@@ -42,6 +43,15 @@ Require-Tool "vsim"
 Require-Tool "vcover"
 Require-Tool "git"
 
+if (-not (Test-Path $PlanPath)) {
+  throw "Verification plan '$PlanPath' was not found."
+}
+$verificationPlan = Import-PowerShellDataFile $PlanPath
+$expectedTestCount = @($verificationPlan.RegressionTests).Count
+if ($expectedTestCount -eq 0) {
+  throw "Verification plan contains no regression tests."
+}
+
 & (Join-Path $PSScriptRoot "run_reg_model_check.ps1")
 & (Join-Path $PSScriptRoot "run_cdc_structural_check.ps1")
 & (Join-Path $PSScriptRoot "run_p2_structural_check.ps1")
@@ -59,7 +69,7 @@ New-Item -ItemType Directory -Force $OutputDir | Out-Null
 $allRows = @()
 $runScript = Join-Path $PSScriptRoot "run_questa.ps1"
 foreach ($seed in $Seeds) {
-  & $runScript -Seed $seed -PclkHalfNs $PclkHalfNs -UartHalfNs $UartHalfNs `
+  & $runScript -PlanPath $PlanPath -Seed $seed -PclkHalfNs $PclkHalfNs -UartHalfNs $UartHalfNs `
     -PclkPhaseNs $PclkPhaseNs -UartPhaseNs $UartPhaseNs
   if ($LASTEXITCODE -ne 0) {
     throw "Regression failed for base seed $seed."
@@ -67,7 +77,8 @@ foreach ($seed in $Seeds) {
 
   $seedSummary = "reports/regression_summary.md"
   $rows = @(Read-RegressionRows $seedSummary)
-  if (($rows.Count -ne 16) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
+  if (($rows.Count -ne $expectedTestCount) -or
+      (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
     throw "Regression summary for base seed $seed is incomplete or contains failures."
   }
 
@@ -104,8 +115,11 @@ if ($LASTEXITCODE -ne 0) {
 
 $sourcePaths = @(
   "filelist.f",
+  "config/verification_plan.psd1",
+  "config/rtl_coverage_policy.psd1",
   "scripts/run_questa.ps1",
   "scripts/merge_coverage.ps1",
+  "scripts/generate_rtl_coverage_gate.ps1",
   "scripts/run_final_regression.ps1",
   "scripts/run_mutation_check.ps1",
   "scripts/run_control_mutation_check.ps1",

@@ -1,6 +1,6 @@
 # Final Regression Summary
 
-- Time: `2026-09-03 17:01:17`
+- Time: `2026-09-03 17:51:09`
 - Base seeds: `101, 201, 301`
 - Clock config: `pclk_half=5ns pclk_phase=0ns uart_half=20ns uart_phase=0ns`
 - Total runs: 48

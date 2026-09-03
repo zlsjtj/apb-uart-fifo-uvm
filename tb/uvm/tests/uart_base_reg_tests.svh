@@ -142,8 +142,6 @@ class uart_ral_test extends uart_base_test;
     uart_ral_predict_seq predict_seq;
 
     phase.raise_objection(this);
-    env.regmodel.reset();
-
     if (env.regmodel.ctrl.get_rights(env.regmodel.default_map) != "RW" ||
         env.regmodel.status.get_rights(env.regmodel.default_map) != "RO" ||
         env.regmodel.baud.get_rights(env.regmodel.default_map) != "RW" ||
@@ -194,7 +192,6 @@ class uart_ral_test extends uart_base_test;
     end
 
     reset_vif.pulse_apb_reset(3);
-    env.regmodel.reset();
     env.regmodel.ctrl.mirror(status, UVM_CHECK, UVM_FRONTDOOR,
                              env.regmodel.default_map);
     env.regmodel.status.mirror(status, UVM_CHECK, UVM_FRONTDOOR,

@@ -42,7 +42,7 @@ APB monitor -> register predictor -> RAL mirror
 
 ## 5. 本轮验证结果
 
-- 寄存器模型结构检查：14/14 PASS；
+- 寄存器模型结构检查：16/16 PASS；
 - RAL 定向测试：前门读写、访问属性、被动预测、BAUD=0 归一化和 reset mirror 全部通过；
 - 三组 seed 完整回归：48/48 PASS，warning、error、fatal 均为 0；
 - 48 个 UCDB 合并后，功能覆盖 65/65、断言 42/42、cover property 14/14；

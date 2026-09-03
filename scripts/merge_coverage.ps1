@@ -68,6 +68,11 @@ Run-Vcover @("report", "-details", "-cvg", "-file", $functionalReport, $mergedUc
 Run-Vcover @("report", "-details", "-code", "bcesft", "-file", $codeReport, $mergedUcdb)
 Run-Vcover @("report", "-details", "-assert", "-file", $assertionReport, $mergedUcdb)
 Run-Vcover @("report", "-bydu", "-code", "bcesft", "-file", $dutByDuReport, $mergedUcdb)
+& (Join-Path $PSScriptRoot "generate_rtl_coverage_gate.ps1") `
+  -ByDuReport $dutByDuReport -OutputDir $OutputDir
+if ($LASTEXITCODE -ne 0) {
+  throw "RTL-only coverage gate failed."
+}
 
 if (-not $SkipHtml) {
   New-Item -ItemType Directory -Force $htmlDir | Out-Null
@@ -87,6 +92,7 @@ $manifest = @(
   "- Code report: ``$codeReport``",
   "- Assertion report: ``$assertionReport``",
   "- By-design-unit report: ``$dutByDuReport``",
+  "- RTL-only gate: ``$(Join-Path $OutputDir 'rtl_coverage_gate.md')``",
   "",
   "| Test | Seed | UCDB |",
   "| --- | ---: | --- |"

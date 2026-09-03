@@ -38,23 +38,28 @@ flowchart TB
   UARTD --> DUT
   DUT --> TXM[TX 引脚 monitor]
   UARTD --> RXM[RX 引脚 monitor]
-  DUT -.配置生效事件.-> CFGM[config monitor]
   APBM[APB monitor] --> PRED[predictor]
   TXM --> PRED
   RXM --> PRED
-  CFGM --> PRED
+  APBM --> CFG[APB可见串行配置模型]
+  CFG --> TXM
+  CFG --> RXM
+  RESET[统一 reset monitor] --> PRED
+  RESET --> SB
+  RESET --> COV[coverage]
+  RESET --> RAL[RAL mirror]
   PRED --> SB[scoreboard]
   TXM --> SB
   APBM --> SB
 ```
 
-外部 RX、帧错误、RX FIFO 满和 reset/CDC 场景均由 virtual sequence 协调。driver 只负责产生引脚波形；RX 期望值来自 RX monitor 实际看到的波形；predictor 解释协议和 FIFO 行为；scoreboard 只比较 expected 与 actual。
+外部 RX、帧错误、RX FIFO 满和 reset/CDC 场景均由 virtual sequence 协调。driver 只负责产生引脚波形；RX 期望值来自 RX monitor 实际看到的波形；predictor 根据 APB 可见事务解释协议和 FIFO 行为；scoreboard 只比较 expected 与 actual。复位由独立 monitor 统一广播，测试不再手工修正 RAL mirror。
 
 ## 4. 黑盒与白盒边界
 
 `uart_if` 是公共接口，只含 `rx_i`、`tx_o`、UART 时钟和复位。数据正确性、帧格式和位宽检查都从这些外部可观察信号得出。
 
-`uart_probe_if` 是白盒接口，集中承载配置邮箱、UART 域生效配置、FIFO 状态和内部控制点。它只用于解释配置跨域时延、连接 SVA 和定位问题，不作为 TX/RX 数据的标准答案。DUT 层次路径只出现在仿真顶层，UVM 组件不再各自引用 `u_dut.*`。
+`uart_probe_if` 是白盒接口，集中承载配置邮箱、UART 域生效配置、FIFO 状态和内部控制点。它只用于解释配置跨域时延、连接 SVA 和定位问题，不作为 TX/RX 数据的标准答案。TX/RX monitor 明确不读取该接口；DUT 层次路径只出现在仿真顶层。
 
 ## 5. 独立时序与故障检出
 
@@ -64,6 +69,6 @@ UART transaction 提供 `bit_cycles` 和 `edge_offset_ps`。driver 根据公开�
 
 ## 6. 证据口径
 
-最终证据由一键验收生成，包括 21 项架构规则、14 项寄存器模型规则、22 项 CDC 规则、11 项 P2 规则、三组 seed 的 48 次正常仿真、两组错相异比时钟压力测试、四类 mutation、合并覆盖率和源码 SHA-256。
+最终证据由一键验收生成，包括 37 项架构规则、16 项寄存器模型规则、22 项 CDC 规则、15 项 P2 规则、三组 seed 的 48 次正常仿真、两组错相异比时钟压力测试、四类 mutation、17 项 RTL-only 覆盖率门禁和源码 SHA-256。测试清单来自 `config/verification_plan.psd1`，门禁与 waiver 来自 `config/rtl_coverage_policy.psd1`。
 
 提交后的 commit 是源码版本锚点；本轮仿真时的精确输入仍以 `source_manifest.md` 为准。若之后改动 RTL、testbench、filelist 或验证脚本，原证据不能自动沿用，必须重新执行验收。

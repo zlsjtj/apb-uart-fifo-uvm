@@ -12,6 +12,8 @@
 - `reports/final_regression/coverage/code_coverage.txt`
 - `reports/final_regression/coverage/assertion_coverage.txt`
 - `reports/final_regression/coverage/dut_bydu_coverage.txt`
+- `reports/final_regression/coverage/rtl_coverage_gate.md`
+- `reports/final_regression/coverage/rtl_coverage_gate.json`
 - `reports/final_regression/coverage/html/index.html`
 
 ## 2. 结果摘要
@@ -24,7 +26,7 @@
 | RTL FSM 状态 | 100% | 5/5 个状态命中 |
 | RTL FSM 转换 | 87.5% | 8 个转换中命中 7 个；缺项来自防御性/default 路径 |
 
-完整工程按文件统计的 code coverage 为 59.2%，这个数字包含 UVM package、testbench、接口和大量不会在普通回归中执行的库式代码，不作为 DUT 的验收指标。DUT 相关设计单元的结果如下。
+完整工程按文件统计的 code coverage 为 58.7%，这个数字包含 UVM package、testbench、接口和大量不会在普通回归中执行的库式代码，不作为 DUT 的验收指标。核心 RTL 改用 `config/rtl_coverage_policy.psd1` 的逐模块门禁，本轮 17/17 通过。
 
 | 设计单元 | Statement | Branch | Condition | Expression | FSM | Toggle |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -49,6 +51,7 @@
 
 - `uart_tx`、`uart_rx` 的 `unique case default`：状态变量使用枚举，并由复位和合法状态转换控制；命中 default 需要人为破坏状态编码，属于故障注入而不是正常功能测试。
 - `apb_uart` 的低 toggle coverage：CTRL 只有低 3 位有效，常用 BAUD 值也集中在低位；32 位总线和寄存器的高位不需要为了 toggle 数字逐位翻转。
+- `uart_baud_gen` 的 BAUD=0 防御分支在集成层不可达，因为 APB 寄存器会先把 0 规范化为 1；该项登记为 `RTL-COV-W004`，branch 实测 85.7%，门槛 85%。
 - 部分 condition/expression 组合：短路表达式并非所有真值组合都有独立功能含义。功能结果、分支和相关断言已经覆盖；TX 数据位故障注入也已证明 scoreboard 能够检出数据路径错误。
 
 ## 5. 当前结论

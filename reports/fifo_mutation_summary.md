@@ -1,6 +1,6 @@
 # FIFO Control Mutation Summary
 
-- Time: `2026-09-03 17:02:51`
+- Time: `2026-09-03 17:42:13`
 - Mutation: force FIFO full flag low (`UART_MUTATE_FIFO_FULL_STUCK_LOW`)
 - Test: `uart_rx_fifo_full_test`
 - Seed: `91`

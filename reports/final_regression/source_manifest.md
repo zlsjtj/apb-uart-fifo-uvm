@@ -1,16 +1,22 @@
 # Source Manifest
 
-- Time: `2026-09-03 17:01:17`
+- Time: `2026-09-03 17:51:09`
 - Hash algorithm: `SHA-256`
 
 | File | SHA-256 |
 | --- | --- |
+| `config\rtl_coverage_policy.psd1` | `73ac838642a6550ac23374a45356bfea6205870d61e43a453a7be788a174619e` |
+| `config\verification_plan.psd1` | `7e4033b05847eceff6b2bdbf961a4734e6606aab530b51617442b24f14411ca9` |
+| `rtl\apb_uart_cfg_cdc.sv` | `1e58b29a57ee585d30a628c6ca3e6b0ac62b34780839fa52af098d9144351510` |
 | `rtl\apb_uart_reg_pkg.sv` | `06d7551f74f2c7949ad8fb6500603430c7dbcc61ecb3ac6bc31ad7383720c884` |
+| `rtl\apb_uart_regs.sv` | `73abd7f26976787a96643b72392968c605aed155df526af3848241cbb7280fda` |
+| `rtl\apb_uart_serial_core.sv` | `8400af1cebccf576b416c98ed32dd0c85a078eb8d3c83343bcc4ac9bd8e96fda` |
 | `rtl\apb_uart_sva.sv` | `2e230c4be93d72b28e671cd0118eb9f85fbbacdd7423193cd938aaa037ef9cdd` |
-| `rtl\apb_uart.sv` | `b41676c943e71727759f4cb776c837d7bea503275ada8ede0c566968e8361d74` |
+| `rtl\apb_uart.sv` | `c2fbba998b14b96acbc89219c74c94128b97a27a7f98d37e41f9324fbb4c8b8e` |
 | `rtl\async_fifo_sva.sv` | `aa1cc9ac69e732f6e9648aaf8e1896b681a0631cf8c9f7e76b13860a54db59cb` |
 | `rtl\async_fifo.sv` | `b3b64e637390c76dfd3d025985ddac1c201829e255643dc3741b01a1d8f4b206` |
 | `rtl\reset_sync.sv` | `dd360f395e890b1e8c48c7233e7a6d6e510f00abd154fa33c9172d29b9877292` |
+| `rtl\uart_baud_gen.sv` | `bf44fe0609fe0ed23cf2703ab0106093343be0fdddcca3f3a932056f6f76597e` |
 | `rtl\uart_rx.sv` | `bfb84755f572e0be72e963386bbf0f6ff8d0f64be7d913dff4bb1d5eb02890d4` |
 | `rtl\uart_tx.sv` | `310a3f34de55f76dc8a72069a5da2023ca54e23702abde298d89ba62f991cf71` |
 | `tb\interfaces\apb_if.sv` | `7e9057e7c4443d3b6d89c03df86537ac94c4cfe8af080dd1269523d159c6dfae` |
@@ -28,39 +34,42 @@
 | `tb\uvm\sequences\uart_misc_sequences.svh` | `af308e194df583cea302d33573b4b5b2c10b55225932134ea850c917a9c6d164` |
 | `tb\uvm\sequences\uart_reset_timing_sequences.svh` | `7fe2235fe0193a0616e774cafe22f5fa26b8b3499172d850f175cbc000dd58fc` |
 | `tb\uvm\sequences\uart_rx_fifo_sequences.svh` | `5fc809ae577e35fdc956f44342fa16907907f2e42f56596f6f5fd162eee5022a` |
-| `tb\uvm\tests\uart_base_reg_tests.svh` | `a23ea78a5ababb809b4c13a169c136a8ae622e425bfed552cc39845d1cde3390` |
+| `tb\uvm\tests\uart_base_reg_tests.svh` | `a4066d63cc28259642665530a13c34f20ffe96df93ddd374a6ed868a42da6bb4` |
 | `tb\uvm\tests\uart_cdc_timing_tests.svh` | `e022c2ef16e81c14b17778db40ec59bd76ccfbea18eed676770e0fee7a4d202b` |
 | `tb\uvm\tests\uart_functional_tests.svh` | `a4ad231206a05027e546a03d07ba2df0cb9d31accb93780be872d7039fb798ba` |
 | `tb\uvm\tests\uart_misc_tests.svh` | `c9a5c8083fb752281b6e4d5cdc191822747c9d94ba47fb128a851a9e8425cc16` |
 | `tb\uvm\uart_agent.svh` | `55ca8d8826738f9d718e4a160ecb3a13a03d505b4633220ffb375ab1234baaff` |
 | `tb\uvm\uart_config_monitor.svh` | `36120cb43ad59dce0343aa52f3b3d8cc6262ecb0c37d4fa1cc165c8ec8b9b1e2` |
-| `tb\uvm\uart_coverage.svh` | `2b71d03ebf85af018110dec414ab1de7baf73f95e21cac114cc36e7464bead61` |
+| `tb\uvm\uart_coverage.svh` | `e153e56e46249ec26ebd1dde59a177488e8ce364b703797466df3a8526ac4dc8` |
 | `tb\uvm\uart_driver.svh` | `8cfd76d3589b654639de870ff9b8043867d9006b9115c1bc0a30bb9830a9ae93` |
 | `tb\uvm\uart_env_cfg.svh` | `9567026f275d898dfc34649b796535b63e5a7071cdb56178b3197e0ac01b7414` |
-| `tb\uvm\uart_env.svh` | `a6e1484b968147528c9e95d27c891afec4c4d4ea18ffeecf9daa65995dbacbc7` |
+| `tb\uvm\uart_env.svh` | `b755234deba1c3df36d243f9d63d3f107e6213ca23425bb0e6a32719c52d1af3` |
 | `tb\uvm\uart_item.svh` | `fb990f9b821a1f0db2c36070f50cafbb7e5d81b109148add1d89cfcafbd60f5d` |
-| `tb\uvm\uart_monitor.svh` | `edf2aae3daa9e68e653bb15e69355d77a7ccd75b18ec4bcbede126ed397fcd9f` |
-| `tb\uvm\uart_pkg.sv` | `729842408ad576253aa4a48171b22f270d1005e50f5bf9f1741f3ee66bf04708` |
-| `tb\uvm\uart_predictor.svh` | `18e2f307ca3e41628a143edefb45139f5f741918ae82854be9f8d3dbd3c3ef79` |
+| `tb\uvm\uart_monitor.svh` | `754f5a913937b01dfb9717ab86159cb08388726292dac965c79b5353563ed96d` |
+| `tb\uvm\uart_pkg.sv` | `a7168bae55cf9f111387391c445a716db305cca0aacce86baf60683f9b93f903` |
+| `tb\uvm\uart_predictor.svh` | `429d375c9af9ce3dfcf8d3a77653a8488b6dbc4e5546eda7217987b6c0b3bdd8` |
 | `tb\uvm\uart_reg_model.svh` | `7da5c9515a8b342bf737c12e064ab35decd185a8e08df11d273e17c9c641e864` |
-| `tb\uvm\uart_rx_monitor.svh` | `1c2bfe8e2c6dfe5823a42a9782ecc8642bc7ec3a2f84277f7d6d6362b081ad27` |
-| `tb\uvm\uart_scoreboard.svh` | `a8480a7edc08690fb1dbe8f01bcfeeea4e27876cb81d5d06ac2e04e2abd116ee` |
+| `tb\uvm\uart_reset_monitor.svh` | `0990646b4e849f318638e134f94183da86b9723ffc255f182c9886e51dedd36f` |
+| `tb\uvm\uart_rx_monitor.svh` | `26529ad5bc49063573cb2c68388eb056461ad7e2472cc5b5ed2ec620607a71e5` |
+| `tb\uvm\uart_scoreboard.svh` | `b336cebd758a613b7e6ea8a142f39dee357e0cabfd6a626c751e02dc02f325f9` |
 | `tb\uvm\uart_sequencer.svh` | `3c5142d394eb23503408ee589eb05871aee2edf858f29858b76fdc711242e52f` |
 | `tb\uvm\uart_sequences.svh` | `60158e694ebcdb1bdfe45dd2cb827695389b8b9a2b5d44909b245d38324aff5e` |
+| `tb\uvm\uart_serial_cfg.svh` | `85a10c62c49aef007682a481e92e82d5a489e995bfb4b29b0852b32ddc2d3d06` |
 | `tb\uvm\uart_tests.svh` | `00be54f1a0d1d1c427a7a6f412775ab5e377c6d2a51bb0ef7dd19bc48ba8b224` |
 | `tb\uvm\uart_virtual_sequencer.svh` | `8e730247f5e2bb901ed95bf661c99f049944ca961d6d55a49a8b07c4a5c152e5` |
 | `tb\uvm\uart_virtual_sequences.svh` | `07024e12538e0ea31fbd8d1ee7d6d2825c73fa108d8f4dea74861e6e26ddc4de` |
-| `filelist.f` | `6ecce35865412a6048e002236d4ad75ebada65fb3e0470df79f91bebc3637ed0` |
-| `scripts\merge_coverage.ps1` | `107efeadfe7e471dad3fd8e045ccf5a58a5a77813024bbb4c08d1d891fc194e5` |
-| `scripts\run_acceptance.ps1` | `796f6dabc0c2c24b42a44194294d5a64ead97074de0eb19f14fd66cb3eab42e5` |
-| `scripts\run_architecture_check.ps1` | `ea2937b9d6a3dfb6288e4f8d6663c143af9dcb1f31a01dcbd5efddb7326b3fd3` |
+| `filelist.f` | `b65467e3a9f96bd4c83cab376b713f8ed44ea6fd168ebba4be3fd596b2e8b6b4` |
+| `scripts\generate_rtl_coverage_gate.ps1` | `c9ecfaefa1a92fcdb5c1b638e656dda3b252f1e8a64d6695b0a309b5b9a06c51` |
+| `scripts\merge_coverage.ps1` | `1fdfa5e59047f0156bbda5a63e051534fe9c43bac21d14bb10509f9e236e2ab4` |
+| `scripts\run_acceptance.ps1` | `4700ac3ca68fd3d36ef3d9fac5ef6ea7d37d5babd1ca2b428d312ddf273706ff` |
+| `scripts\run_architecture_check.ps1` | `332681482b26708f833e6d76b57b412f6f8ce73c52b6d9b3c7d8b6fe91e94e62` |
 | `scripts\run_baud_mutation_check.ps1` | `29d0b7b892c48eea28db694fa82f95ff7a70accecf5de64ed0494d3aaed52e1b` |
-| `scripts\run_cdc_structural_check.ps1` | `4148770f4a0d58039818ca91a8d4d48c3b84861bd26efd24f278b95eb91adcc5` |
+| `scripts\run_cdc_structural_check.ps1` | `5899656f105811782ae7343b3304054fd2faa718759e3b9d2625d732bb47ae85` |
 | `scripts\run_control_mutation_check.ps1` | `add569e3329e7778029876ee830857d9f2336be3f7b15b534a28ef5a96200479` |
 | `scripts\run_fifo_mutation_check.ps1` | `fc35047129ca010a7e874e34c41aba708e932e2234eae6b886817956934b2433` |
-| `scripts\run_final_regression.ps1` | `06edb4828698954210f241b88ddb9cfca75faf8faf05b51fd6f8b249e6cb90ea` |
+| `scripts\run_final_regression.ps1` | `01bed248036dcbb95721c8f0f3aa40eaf5e03dc9105c22fba876b1c882c4a19d` |
 | `scripts\run_mutation_check.ps1` | `8c6f1c8deefdf54d1559ee124ae66ab6969abd81391b3ecff5b688bd13d95fd5` |
 | `scripts\run_mutation_suite.ps1` | `d799d5ae94825b1556126415d12c0a095b03fcc3f61cddc7763ca8ad082b4481` |
-| `scripts\run_p2_structural_check.ps1` | `ac808a93e7b8921094cc57f45c869c0343d77384b9c9f681f72bd856f4339d62` |
-| `scripts\run_questa.ps1` | `23593973b8e378d0fec3c84edd704d8745f310e37cfb3370cd5e3e0dfda9bbf3` |
-| `scripts\run_reg_model_check.ps1` | `41bcc44c9bb8f8d7b5fadb539257a7f01f74c6f97d896a26325d42d9d32794f7` |
+| `scripts\run_p2_structural_check.ps1` | `51729270ebce634d858e9a5967582857e29bbb04461dd3c54274a8cee309eed3` |
+| `scripts\run_questa.ps1` | `ffe5c795bf4f1b121b7668e33b0c7fa8ac470413c50b66a671a6907573f624d0` |
+| `scripts\run_reg_model_check.ps1` | `928247ce6d44e9e6f5be2c5a68d36e9ddd5a874cc36b882ec4cf3d789c29ca98` |

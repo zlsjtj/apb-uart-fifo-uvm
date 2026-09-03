@@ -22,7 +22,7 @@ $checks += Test-RequiredPattern "rtl/apb_uart_reg_pkg.sv" 'UART_ADDR_STATUS\s*=\
 $checks += Test-RequiredPattern "rtl/apb_uart_reg_pkg.sv" 'UART_ADDR_BAUD\s*=\s*8.h08' "BAUD address has one canonical definition"
 $checks += Test-RequiredPattern "rtl/apb_uart_reg_pkg.sv" 'UART_ADDR_TXDATA\s*=\s*8.h0c' "TXDATA address has one canonical definition"
 $checks += Test-RequiredPattern "rtl/apb_uart_reg_pkg.sv" 'UART_ADDR_RXDATA\s*=\s*8.h10' "RXDATA address has one canonical definition"
-$checks += Test-ForbiddenPattern -Path @("rtl/apb_uart.sv", "rtl/apb_uart_sva.sv", "tb/uvm/sequences/*.svh") -Pattern 'ADDR_\w+\s*=\s*8.h' -Name "RTL, SVA and sequences contain no numeric address copies"
+$checks += Test-ForbiddenPattern -Path @("rtl/apb_uart.sv", "rtl/apb_uart_regs.sv", "rtl/apb_uart_sva.sv", "tb/uvm/sequences/*.svh") -Pattern 'ADDR_\w+\s*=\s*8.h' -Name "RTL, SVA and sequences contain no numeric address copies"
 $checks += Test-RequiredPattern "tb/uvm/uart_reg_model.svh" 'class\s+uart_reg_block\s+extends\s+uvm_reg_block' "RAL register block exists"
 $checks += Test-RequiredPattern "tb/uvm/uart_reg_model.svh" 'add_reg\(ctrl,\s+UART_ADDR_CTRL,\s+"RW"\)' "RAL map uses canonical CTRL definition"
 $checks += Test-RequiredPattern "tb/uvm/uart_reg_model.svh" 'add_reg\(status,\s+UART_ADDR_STATUS,\s+"RO"\)' "RAL map models STATUS as read-only"
@@ -31,6 +31,8 @@ $checks += Test-RequiredPattern "tb/uvm/uart_reg_model.svh" 'class\s+uart_apb_re
 $checks += Test-RequiredPattern "tb/uvm/uart_env.svh" 'uvm_reg_predictor\s*#\(apb_item\)' "Typed APB predictor is instantiated"
 $checks += Test-RequiredPattern "tb/uvm/uart_env.svh" 'apb.mon.ap.connect\(reg_predictor.bus_in\)' "APB monitor feeds the predictor"
 $checks += Test-RequiredPattern "tb/uvm/tests/uart_base_reg_tests.svh" 'class\s+uart_ral_test' "RAL access and reset test exists"
+$checks += Test-RequiredPattern "tb/uvm/uart_reset_monitor.svh" 'regmodel\.reset\(\)' "RAL mirror reset is driven by the unified reset observer"
+$checks += Test-ForbiddenPattern -Path @("tb/uvm/tests/*.svh") -Pattern 'env\.regmodel\.reset\(\)' -Name "Tests do not manually repair the RAL mirror"
 
 $failed = @($checks | Where-Object { $_.Result -ne "PASS" })
 foreach ($check in $checks) {

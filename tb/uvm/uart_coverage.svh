@@ -3,7 +3,7 @@ class uart_coverage extends uvm_component;
 
   uvm_analysis_imp_apb_cov  #(apb_item,  uart_coverage) apb_export;
   uvm_analysis_imp_uart_cov #(uart_item, uart_coverage) uart_export;
-  virtual reset_if reset_vif;
+  uvm_analysis_imp_reset_cov #(uart_reset_item, uart_coverage) reset_export;
 
   bit [7:0]  cov_addr;
   bit        cov_write;
@@ -128,6 +128,7 @@ class uart_coverage extends uvm_component;
     super.new(name, parent);
     apb_export  = new("apb_export", this);
     uart_export = new("uart_export", this);
+    reset_export = new("reset_export", this);
     apb_cg      = new();
     uart_cg     = new();
     status_irq_cg = new();
@@ -136,22 +137,12 @@ class uart_coverage extends uvm_component;
     reset_cg = new();
   endfunction
 
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif)) begin
-      `uvm_fatal("NORESETVIF", "reset_if is not set")
+  function void write_reset_cov(uart_reset_item tr);
+    if (tr.asserted) begin
+      cov_reset_kind = tr.kind;
+      reset_cg.sample();
     end
   endfunction
-
-  task run_phase(uvm_phase phase);
-    forever begin
-      @(negedge reset_vif.presetn or negedge reset_vif.uart_rst_n);
-      #1ps;
-      cov_reset_kind = {!reset_vif.presetn, !reset_vif.uart_rst_n};
-      reset_cg.sample();
-      wait (reset_vif.presetn && reset_vif.uart_rst_n);
-    end
-  endtask
 
   function void write_apb_cov(apb_item tr);
     cov_addr   = tr.addr;

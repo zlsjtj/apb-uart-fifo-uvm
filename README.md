@@ -11,6 +11,7 @@ regression scripts, and a short set of notes about what was checked.
 
 ```text
 rtl/                DUT and SVA
+config/             Declarative regression plan and RTL coverage policy
 tb/interfaces/      APB and UART interfaces
 tb/uvm/             UVM items, agents, env, predictor, scoreboard, coverage
 tb/uvm/sequences/   Feature-oriented APB/UART sequences
@@ -119,6 +120,9 @@ powershell -ExecutionPolicy Bypass -File scripts/run_acceptance.ps1
 
 The acceptance flow combines structural audits, the three-seed regression,
 two skewed-clock stress subsets, coverage merge, and all mutation cases.
+The regression list and stress profiles come from
+`config/verification_plan.psd1`; RTL coverage thresholds and waivers come from
+`config/rtl_coverage_policy.psd1`.
 
 Run the register-model structural audit:
 
@@ -190,3 +194,4 @@ Sample loopback log excerpt:
 - P2 verification architecture: [`docs/p2_verification_architecture.md`](docs/p2_verification_architecture.md)
 - Architecture optimization: [`docs/architecture_optimization.md`](docs/architecture_optimization.md)
 - Architecture closure and diagrams: [`docs/verification_architecture_closure.md`](docs/verification_architecture_closure.md)
+- P0-P4 optimization closure: [`docs/p0_p4_optimization_closure.md`](docs/p0_p4_optimization_closure.md)
