@@ -14,6 +14,7 @@ module tb_apb_uart;
   integer uart_half_ns;
   integer pclk_phase_ns;
   integer uart_phase_ns;
+  localparam int FIFO_ADDR_WIDTH = 4;
 
   initial begin
     pclk_half_ns = 5;
@@ -43,7 +44,7 @@ module tb_apb_uart;
   uart_if uart_vif (.uart_clk(uart_clk), .uart_rst_n(uart_rst_n));
 
   apb_uart #(
-    .FIFO_ADDR_WIDTH(4)
+    .FIFO_ADDR_WIDTH(FIFO_ADDR_WIDTH)
   ) u_dut (
     .pclk       (pclk),
     .presetn    (presetn),
@@ -83,6 +84,7 @@ module tb_apb_uart;
     .cfg_req_tgl(u_dut.cfg_req_tgl),
     .cfg_ack_pclk_q2(u_dut.cfg_ack_pclk_q2),
     .cfg_uart_initialized(u_dut.cfg_uart_initialized),
+    .cfg_apply_uart(u_dut.cfg_apply_uart),
     .ctrl_uart_cfg(u_dut.ctrl_uart_cfg),
     .baud_uart_cfg(u_dut.baud_uart_cfg),
     .enable_uart(u_dut.enable_uart),
@@ -100,6 +102,9 @@ module tb_apb_uart;
   );
 
   assign uart_vif.bit_tick = u_dut.baud_tick;
+  assign uart_vif.ctrl_uart_cfg = u_dut.ctrl_uart_cfg;
+  assign uart_vif.baud_uart_cfg = u_dut.baud_uart_cfg;
+  assign uart_vif.cfg_apply = u_dut.cfg_apply_uart;
 
   initial begin
     apb_vif.idle_bus();
@@ -113,6 +118,15 @@ module tb_apb_uart;
   end
 
   initial begin
+    uart_env_cfg env_cfg;
+    #0;
+    env_cfg = uart_env_cfg::type_id::create("env_cfg");
+    env_cfg.fifo_addr_width = FIFO_ADDR_WIDTH;
+    env_cfg.pclk_half_ns = pclk_half_ns;
+    env_cfg.uart_half_ns = uart_half_ns;
+    env_cfg.pclk_phase_ns = pclk_phase_ns;
+    env_cfg.uart_phase_ns = uart_phase_ns;
+    uvm_config_db#(uart_env_cfg)::set(null, "uvm_test_top.env*", "env_cfg", env_cfg);
     uvm_config_db#(virtual apb_if)::set(null, "uvm_test_top.env.apb.*", "vif", apb_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top.env.uart.*", "vif", uart_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top", "timing_vif", uart_vif);

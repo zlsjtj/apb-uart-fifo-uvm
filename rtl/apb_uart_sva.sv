@@ -19,6 +19,7 @@ module apb_uart_sva (
   input logic        cfg_req_tgl,
   input logic        cfg_ack_pclk_q2,
   input logic        cfg_uart_initialized,
+  input logic        cfg_apply_uart,
   input logic [2:0]  ctrl_uart_cfg,
   input logic [31:0] baud_uart_cfg,
   input logic        enable_uart,
@@ -34,19 +35,10 @@ module apb_uart_sva (
   input logic        rx_wr_en,
   input logic        irq_o
 );
-
-  localparam logic [7:0] ADDR_CTRL   = 8'h00;
-  localparam logic [7:0] ADDR_STATUS = 8'h04;
-  localparam logic [7:0] ADDR_BAUD   = 8'h08;
-  localparam logic [7:0] ADDR_TXDATA = 8'h0c;
-  localparam logic [7:0] ADDR_RXDATA = 8'h10;
+  import apb_uart_reg_pkg::*;
 
   logic legal_addr;
-  assign legal_addr = (paddr == ADDR_CTRL)   ||
-                      (paddr == ADDR_STATUS) ||
-                      (paddr == ADDR_BAUD)   ||
-                      (paddr == ADDR_TXDATA) ||
-                      (paddr == ADDR_RXDATA);
+  assign legal_addr = uart_addr_is_legal(paddr);
 
   apb_setup_to_access:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
@@ -66,35 +58,35 @@ module apb_uart_sva (
 
   status_write_reports_error:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_STATUS) |=> pslverr);
+      (psel && penable && pwrite && paddr == UART_ADDR_STATUS) |=> pslverr);
 
   rejected_tx_write_reports_error:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_TXDATA &&
+      (psel && penable && pwrite && paddr == UART_ADDR_TXDATA &&
        (!enable_uart || tx_full)) |=> pslverr);
 
   rejected_tx_write_has_no_push:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_TXDATA &&
+      (psel && penable && pwrite && paddr == UART_ADDR_TXDATA &&
        (!enable_uart || tx_full)) |-> !tx_push);
 
   accepted_tx_write_pushes:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_TXDATA &&
+      (psel && penable && pwrite && paddr == UART_ADDR_TXDATA &&
        enable_uart && !tx_full) |-> tx_push);
 
   empty_rx_read_reports_error:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && !pwrite && paddr == ADDR_RXDATA && rx_empty)
+      (psel && penable && !pwrite && paddr == UART_ADDR_RXDATA && rx_empty)
       |=> pslverr);
 
   rx_write_reports_error:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_RXDATA) |=> pslverr);
+      (psel && penable && pwrite && paddr == UART_ADDR_RXDATA) |=> pslverr);
 
   rejected_rx_access_has_no_pop:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && paddr == ADDR_RXDATA && (pwrite || rx_empty))
+      (psel && penable && paddr == UART_ADDR_RXDATA && (pwrite || rx_empty))
       |-> !rx_pop);
 
   invalid_addr_has_no_fifo_side_effect:
@@ -103,7 +95,7 @@ module apb_uart_sva (
 
   baud_div_not_zero_after_write:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
-      (psel && penable && pwrite && paddr == ADDR_BAUD && pwdata == 0) |=> !pslverr);
+      (psel && penable && pwrite && paddr == UART_ADDR_BAUD && pwdata == 0) |=> !pslverr);
 
   config_mailbox_idle_matches_ack:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
@@ -112,6 +104,14 @@ module apb_uart_sva (
   config_payload_known:
     assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
       cfg_uart_initialized |-> !$isunknown({ctrl_uart_cfg, baud_uart_cfg}));
+
+  config_changes_only_on_apply:
+    assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
+      ($changed(ctrl_uart_cfg) || $changed(baud_uart_cfg)) |-> cfg_apply_uart);
+
+  config_apply_payload_known:
+    assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
+      cfg_apply_uart |-> !$isunknown({ctrl_uart_cfg, baud_uart_cfg}));
 
   status_cdc_flags_known:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
@@ -135,23 +135,27 @@ module apb_uart_sva (
 
   disabled_tx_write_rejected:
     cover property (@(posedge pclk) disable iff (!pclk_rst_n)
-      psel && penable && pwrite && paddr == ADDR_TXDATA && !enable_uart);
+      psel && penable && pwrite && paddr == UART_ADDR_TXDATA && !enable_uart);
 
   full_tx_write_rejected:
     cover property (@(posedge pclk) disable iff (!pclk_rst_n)
-      psel && penable && pwrite && paddr == ADDR_TXDATA && tx_full);
+      psel && penable && pwrite && paddr == UART_ADDR_TXDATA && tx_full);
 
   empty_rx_read_rejected:
     cover property (@(posedge pclk) disable iff (!pclk_rst_n)
-      psel && penable && !pwrite && paddr == ADDR_RXDATA && rx_empty);
+      psel && penable && !pwrite && paddr == UART_ADDR_RXDATA && rx_empty);
 
   rx_write_rejected:
     cover property (@(posedge pclk) disable iff (!pclk_rst_n)
-      psel && penable && pwrite && paddr == ADDR_RXDATA);
+      psel && penable && pwrite && paddr == UART_ADDR_RXDATA);
 
   config_mailbox_exercised:
     cover property (@(posedge pclk) disable iff (!pclk_rst_n)
       cfg_busy ##[1:32] !cfg_busy);
+
+  config_uart_apply_seen:
+    cover property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
+      cfg_apply_uart);
 
   bad_frame_not_written:
     assert property (@(posedge uart_clk) disable iff (!uart_clk_rst_n)

@@ -26,8 +26,10 @@ Relevant files:
 5. Loopback routes `tx_o` into `uart_rx`.
 6. RX data is stored in the RX FIFO and read back through `RXDATA`.
 
-The scoreboard tracks APB TX writes, UART TX frames, and APB RX reads. In the
-sample run, it reported `checked TX=6 RX=6`.
+The predictor receives APB transactions, observed TX frames and independently
+decoded RX-pin frames, then publishes expected TX/RX streams. The scoreboard
+only compares those streams with observed TX frames and APB RXDATA reads. In
+the sample run, it reported `checked TX=6 RX=6`.
 
 For waveform debug, the regression script can dump the key APB and UART signals
 for this test:
@@ -84,8 +86,9 @@ asserts for the pending data, and the byte can be read normally.
 16 bytes fill the configured FIFO; the extra frame is rejected while full.
 The APB side checks `rx_full`, `rx_empty` and IRQ, reads the accepted bytes in
 order, waits for the cross-domain flags to settle, and verifies the FIFO can
-accept a new byte afterward. The scoreboard models the 16-entry capacity so a
-full-FIFO drop is distinguished from an unexplained data loss.
+accept a new byte afterward. The predictor models the 16-entry capacity so a
+full-FIFO drop is distinguished from an unexplained data loss; the scoreboard
+remains a pure comparator.
 
 ## Reset and Clock-ratio Stress
 
@@ -110,6 +113,13 @@ edge, the checker measures nine consecutive widths directly on `tx_o` and
 compares them with the measured UART clock period times the programmed divisor.
 The checker never reads the internal `bit_tick`. BAUD=0 is expected to normalize
 to divisor 1. BAUD updates are supported between frames, not during a frame.
+
+## 配置写入与目标域生效
+
+APB 写 CTRL 或 BAUD 只表示软件侧寄存器更新完成，并不等于 UART 域已经使用新值。RTL 在 UART 域接收完整配置快照时产生单周期 `cfg_apply_uart`；配置监视器以该事件发布实际生效值，predictor 也只在此时更新有效 loopback 配置。
+
+`uart_config_latency_test` 分别记录 APB 写完成和 UART 域生效时刻。默认时钟下，定向运行测得 BAUD 延迟 50 ns、CTRL 延迟 130 ns；采用 14 ns APB 周期、22 ns UART 周期并错相时，分别测得 58 ns 和 56 ns。延迟会受两个异步时钟相位和邮箱状态影响，因此测试检查的是“目标值在 APB 完成之后才生效”，不把延迟写死成固定周期数。
+
 # 受控故障注入
 
-为确认验证环境不是“只会跑通”，增加了 TX FIFO 写数据最低位翻转的编译期开关。故障版本在独立 `work_mutation` 库中运行，`uart_loopback_test` 的 6 个发送字节全部被 scoreboard 以 `SB_TX_MISMATCH` 检出。默认编译不定义该开关，之后的正式回归为 13/13 PASS。完整记录见 `docs/bug_closure_case.md` 和 `reports/mutation_summary.md`。
+为确认验证环境不是“只会跑通”，目前保留了三类编译期故障：TX FIFO 写数据最低位翻转、IRQ 输出恒低、异步 FIFO full 恒低。三个故障版本使用彼此隔离的仿真库运行：TX 用例由 `SB_TX_MISMATCH` 检出，IRQ 用例由状态检查和断言检出，FIFO full 用例由满状态、顺序和 scoreboard 检查共同检出。默认编译不定义这些开关，三组正式回归为 45/45 PASS。完整记录见 `docs/bug_closure_case.md` 和 `reports/mutation_matrix.md`。

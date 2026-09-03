@@ -107,9 +107,9 @@ the test-local `baud_timing_cg` reached 100%. Results are recorded in
 
 ## Merged Regression Result
 
-The 2026-09-03 final merge contains exactly the 39 PASS rows from base seeds
-101, 201, and 301. Functional coverage is 100% (65/65 planned bins), all 40
-assertions were attempted with zero failures, and all 13 cover directives were
+The 2026-09-03 final merge contains exactly the 45 PASS rows from base seeds
+101, 201, and 301. Functional coverage is 100% (65/65 planned bins), all 42
+assertions were attempted with zero failures, and all 14 cover directives were
 hit. DUT code metrics and waivers are documented in
 `docs/coverage_closure.md`; generated text and HTML reports are under
 `reports/coverage/`.

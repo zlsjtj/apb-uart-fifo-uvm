@@ -1,6 +1,6 @@
 # Mutation Check Summary
 
-- Time: `2026-09-02 23:59:39`
+- Time: `2026-09-03 15:19:06`
 - Mutation: invert TX FIFO write-data bit 0 (`UART_MUTATE_TX_LSB`)
 - Test: `uart_loopback_test`
 - Seed: `71`

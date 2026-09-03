@@ -2,11 +2,9 @@ class uart_driver extends uvm_driver #(uart_item);
   `uvm_component_utils(uart_driver)
 
   virtual uart_if vif;
-  uvm_analysis_port #(uart_item) ap;
 
   function new(string name = "uart_driver", uvm_component parent = null);
     super.new(name, parent);
-    ap = new("ap", this);
   endfunction
 
   function void build_phase(uvm_phase phase);
@@ -27,7 +25,6 @@ class uart_driver extends uvm_driver #(uart_item);
     forever begin
       seq_item_port.get_next_item(tr);
       drive_frame(tr);
-      ap.write(tr);
       seq_item_port.item_done();
     end
   endtask

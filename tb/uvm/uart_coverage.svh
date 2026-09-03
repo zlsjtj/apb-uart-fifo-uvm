@@ -20,11 +20,11 @@ class uart_coverage extends uvm_component;
     option.per_instance = 1;
 
     cp_addr: coverpoint cov_addr {
-      bins ctrl   = {8'h00};
-      bins status = {8'h04};
-      bins baud   = {8'h08};
-      bins txdata = {8'h0c};
-      bins rxdata = {8'h10};
+      bins ctrl   = {UART_ADDR_CTRL};
+      bins status = {UART_ADDR_STATUS};
+      bins baud   = {UART_ADDR_BAUD};
+      bins txdata = {UART_ADDR_TXDATA};
+      bins rxdata = {UART_ADDR_RXDATA};
       bins bad    = default;
     }
 
@@ -160,15 +160,15 @@ class uart_coverage extends uvm_component;
     cov_data   = (tr.kind == apb_item::APB_WRITE) ? tr.data[7:0] : tr.rdata[7:0];
     apb_cg.sample();
 
-    if (tr.addr == 8'h00 && tr.kind == apb_item::APB_WRITE && !tr.slverr) begin
-      cov_irq_en = tr.data[2];
+    if (tr.addr == UART_ADDR_CTRL && tr.kind == apb_item::APB_WRITE && !tr.slverr) begin
+      cov_irq_en = tr.data[UART_CTRL_IRQ_EN_BIT];
     end
 
-    if (tr.addr == 8'h04 && tr.kind == apb_item::APB_READ && !tr.slverr) begin
-      cov_status_rx_full  = tr.rdata[3];
-      cov_status_rx_empty = tr.rdata[2];
-      cov_status_irq      = tr.rdata[4];
-      cov_status_frame_err = tr.rdata[5];
+    if (tr.addr == UART_ADDR_STATUS && tr.kind == apb_item::APB_READ && !tr.slverr) begin
+      cov_status_rx_full  = tr.rdata[UART_STATUS_RX_FULL_BIT];
+      cov_status_rx_empty = tr.rdata[UART_STATUS_RX_EMPTY_BIT];
+      cov_status_irq      = tr.rdata[UART_STATUS_IRQ_BIT];
+      cov_status_frame_err = tr.rdata[UART_STATUS_FRAME_ERR_BIT];
       status_irq_cg.sample();
       status_error_cg.sample();
       status_fifo_cg.sample();

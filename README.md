@@ -12,7 +12,9 @@ regression scripts, and a short set of notes about what was checked.
 ```text
 rtl/                DUT and SVA
 tb/interfaces/      APB and UART interfaces
-tb/uvm/             UVM items, agents, env, scoreboard, coverage, tests
+tb/uvm/             UVM items, agents, env, predictor, scoreboard, coverage
+tb/uvm/sequences/   Feature-oriented APB/UART sequences
+tb/uvm/tests/       Feature-oriented UVM tests
 tb/top/             Simulation top
 scripts/            Local regression entry points
 reports/            Regression summary and sample logs
@@ -20,6 +22,9 @@ docs/               Verification and coverage notes
 ```
 
 ## Register Map
+
+寄存器地址、复位值和位定义统一放在 `rtl/apb_uart_reg_pkg.sv`。RTL、SVA、
+UVM sequence 和寄存器模型都引用同一份定义，避免后续修改时出现地址不一致。
 
 | Address | Name | Description |
 | --- | --- | --- |
@@ -91,7 +96,43 @@ This command passes only when the injected bit error is reported by the
 scoreboard. It uses `work_mutation` and does not replace the normal simulation
 library. See [`docs/bug_closure_case.md`](docs/bug_closure_case.md).
 
-Freeze the three-seed final evidence package (39 simulations plus merged UCDB):
+Run the isolated IRQ-control mutation check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
+```
+
+This check forces IRQ low in a separate simulation library and passes only
+when the IRQ test or assertion reports the injected fault.
+
+Run all three mutation cases and generate a mutation matrix:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_mutation_suite.ps1
+```
+
+Run the complete local acceptance flow:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_acceptance.ps1
+```
+
+The acceptance flow combines structural audits, the three-seed regression,
+the skewed-clock stress subset, coverage merge, and all mutation cases.
+
+Run the register-model structural audit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_reg_model_check.ps1
+```
+
+Run the P2 verification-architecture audit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_p2_structural_check.ps1
+```
+
+Freeze the three-seed final evidence package (45 simulations plus merged UCDB):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
@@ -116,6 +157,8 @@ see [`docs/cdc_analysis.md`](docs/cdc_analysis.md).
 | Test | Main check |
 | --- | --- |
 | `uart_reg_test` | Reset values, register read/write, illegal access |
+| `uart_config_latency_test` | APB configuration-write time versus UART-domain apply time |
+| `uart_ral_test` | RAL access policy, frontdoor access, passive prediction, reset mirror |
 | `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
 | `uart_baud_loopback_test` | Loopback with `BAUD=4` to check bit tick timing |
 | `uart_baud_timing_test` | Independent TX bit-width checks for BAUD=0/1/4/8 |
@@ -142,3 +185,6 @@ Sample loopback log excerpt:
 - Mutation case: [`docs/bug_closure_case.md`](docs/bug_closure_case.md)
 - Final regression evidence: [`docs/final_regression_evidence.md`](docs/final_regression_evidence.md)
 - CDC analysis: [`docs/cdc_analysis.md`](docs/cdc_analysis.md)
+- Register model: [`docs/register_model.md`](docs/register_model.md)
+- P2 verification architecture: [`docs/p2_verification_architecture.md`](docs/p2_verification_architecture.md)
+- Architecture optimization: [`docs/architecture_optimization.md`](docs/architecture_optimization.md)

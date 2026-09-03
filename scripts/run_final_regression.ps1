@@ -42,7 +42,10 @@ Require-Tool "vsim"
 Require-Tool "vcover"
 Require-Tool "git"
 
+& (Join-Path $PSScriptRoot "run_reg_model_check.ps1")
 & (Join-Path $PSScriptRoot "run_cdc_structural_check.ps1")
+& (Join-Path $PSScriptRoot "run_p2_structural_check.ps1")
+& (Join-Path $PSScriptRoot "run_architecture_check.ps1")
 
 if ($Seeds.Count -eq 0) {
   throw "At least one seed is required."
@@ -64,7 +67,7 @@ foreach ($seed in $Seeds) {
 
   $seedSummary = "reports/regression_summary.md"
   $rows = @(Read-RegressionRows $seedSummary)
-  if (($rows.Count -ne 13) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
+  if (($rows.Count -ne 15) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
     throw "Regression summary for base seed $seed is incomplete or contains failures."
   }
 
@@ -105,7 +108,14 @@ $sourcePaths = @(
   "scripts/merge_coverage.ps1",
   "scripts/run_final_regression.ps1",
   "scripts/run_mutation_check.ps1",
-  "scripts/run_cdc_structural_check.ps1"
+  "scripts/run_control_mutation_check.ps1",
+  "scripts/run_cdc_structural_check.ps1",
+  "scripts/run_reg_model_check.ps1",
+  "scripts/run_p2_structural_check.ps1",
+  "scripts/run_architecture_check.ps1",
+  "scripts/run_acceptance.ps1",
+  "scripts/run_fifo_mutation_check.ps1",
+  "scripts/run_mutation_suite.ps1"
 )
 $sourcePaths += Get-ChildItem -Path "rtl", "tb" -Recurse -File |
   Where-Object { $_.Extension -in @(".sv", ".svh") } |
@@ -130,8 +140,17 @@ foreach ($sourcePath in $sourcePaths) {
 }
 Write-Utf8File $sourceManifestPath $sourceManifest
 
-$gitHead = (& git rev-parse HEAD).Trim()
-$gitState = @(& git status --short)
+$savedGitConfigGlobal = $env:GIT_CONFIG_GLOBAL
+try {
+  # Some lab machines redirect the global Git config to a protected directory.
+  # Provenance only needs repository-local data, so make the query independent
+  # of that machine-specific configuration.
+  $env:GIT_CONFIG_GLOBAL = "NUL"
+  $gitHead = (& git rev-parse HEAD).Trim()
+  $gitState = @(& git status --short)
+} finally {
+  $env:GIT_CONFIG_GLOBAL = $savedGitConfigGlobal
+}
 $vlogVersion = @(& vlog -version 2>&1 | Select-Object -First 1) -join " "
 $seedLiteral = "@(" + (($Seeds | ForEach-Object { $_.ToString() }) -join ", ") + ")"
 $manifestPath = Join-Path $OutputDir "final_regression_manifest.md"
@@ -146,7 +165,10 @@ $manifest = @(
   "- Command: ``& .\scripts\run_final_regression.ps1 -Seeds $seedLiteral``",
   "- Regression summary: ``$summaryPath``",
   "- Coverage directory: ``$coverageDir``",
+  "- Register-model structural report: ``reports/register_model_structural_summary.md``",
   "- CDC structural report: ``reports/cdc_structural_summary.md``",
+  "- P2 structural report: ``reports/p2_structural_summary.md``",
+  "- Architecture structural report: ``reports/architecture_structural_summary.md``",
   "- Source hashes: ``$sourceManifestPath``",
   "",
   "## Working tree status"

@@ -22,3 +22,18 @@ class uart_item extends uvm_sequence_item;
                      data, gap_cycles, frame_err);
   endfunction
 endclass
+
+class uart_cfg_item extends uvm_sequence_item;
+  bit [2:0]  ctrl;
+  bit [31:0] baud;
+  time       effective_time;
+
+  `uvm_object_utils_begin(uart_cfg_item)
+    `uvm_field_int(ctrl, UVM_ALL_ON | UVM_HEX)
+    `uvm_field_int(baud, UVM_ALL_ON)
+  `uvm_object_utils_end
+
+  function new(string name = "uart_cfg_item");
+    super.new(name);
+  endfunction
+endclass

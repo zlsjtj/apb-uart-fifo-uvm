@@ -37,10 +37,14 @@ module async_fifo #(
   assign wgray_next = bin2gray(wbin_next);
   assign rgray_next = bin2gray(rbin_next);
 
+`ifdef UART_MUTATE_FIFO_FULL_STUCK_LOW
+  assign wr_full = 1'b0;
+`else
   assign wr_full = (wgray == {
                     ~rgray_wclk_q2[PTR_WIDTH-1:PTR_WIDTH-2],
                      rgray_wclk_q2[PTR_WIDTH-3:0]
                   });
+`endif
   assign rd_empty = (rgray == wgray_rclk_q2);
   assign rd_data  = mem[rbin[ADDR_WIDTH-1:0]];
 

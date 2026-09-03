@@ -16,9 +16,12 @@
 - UART TX/RX、回环路径和 TX/RX 异步 FIFO；
 - APB agent、UART agent、scoreboard、functional coverage、SVA 和基础回归脚本；
 - 寄存器访问、loopback、IRQ、外部 RX、TX FIFO 满、非法访问、随机数据和 disable/enable 恢复等基础用例；
-- 13 个用例、三组基准 seed 的 Questa 正式回归记录。
+- 15 个用例、三组基准 seed 的 Questa 正式回归记录；
+- 一套轻量 UVM RAL，包含 APB adapter、被动 predictor 和复位镜像检查。
+- 独立 RX 引脚监视器、参考预测器，以及 UART 域配置生效事件监测。
+- 统一环境配置、virtual sequencer、按功能拆分的 sequence/test 文件和一键验收入口。
 
-这些内容说明项目不是从零开始，也不能把“39/39 PASS”单独当成验证结束。目前已形成覆盖率合并报告，通过故障注入证明了 TX 数据检查器的有效性，完成 39 次多 seed 正式回归，并完成 CDC 结构审计与复位同步释放优化；剩余工作主要是商业 CDC/lint signoff 条件下的补充检查和论文、答辩材料整理。
+这些内容说明项目不是从零开始，也不能把“45/45 PASS”单独当成验证结束。目前已形成覆盖率合并报告，通过 TX 数据、IRQ 控制和 FIFO full 控制三类故障注入验证了检查器的有效性，完成 45 次多 seed 正式回归，并完成 CDC 结构审计、复位同步释放、寄存器模型统一以及 predictor/scoreboard 职责拆分；剩余工作主要是商业 CDC/lint 条件下的补充检查和论文、答辩材料整理。
 
 ## 3. 本阶段要解决的问题
 
@@ -47,8 +50,8 @@
 验证平台应完成：
 
 - APB 主机侧激励和事务监测；
-- UART 外部输入激励和 TX 串行帧监测；
-- 对 TX、RX 数据顺序和 APB 访问结果的 scoreboard 检查；
+- UART 外部输入激励，以及不依赖 DUT `bit_tick` 的 TX/RX 串行帧监测；
+- 由 predictor 建立期望结果，由 scoreboard 只负责 TX、RX 数据比较；
 - 对寄存器访问、错误路径、FIFO 边界、串行收发、复位和 CDC 压力的定向与约束随机测试；
 - 对 APB 协议、错误响应、FIFO 使用边界和关键状态的 SVA 检查；
 - 功能覆盖率、代码覆盖率、断言覆盖率的收集、合并和分析；
@@ -70,7 +73,7 @@
 
 | 编号 | 验收内容 | 预期证据 |
 | --- | --- | --- |
-| RQ-01 | CTRL、BAUD 的复位值、读写和非法访问行为正确 | 寄存器测试、APB 断言、波形截图 |
+| RQ-01 | CTRL、BAUD 的复位值、读写和非法访问行为正确 | 普通寄存器测试、RAL 前门访问与 reset mirror、APB 断言 |
 | RQ-02 | APB 写 TXDATA 后，数据能按顺序从 TX 串行输出 | TX monitor、scoreboard、loopback 测试 |
 | RQ-03 | 外部 UART RX 和 loopback 数据能按顺序从 RXDATA 读回 | 外部 RX/loopback 测试、scoreboard |
 | RQ-04 | TX/RX FIFO 的满、空、溢出、下溢和恢复行为明确且可验证 | 边界测试、状态检查、SVA |

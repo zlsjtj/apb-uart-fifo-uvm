@@ -1,0 +1,86 @@
+class uart_random_test extends uart_base_test;
+  `uvm_component_utils(uart_random_test)
+
+  function new(string name = "uart_random_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_random_apb_seq seq;
+    phase.raise_objection(this);
+    seq = uart_random_apb_seq::type_id::create("seq");
+    seq.start(env.apb.seqr);
+    #2us;
+    phase.drop_objection(this);
+  endtask
+endclass
+
+class uart_fifo_full_test extends uart_base_test;
+  `uvm_component_utils(uart_fifo_full_test)
+
+  function new(string name = "uart_fifo_full_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_fifo_full_seq seq;
+    phase.raise_objection(this);
+    seq = uart_fifo_full_seq::type_id::create("seq");
+    seq.start(env.apb.seqr);
+    #2us;
+    phase.drop_objection(this);
+  endtask
+endclass
+
+class uart_bad_access_test extends uart_base_test;
+  `uvm_component_utils(uart_bad_access_test)
+
+  function new(string name = "uart_bad_access_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_bad_access_seq seq;
+    phase.raise_objection(this);
+    seq = uart_bad_access_seq::type_id::create("seq");
+    seq.start(env.apb.seqr);
+    #1us;
+    phase.drop_objection(this);
+  endtask
+endclass
+
+class uart_external_rx_test extends uart_base_test;
+  `uvm_component_utils(uart_external_rx_test)
+
+  function new(string name = "uart_external_rx_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_external_rx_vseq vseq;
+
+    phase.raise_objection(this);
+    vseq = uart_external_rx_vseq::type_id::create("vseq");
+    vseq.start(env.vseqr);
+
+    #2us;
+    phase.drop_objection(this);
+  endtask
+endclass
+
+class uart_recover_test extends uart_base_test;
+  `uvm_component_utils(uart_recover_test)
+
+  function new(string name = "uart_recover_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    uart_disable_recover_seq seq;
+    phase.raise_objection(this);
+    seq = uart_disable_recover_seq::type_id::create("seq");
+    seq.start(env.apb.seqr);
+    #2us;
+    phase.drop_objection(this);
+  endtask
+endclass

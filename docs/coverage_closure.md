@@ -2,7 +2,7 @@
 
 ## 1. 数据来源
 
-功能闭环的首轮结果来自 2026-07-13 的 13/13 PASS 回归。P0 复位优化完成后，又在 2026-09-03 使用 `scripts/run_final_regression.ps1` 完成 3 组 seed、39/39 PASS 的正式回归，并合并 39 个 UCDB；正式证据见 `docs/final_regression_evidence.md` 和 `reports/final_regression/`。`scripts/merge_coverage.ps1` 只选择摘要表中对应测试和 seed 的 UCDB，不合并目录中其他调试运行或旧 seed。
+功能闭环的首轮结果来自 2026-07-13 的 13/13 PASS 回归。P2 验证架构优化完成后，2026-09-03 使用 `scripts/run_final_regression.ps1` 完成 3 组 seed、45/45 PASS 的正式回归，并合并 45 个 UCDB；正式证据见 `docs/final_regression_evidence.md` 和 `reports/final_regression/`。`scripts/merge_coverage.ps1` 只选择摘要表中对应测试和 seed 的 UCDB，不合并目录中其他调试运行或旧 seed。
 
 生成内容：
 
@@ -19,8 +19,8 @@
 | 类型 | 结果 | 说明 |
 | --- | ---: | --- |
 | 功能覆盖率 | 100% | 7 个 covergroup type，65/65 个计划 bin 命中 |
-| 断言覆盖率 | 100% | 40/40 条 assertion 有有效尝试，failure count 均为 0 |
-| Cover directive | 100% | 13/13 条 cover property 命中 |
+| 断言覆盖率 | 100% | 42/42 条 assertion 有有效尝试，failure count 均为 0 |
+| Cover directive | 100% | 14/14 条 cover property 命中 |
 | RTL FSM 状态 | 100% | 5/5 个状态命中 |
 | RTL FSM 转换 | 87.5% | 8 个转换中命中 7 个；缺项来自防御性/default 路径 |
 

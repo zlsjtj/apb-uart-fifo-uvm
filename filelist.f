@@ -1,5 +1,6 @@
 +incdir+tb/uvm
 +incdir+tb/interfaces
+rtl/apb_uart_reg_pkg.sv
 rtl/reset_sync.sv
 rtl/async_fifo.sv
 rtl/async_fifo_sva.sv

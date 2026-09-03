@@ -1,6 +1,8 @@
 param(
   [string[]]$Tests = @(
     "uart_reg_test",
+    "uart_config_latency_test",
+    "uart_ral_test",
     "uart_loopback_test",
     "uart_baud_loopback_test",
     "uart_baud_timing_test",

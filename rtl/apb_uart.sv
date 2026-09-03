@@ -19,12 +19,7 @@ module apb_uart #(
   output logic        tx_o,
   output logic        irq_o
 );
-
-  localparam logic [7:0] ADDR_CTRL   = 8'h00;
-  localparam logic [7:0] ADDR_STATUS = 8'h04;
-  localparam logic [7:0] ADDR_BAUD   = 8'h08;
-  localparam logic [7:0] ADDR_TXDATA = 8'h0c;
-  localparam logic [7:0] ADDR_RXDATA = 8'h10;
+  import apb_uart_reg_pkg::*;
 
   logic [31:0] ctrl_reg;
   logic [31:0] baud_reg;
@@ -54,6 +49,7 @@ module apb_uart #(
   (* ASYNC_REG = "TRUE" *) logic cfg_req_uart_q1, cfg_req_uart_q2;
   logic        cfg_req_seen;
   logic        cfg_uart_initialized;
+  logic        cfg_apply_uart;
   logic        cfg_pending;
   logic        cfg_write;
   logic        cfg_busy;
@@ -83,13 +79,17 @@ module apb_uart #(
 
   assign apb_access  = psel && penable;
   assign pready      = 1'b1;
-  assign enable_uart = ctrl_reg[0];
-  assign loopback_en = ctrl_reg[1];
-  assign irq_en      = ctrl_reg[2];
+  assign enable_uart = ctrl_reg[UART_CTRL_ENABLE_BIT];
+  assign loopback_en = ctrl_reg[UART_CTRL_LOOPBACK_BIT];
+  assign irq_en      = ctrl_reg[UART_CTRL_IRQ_EN_BIT];
+`ifdef UART_MUTATE_IRQ_STUCK_LOW
+  assign irq_o       = 1'b0;
+`else
   assign irq_o       = irq_en && !rx_empty;
+`endif
   assign fifo_async_rst_n = presetn && uart_rst_n;
   assign cfg_write   = apb_access && pwrite &&
-                       ((paddr == ADDR_CTRL) || (paddr == ADDR_BAUD));
+                       ((paddr == UART_ADDR_CTRL) || (paddr == UART_ADDR_BAUD));
   assign cfg_busy    = (cfg_req_tgl != cfg_ack_pclk_q2);
 
 `ifdef UART_MUTATE_TX_LSB
@@ -98,9 +98,9 @@ module apb_uart #(
   assign tx_fifo_wdata = pwdata[7:0];
 `endif
 
-  assign tx_push = apb_access && pwrite && (paddr == ADDR_TXDATA) &&
+  assign tx_push = apb_access && pwrite && (paddr == UART_ADDR_TXDATA) &&
                    enable_uart && !tx_full;
-  assign rx_pop  = apb_access && !pwrite && (paddr == ADDR_RXDATA) &&
+  assign rx_pop  = apb_access && !pwrite && (paddr == UART_ADDR_RXDATA) &&
                    !rx_empty;
 
   reset_sync u_pclk_reset_sync (
@@ -134,10 +134,10 @@ module apb_uart #(
 
   always_ff @(posedge pclk or negedge pclk_rst_n) begin
     if (!pclk_rst_n) begin
-      ctrl_reg <= 32'h0;
-      baud_reg <= 32'd16;
+      ctrl_reg <= UART_CTRL_RESET;
+      baud_reg <= UART_BAUD_RESET;
       cfg_ctrl_hold <= 3'b000;
-      cfg_baud_hold <= 32'd16;
+      cfg_baud_hold <= UART_BAUD_RESET;
       cfg_req_tgl <= 1'b0;
       cfg_ack_pclk_q1 <= 1'b0;
       cfg_ack_pclk_q2 <= 1'b0;
@@ -151,15 +151,15 @@ module apb_uart #(
 
       if (apb_access) begin
         unique case (paddr)
-          ADDR_CTRL: begin
+          UART_ADDR_CTRL: begin
             if (pwrite) begin
-              ctrl_reg <= pwdata & 32'h7;
+              ctrl_reg <= pwdata & UART_CTRL_MASK;
             end else begin
               prdata <= ctrl_reg;
             end
           end
 
-          ADDR_STATUS: begin
+          UART_ADDR_STATUS: begin
             if (pwrite) begin
               pslverr <= 1'b1;
             end else begin
@@ -168,15 +168,15 @@ module apb_uart #(
             end
           end
 
-          ADDR_BAUD: begin
+          UART_ADDR_BAUD: begin
             if (pwrite) begin
-              baud_reg <= (pwdata == 0) ? 32'd1 : pwdata;
+              baud_reg <= (pwdata == 0) ? UART_BAUD_MIN : pwdata;
             end else begin
               prdata <= baud_reg;
             end
           end
 
-          ADDR_TXDATA: begin
+          UART_ADDR_TXDATA: begin
             if (!pwrite) begin
               pslverr <= 1'b1;
               prdata  <= 32'h0;
@@ -185,7 +185,7 @@ module apb_uart #(
             end
           end
 
-          ADDR_RXDATA: begin
+          UART_ADDR_RXDATA: begin
             if (pwrite || rx_empty) begin
               pslverr <= 1'b1;
               prdata  <= 32'h0;
@@ -206,9 +206,9 @@ module apb_uart #(
       // most recent APB-visible configuration is sent in the next transfer.
       if (cfg_write) begin
         if (!cfg_busy) begin
-          cfg_ctrl_hold <= (paddr == ADDR_CTRL) ? pwdata[2:0] : ctrl_reg[2:0];
-          cfg_baud_hold <= (paddr == ADDR_BAUD) ?
-                           ((pwdata == 0) ? 32'd1 : pwdata) : baud_reg;
+          cfg_ctrl_hold <= (paddr == UART_ADDR_CTRL) ? pwdata[2:0] : ctrl_reg[2:0];
+          cfg_baud_hold <= (paddr == UART_ADDR_BAUD) ?
+                           ((pwdata == 0) ? UART_BAUD_MIN : pwdata) : baud_reg;
           cfg_req_tgl <= ~cfg_req_tgl;
           cfg_pending <= 1'b0;
         end else begin
@@ -245,12 +245,14 @@ module apb_uart #(
       cfg_req_uart_q2 <= 1'b0;
       cfg_req_seen <= 1'b0;
       cfg_uart_initialized <= 1'b0;
+      cfg_apply_uart <= 1'b0;
       cfg_ack_tgl <= 1'b0;
       ctrl_uart_cfg <= 3'b000;
-      baud_uart_cfg <= 32'd16;
+      baud_uart_cfg <= UART_BAUD_RESET;
     end else begin
       cfg_req_uart_q1 <= cfg_req_tgl;
       cfg_req_uart_q2 <= cfg_req_uart_q1;
+      cfg_apply_uart <= 1'b0;
 
       // Capture the reset-surviving APB configuration once after a UART-only
       // reset, then capture each later request after the two-flop synchronizer.
@@ -260,11 +262,13 @@ module apb_uart #(
         cfg_req_seen <= cfg_req_uart_q2;
         cfg_ack_tgl <= cfg_req_uart_q2;
         cfg_uart_initialized <= 1'b1;
+        cfg_apply_uart <= 1'b1;
       end else if (cfg_req_uart_q2 != cfg_req_seen) begin
         ctrl_uart_cfg <= cfg_ctrl_hold;
         baud_uart_cfg <= cfg_baud_hold;
         cfg_req_seen <= cfg_req_uart_q2;
         cfg_ack_tgl <= cfg_req_uart_q2;
+        cfg_apply_uart <= 1'b1;
       end
     end
   end
