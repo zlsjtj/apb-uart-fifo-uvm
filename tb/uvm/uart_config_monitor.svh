@@ -1,7 +1,7 @@
 class uart_config_monitor extends uvm_component;
   `uvm_component_utils(uart_config_monitor)
 
-  virtual uart_if vif;
+  virtual uart_probe_if probe_vif;
   uvm_analysis_port #(uart_cfg_item) ap;
 
   function new(string name = "uart_config_monitor", uvm_component parent = null);
@@ -11,8 +11,8 @@ class uart_config_monitor extends uvm_component;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual uart_if)::get(this, "", "vif", vif)) begin
-      `uvm_fatal("NOVIF", "uart_if is not set")
+    if (!uvm_config_db#(virtual uart_probe_if)::get(this, "", "probe_vif", probe_vif)) begin
+      `uvm_fatal("NOPROBEVIF", "uart_probe_if is not set")
     end
   endfunction
 
@@ -20,11 +20,11 @@ class uart_config_monitor extends uvm_component;
     uart_cfg_item tr;
 
     forever begin
-      @(vif.mon_cb);
-      if (vif.uart_rst_n && vif.mon_cb.cfg_apply) begin
+      @(probe_vif.uart_mon_cb);
+      if (probe_vif.uart_mon_cb.uart_clk_rst_n && probe_vif.uart_mon_cb.cfg_apply_uart) begin
         tr = uart_cfg_item::type_id::create("cfg_tr", this);
-        tr.ctrl = vif.mon_cb.ctrl_uart_cfg;
-        tr.baud = vif.mon_cb.baud_uart_cfg;
+        tr.ctrl = probe_vif.uart_mon_cb.ctrl_uart_cfg;
+        tr.baud = probe_vif.uart_mon_cb.baud_uart_cfg;
         tr.effective_time = $time;
         ap.write(tr);
         `uvm_info("UART_CFG_MON",

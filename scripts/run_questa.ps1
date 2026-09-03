@@ -9,6 +9,7 @@ param(
     "uart_irq_test",
     "uart_frame_error_test",
     "uart_external_rx_test",
+    "uart_external_rx_baud_test",
     "uart_rx_fifo_full_test",
     "uart_reset_cdc_test",
     "uart_fifo_full_test",

@@ -1,6 +1,6 @@
 # CDC Structural Check Summary
 
-- Time: `2026-09-03 15:14:26`
+- Time: `2026-09-03 16:55:41`
 - Commercial CDC tool available: `False`
 - Scope: RTL structural rules only; this is not a replacement for signoff CDC analysis.
 - Result: 22/22 checks passed.

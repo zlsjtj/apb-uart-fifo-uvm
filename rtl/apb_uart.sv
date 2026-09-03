@@ -60,6 +60,7 @@ module apb_uart #(
   logic [31:0] baud_cnt;
   logic [31:0] baud_divisor;
   logic        baud_tick;
+  logic        serial_bit_tick;
 
   logic        tx_ready;
   logic        tx_rd_en;
@@ -296,6 +297,12 @@ module apb_uart #(
     end
   end
 
+`ifdef UART_MUTATE_BAUD_TICK_FAST
+  assign serial_bit_tick = enable_uart_clk;
+`else
+  assign serial_bit_tick = baud_tick;
+`endif
+
   async_fifo #(
     .DATA_WIDTH(8),
     .ADDR_WIDTH(FIFO_ADDR_WIDTH)
@@ -328,13 +335,13 @@ module apb_uart #(
     .rd_empty (tx_empty)
   );
 
-  assign tx_rd_en = enable_uart_clk && baud_tick && tx_ready && !tx_empty;
+  assign tx_rd_en = enable_uart_clk && serial_bit_tick && tx_ready && !tx_empty;
 
   uart_tx u_uart_tx (
     .clk     (uart_clk),
     .rst_n   (uart_clk_rst_n),
     .enable  (enable_uart_clk),
-    .bit_tick_i (baud_tick),
+    .bit_tick_i (serial_bit_tick),
     .data_i  (tx_fifo_rdata),
     .valid_i (tx_rd_en),
     .ready_o (tx_ready),
@@ -345,7 +352,7 @@ module apb_uart #(
     .clk         (uart_clk),
     .rst_n       (uart_clk_rst_n),
     .enable      (enable_uart_clk),
-    .bit_tick_i  (baud_tick),
+    .bit_tick_i  (serial_bit_tick),
     .rx_i        (serial_rx),
     .data_o      (rx_data),
     .valid_o     (rx_valid),

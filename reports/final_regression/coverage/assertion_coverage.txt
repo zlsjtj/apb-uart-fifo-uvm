@@ -5,35 +5,35 @@ Name                 File(Line)           Failure Pass
                                           Count   Count
 -------------------------------------------------------
 /tb_apb_uart/u_dut/u_tx_fifo_sva/no_overflow_write
-                     rtl/async_fifo_sva.sv(19)       0 33778
+                     rtl/async_fifo_sva.sv(19)       0 38217
 /tb_apb_uart/u_dut/u_tx_fifo_sva/no_underflow_read
-                     rtl/async_fifo_sva.sv(23)       0  8394
+                     rtl/async_fifo_sva.sv(23)       0  9499
 /tb_apb_uart/u_dut/u_tx_fifo_sva/write_side_flags_known
-                     rtl/async_fifo_sva.sv(27)       0 33778
+                     rtl/async_fifo_sva.sv(27)       0 38217
 /tb_apb_uart/u_dut/u_tx_fifo_sva/read_side_flags_known
-                     rtl/async_fifo_sva.sv(31)       0  8394
+                     rtl/async_fifo_sva.sv(31)       0  9499
 /tb_apb_uart/u_dut/u_tx_fifo_sva/read_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(35)       0   142
+                     rtl/async_fifo_sva.sv(35)       0   138
 /tb_apb_uart/u_dut/u_tx_fifo_sva/write_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(39)       0   145
+                     rtl/async_fifo_sva.sv(39)       0   141
 /tb_apb_uart/u_dut/u_rx_fifo_sva/no_overflow_write
-                     rtl/async_fifo_sva.sv(19)       0  8394
+                     rtl/async_fifo_sva.sv(19)       0  9499
 /tb_apb_uart/u_dut/u_rx_fifo_sva/no_underflow_read
-                     rtl/async_fifo_sva.sv(23)       0 33778
+                     rtl/async_fifo_sva.sv(23)       0 38217
 /tb_apb_uart/u_dut/u_rx_fifo_sva/write_side_flags_known
-                     rtl/async_fifo_sva.sv(27)       0  8394
+                     rtl/async_fifo_sva.sv(27)       0  9499
 /tb_apb_uart/u_dut/u_rx_fifo_sva/read_side_flags_known
-                     rtl/async_fifo_sva.sv(31)       0 33778
+                     rtl/async_fifo_sva.sv(31)       0 38217
 /tb_apb_uart/u_dut/u_rx_fifo_sva/read_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(35)       0   145
+                     rtl/async_fifo_sva.sv(35)       0   156
 /tb_apb_uart/u_dut/u_rx_fifo_sva/write_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(39)       0   145
+                     rtl/async_fifo_sva.sv(39)       0   156
 /tb_apb_uart/u_apb_uart_sva/apb_setup_to_access
-                     rtl/apb_uart_sva.sv(45)       0   632
+                     rtl/apb_uart_sva.sv(45)       0   644
 /tb_apb_uart/u_apb_uart_sva/apb_access_has_ready
-                     rtl/apb_uart_sva.sv(49)       0   632
+                     rtl/apb_uart_sva.sv(49)       0   644
 /tb_apb_uart/u_apb_uart_sva/apb_addr_stable_in_access
-                     rtl/apb_uart_sva.sv(53)       0   632
+                     rtl/apb_uart_sva.sv(53)       0   644
 /tb_apb_uart/u_apb_uart_sva/invalid_addr_reports_error
                      rtl/apb_uart_sva.sv(57)       0     6
 /tb_apb_uart/u_apb_uart_sva/status_write_reports_error
@@ -43,7 +43,7 @@ Name                 File(Line)           Failure Pass
 /tb_apb_uart/u_apb_uart_sva/rejected_tx_write_has_no_push
                      rtl/apb_uart_sva.sv(71)       0    24
 /tb_apb_uart/u_apb_uart_sva/accepted_tx_write_pushes
-                     rtl/apb_uart_sva.sv(76)       0   145
+                     rtl/apb_uart_sva.sv(76)       0   141
 /tb_apb_uart/u_apb_uart_sva/empty_rx_read_reports_error
                      rtl/apb_uart_sva.sv(81)       0     6
 /tb_apb_uart/u_apb_uart_sva/rx_write_reports_error
@@ -55,36 +55,36 @@ Name                 File(Line)           Failure Pass
 /tb_apb_uart/u_apb_uart_sva/baud_div_not_zero_after_write
                      rtl/apb_uart_sva.sv(98)       0     6
 /tb_apb_uart/u_apb_uart_sva/config_mailbox_idle_matches_ack
-                     rtl/apb_uart_sva.sv(102)       0 32215
+                     rtl/apb_uart_sva.sv(102)       0 36591
 /tb_apb_uart/u_apb_uart_sva/config_payload_known
-                     rtl/apb_uart_sva.sv(106)       0  8280
+                     rtl/apb_uart_sva.sv(106)       0  9379
 /tb_apb_uart/u_apb_uart_sva/config_changes_only_on_apply
-                     rtl/apb_uart_sva.sv(110)       0   117
+                     rtl/apb_uart_sva.sv(110)       0   123
 /tb_apb_uart/u_apb_uart_sva/config_apply_payload_known
-                     rtl/apb_uart_sva.sv(114)       0   189
+                     rtl/apb_uart_sva.sv(114)       0   198
 /tb_apb_uart/u_apb_uart_sva/status_cdc_flags_known
-                     rtl/apb_uart_sva.sv(118)       0 33844
+                     rtl/apb_uart_sva.sv(118)       0 38283
 /tb_apb_uart/u_apb_uart_sva/irq_is_known
-                     rtl/apb_uart_sva.sv(122)       0 33844
+                     rtl/apb_uart_sva.sv(122)       0 38283
 /tb_apb_uart/u_apb_uart_sva/irq_matches_rx_state
-                     rtl/apb_uart_sva.sv(126)       0 33844
+                     rtl/apb_uart_sva.sv(126)       0 38283
 /tb_apb_uart/u_apb_uart_sva/bad_frame_not_written
                      rtl/apb_uart_sva.sv(162)       0    48
 /tb_apb_uart/u_apb_uart_sva/rx_full_blocks_write
                      rtl/apb_uart_sva.sv(170)       0    51
 /tb_apb_uart/u_apb_uart_sva/pclk_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(178)       0   387
+                     rtl/apb_uart_sva.sv(178)       0   411
 /tb_apb_uart/u_apb_uart_sva/uart_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(182)       0   108
+                     rtl/apb_uart_sva.sv(182)       0   114
 /tb_apb_uart/u_apb_uart_sva/fifo_pclk_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(186)       0   450
+                     rtl/apb_uart_sva.sv(186)       0   474
 /tb_apb_uart/u_apb_uart_sva/fifo_uart_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(190)       0   108
+                     rtl/apb_uart_sva.sv(190)       0   114
 /tb_apb_uart/u_apb_uart_sva/pclk_reset_releases_only_when_source_high
-                     rtl/apb_uart_sva.sv(194)       0    54
+                     rtl/apb_uart_sva.sv(194)       0    57
 /tb_apb_uart/u_apb_uart_sva/uart_reset_releases_only_when_source_high
-                     rtl/apb_uart_sva.sv(198)       0    51
+                     rtl/apb_uart_sva.sv(198)       0    54
 /tb_apb_uart/u_apb_uart_sva/fifo_pclk_reset_releases_only_when_sources_high
-                     rtl/apb_uart_sva.sv(202)       0    57
+                     rtl/apb_uart_sva.sv(202)       0    60
 /tb_apb_uart/u_apb_uart_sva/fifo_uart_reset_releases_only_when_sources_high
-                     rtl/apb_uart_sva.sv(206)       0    57
+                     rtl/apb_uart_sva.sv(206)       0    60

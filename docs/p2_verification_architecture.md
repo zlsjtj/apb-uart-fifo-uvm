@@ -65,7 +65,7 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 
 本轮结果为 `PASS (mutation detected)`。故障同时触发了测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言，说明控制输出错误不会被正常数据通路掩盖。故障库与正常回归库隔离，不会污染正式 UCDB。
 
-原有 TX 最低位翻转 mutation 也重新执行，6 个发送字节全部触发 `SB_TX_MISMATCH`。后续架构优化又补充了 FIFO full 恒低故障；当前三项 mutation 分别覆盖数据、IRQ 控制和 FIFO 控制，但不代表所有故障类型都已经被证明可检出。
+原有 TX 最低位翻转 mutation 也重新执行，6 个发送字节全部触发 `SB_TX_MISMATCH`。后续架构优化又补充了 FIFO full 恒低和 baud tick 过快故障；当前四项 mutation 分别覆盖数据、IRQ 控制、FIFO 控制和串行时序，但不代表所有故障类型都已经被证明可检出。
 
 ## 6. 本地验证结果
 
@@ -77,8 +77,8 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 - TX 数据 mutation：PASS，已检出；
 - IRQ 控制 mutation：PASS，已检出；
 - FIFO full 控制 mutation：PASS，已检出；
-- 三组完整回归：45/45 PASS，warning、error、fatal 均为 0；
-- 合并 45 个 UCDB：功能覆盖 65/65，断言 42/42，cover property 14/14。
+- 三组完整回归：48/48 PASS，warning、error、fatal 均为 0；
+- 合并 48 个 UCDB：功能覆盖 65/65，断言 42/42，cover property 14/14。
 
 详细证据分别保存在 `reports/p2_structural_summary.md`、`reports/config_latency_summary.md`、`reports/mutation_matrix.md` 和 `reports/final_regression/`。
 

@@ -203,7 +203,9 @@ class uart_bad_frame_seq extends uvm_sequence #(uart_item);
     tr = uart_item::type_id::create("bad_frame");
     start_item(tr);
     tr.data       = 8'he1;
-    tr.gap_cycles = 3;
+    // Allow the independently timed peer to start only after the APB-to-UART
+    // configuration mailbox and baud generator have settled.
+    tr.gap_cycles = 10;
     tr.frame_err  = 1'b1;
     finish_item(tr);
   endtask
@@ -226,4 +228,3 @@ class uart_good_recovery_seq extends uvm_sequence #(uart_item);
     finish_item(tr);
   endtask
 endclass
-

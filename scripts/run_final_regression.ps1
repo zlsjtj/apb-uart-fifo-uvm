@@ -67,7 +67,7 @@ foreach ($seed in $Seeds) {
 
   $seedSummary = "reports/regression_summary.md"
   $rows = @(Read-RegressionRows $seedSummary)
-  if (($rows.Count -ne 15) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
+  if (($rows.Count -ne 16) -or (@($rows | Where-Object { $_.Status -ne "PASS" }).Count -ne 0)) {
     throw "Regression summary for base seed $seed is incomplete or contains failures."
   }
 
@@ -115,6 +115,7 @@ $sourcePaths = @(
   "scripts/run_architecture_check.ps1",
   "scripts/run_acceptance.ps1",
   "scripts/run_fifo_mutation_check.ps1",
+  "scripts/run_baud_mutation_check.ps1",
   "scripts/run_mutation_suite.ps1"
 )
 $sourcePaths += Get-ChildItem -Path "rtl", "tb" -Recurse -File |
@@ -148,6 +149,7 @@ try {
   $env:GIT_CONFIG_GLOBAL = "NUL"
   $gitHead = (& git rev-parse HEAD).Trim()
   $gitState = @(& git status --short)
+  $sourceGitState = @(& git status --short -- $sourcePaths)
 } finally {
   $env:GIT_CONFIG_GLOBAL = $savedGitConfigGlobal
 }
@@ -159,7 +161,8 @@ $manifest = @(
   "",
   "- Time: ``$now``",
   "- Baseline git commit: ``$gitHead``",
-  "- Working tree clean: ``$($gitState.Count -eq 0)``",
+  "- Source tree clean relative to baseline: ``$($sourceGitState.Count -eq 0)``",
+  "- Full working tree clean: ``$($gitState.Count -eq 0)``",
   "- Simulator: ``$vlogVersion``",
   "- UVM: ``UVM-1.1d built-in; Questa UVM-1.2.2 reported by simulation log``",
   "- Command: ``& .\scripts\run_final_regression.ps1 -Seeds $seedLiteral``",
@@ -173,12 +176,20 @@ $manifest = @(
   "",
   "## Working tree status"
 )
-if ($gitState.Count -eq 0) {
+if ($sourceGitState.Count -eq 0) {
   $manifest += ""
-  $manifest += "Clean. The baseline commit identifies the simulated source tree."
+  $manifest += "The RTL, testbench, filelist and verification scripts match the baseline commit."
 } else {
   $manifest += ""
-  $manifest += "The working tree was not clean. The commit is a baseline only; use source_manifest.md to identify the exact simulated files."
+  $manifest += "The source tree differs from the baseline commit. Use source_manifest.md to identify the exact simulated files. Generated reports are not used to decide source cleanliness."
+  $manifest += ""
+  $manifest += '```text'
+  $manifest += $sourceGitState
+  $manifest += '```'
+}
+$manifest += ""
+$manifest += "Full working-tree status is recorded separately because this run updates tracked evidence files."
+if ($gitState.Count -ne 0) {
   $manifest += ""
   $manifest += '```text'
   $manifest += $gitState

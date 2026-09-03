@@ -2,7 +2,7 @@ class uart_rx_monitor extends uvm_component;
   `uvm_component_utils(uart_rx_monitor)
 
   virtual uart_if vif;
-  uart_env_cfg cfg;
+  virtual uart_probe_if probe_vif;
   uvm_analysis_port #(uart_item) ap;
 
   function new(string name = "uart_rx_monitor", uvm_component parent = null);
@@ -15,8 +15,8 @@ class uart_rx_monitor extends uvm_component;
     if (!uvm_config_db#(virtual uart_if)::get(this, "", "vif", vif)) begin
       `uvm_fatal("NOVIF", "uart_if is not set")
     end
-    if (!uvm_config_db#(uart_env_cfg)::get(this, "", "env_cfg", cfg)) begin
-      `uvm_fatal("NOCFG", "uart_env_cfg is not set")
+    if (!uvm_config_db#(virtual uart_probe_if)::get(this, "", "probe_vif", probe_vif)) begin
+      `uvm_fatal("NOPROBEVIF", "uart_probe_if is not set")
     end
   endfunction
 
@@ -28,13 +28,13 @@ class uart_rx_monitor extends uvm_component;
     prev_rx = 1'b1;
     forever begin
       @(vif.mon_cb);
-      if (!vif.uart_rst_n || !vif.mon_cb.ctrl_uart_cfg[UART_CTRL_ENABLE_BIT]) begin
+      if (!vif.uart_rst_n || !probe_vif.uart_mon_cb.ctrl_uart_cfg[UART_CTRL_ENABLE_BIT]) begin
         prev_rx = 1'b1;
       end else if ((prev_rx == 1'b1) && (vif.mon_cb.rx_i == 1'b0)) begin
         tr = uart_item::type_id::create("rx_pin_tr", this);
-        divisor = effective_divisor(vif.mon_cb.baud_uart_cfg);
+        divisor = effective_divisor(probe_vif.uart_mon_cb.baud_uart_cfg);
 
-        for (int i = 0; i < cfg.data_bits; i++) begin
+        for (int i = 0; i < UART_DATA_BITS; i++) begin
           wait_uart_cycles(divisor);
           tr.data[i] = vif.mon_cb.rx_i;
         end

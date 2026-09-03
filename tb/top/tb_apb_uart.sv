@@ -42,6 +42,7 @@ module tb_apb_uart;
 
   apb_if  apb_vif  (.pclk(pclk), .presetn(presetn));
   uart_if uart_vif (.uart_clk(uart_clk), .uart_rst_n(uart_rst_n));
+  uart_probe_if probe_vif (.pclk(pclk), .uart_clk(uart_clk));
 
   apb_uart #(
     .FIFO_ADDR_WIDTH(FIFO_ADDR_WIDTH)
@@ -68,11 +69,11 @@ module tb_apb_uart;
     .presetn (presetn),
     .uart_clk(uart_clk),
     .uart_rst_n(uart_rst_n),
-    .pclk_rst_n(u_dut.pclk_rst_n),
-    .uart_clk_rst_n(u_dut.uart_clk_rst_n),
-    .fifo_async_rst_n(u_dut.fifo_async_rst_n),
-    .fifo_pclk_rst_n(u_dut.fifo_pclk_rst_n),
-    .fifo_uart_rst_n(u_dut.fifo_uart_rst_n),
+    .pclk_rst_n(probe_vif.pclk_rst_n),
+    .uart_clk_rst_n(probe_vif.uart_clk_rst_n),
+    .fifo_async_rst_n(probe_vif.fifo_async_rst_n),
+    .fifo_pclk_rst_n(probe_vif.fifo_pclk_rst_n),
+    .fifo_uart_rst_n(probe_vif.fifo_uart_rst_n),
     .psel    (apb_vif.psel),
     .penable (apb_vif.penable),
     .pwrite  (apb_vif.pwrite),
@@ -80,31 +81,52 @@ module tb_apb_uart;
     .pwdata  (apb_vif.pwdata),
     .pready  (apb_vif.pready),
     .pslverr (apb_vif.pslverr),
-    .cfg_busy(u_dut.cfg_busy),
-    .cfg_req_tgl(u_dut.cfg_req_tgl),
-    .cfg_ack_pclk_q2(u_dut.cfg_ack_pclk_q2),
-    .cfg_uart_initialized(u_dut.cfg_uart_initialized),
-    .cfg_apply_uart(u_dut.cfg_apply_uart),
-    .ctrl_uart_cfg(u_dut.ctrl_uart_cfg),
-    .baud_uart_cfg(u_dut.baud_uart_cfg),
-    .enable_uart(u_dut.enable_uart),
-    .irq_en  (u_dut.irq_en),
-    .tx_full (u_dut.tx_full),
-    .tx_push (u_dut.tx_push),
-    .rx_full (u_dut.rx_full_uart),
-    .rx_full_pclk(u_dut.rx_full_pclk_q2),
-    .rx_empty(u_dut.rx_empty),
-    .rx_pop  (u_dut.rx_pop),
-    .rx_frame_err(u_dut.rx_frame_err_uart),
-    .rx_frame_err_pclk(u_dut.rx_frame_err_pclk_q2),
-    .rx_wr_en(u_dut.rx_wr_en),
+    .cfg_busy(probe_vif.cfg_busy),
+    .cfg_req_tgl(probe_vif.cfg_req_tgl),
+    .cfg_ack_pclk_q2(probe_vif.cfg_ack_pclk_q2),
+    .cfg_uart_initialized(probe_vif.cfg_uart_initialized),
+    .cfg_apply_uart(probe_vif.cfg_apply_uart),
+    .ctrl_uart_cfg(probe_vif.ctrl_uart_cfg),
+    .baud_uart_cfg(probe_vif.baud_uart_cfg),
+    .enable_uart(probe_vif.enable_uart),
+    .irq_en  (probe_vif.irq_en),
+    .tx_full (probe_vif.tx_full),
+    .tx_push (probe_vif.tx_push),
+    .rx_full (probe_vif.rx_full),
+    .rx_full_pclk(probe_vif.rx_full_pclk),
+    .rx_empty(probe_vif.rx_empty),
+    .rx_pop  (probe_vif.rx_pop),
+    .rx_frame_err(probe_vif.rx_frame_err),
+    .rx_frame_err_pclk(probe_vif.rx_frame_err_pclk),
+    .rx_wr_en(probe_vif.rx_wr_en),
     .irq_o   (irq_o)
   );
 
-  assign uart_vif.bit_tick = u_dut.baud_tick;
-  assign uart_vif.ctrl_uart_cfg = u_dut.ctrl_uart_cfg;
-  assign uart_vif.baud_uart_cfg = u_dut.baud_uart_cfg;
-  assign uart_vif.cfg_apply = u_dut.cfg_apply_uart;
+  // All hierarchy-based white-box observation is collected in one place.
+  // The UART BFM itself receives only the public serial pins and clocks.
+  assign probe_vif.pclk_rst_n = u_dut.pclk_rst_n;
+  assign probe_vif.uart_clk_rst_n = u_dut.uart_clk_rst_n;
+  assign probe_vif.fifo_async_rst_n = u_dut.fifo_async_rst_n;
+  assign probe_vif.fifo_pclk_rst_n = u_dut.fifo_pclk_rst_n;
+  assign probe_vif.fifo_uart_rst_n = u_dut.fifo_uart_rst_n;
+  assign probe_vif.cfg_busy = u_dut.cfg_busy;
+  assign probe_vif.cfg_req_tgl = u_dut.cfg_req_tgl;
+  assign probe_vif.cfg_ack_pclk_q2 = u_dut.cfg_ack_pclk_q2;
+  assign probe_vif.cfg_uart_initialized = u_dut.cfg_uart_initialized;
+  assign probe_vif.cfg_apply_uart = u_dut.cfg_apply_uart;
+  assign probe_vif.ctrl_uart_cfg = u_dut.ctrl_uart_cfg;
+  assign probe_vif.baud_uart_cfg = u_dut.baud_uart_cfg;
+  assign probe_vif.enable_uart = u_dut.enable_uart;
+  assign probe_vif.irq_en = u_dut.irq_en;
+  assign probe_vif.tx_full = u_dut.tx_full;
+  assign probe_vif.tx_push = u_dut.tx_push;
+  assign probe_vif.rx_full = u_dut.rx_full_uart;
+  assign probe_vif.rx_full_pclk = u_dut.rx_full_pclk_q2;
+  assign probe_vif.rx_empty = u_dut.rx_empty;
+  assign probe_vif.rx_pop = u_dut.rx_pop;
+  assign probe_vif.rx_frame_err = u_dut.rx_frame_err_uart;
+  assign probe_vif.rx_frame_err_pclk = u_dut.rx_frame_err_pclk_q2;
+  assign probe_vif.rx_wr_en = u_dut.rx_wr_en;
 
   initial begin
     apb_vif.idle_bus();
@@ -129,7 +151,9 @@ module tb_apb_uart;
     uvm_config_db#(uart_env_cfg)::set(null, "uvm_test_top.env*", "env_cfg", env_cfg);
     uvm_config_db#(virtual apb_if)::set(null, "uvm_test_top.env.apb.*", "vif", apb_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top.env.uart.*", "vif", uart_vif);
+    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top.env.uart.*", "probe_vif", probe_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top", "timing_vif", uart_vif);
+    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top", "probe_vif", probe_vif);
     uvm_config_db#(virtual reset_if)::set(null, "uvm_test_top*", "reset_vif", reset_vif);
     run_test();
   end

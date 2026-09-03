@@ -1,8 +1,8 @@
 # Coverage Merge Manifest
 
-- Time: `2026-09-03 15:18:39`
+- Time: `2026-09-03 17:01:22`
 - Regression summary: `reports\final_regression\final_regression_summary.md`
-- Tests merged: 45
+- Tests merged: 48
 - Merged UCDB: `reports\final_regression\coverage\regression_merged.ucdb`
 - Totals report: `reports\final_regression\coverage\coverage_totals.txt`
 - Functional report: `reports\final_regression\coverage\functional_coverage.txt`
@@ -21,12 +21,13 @@
 | uart_irq_test | 107 | `reports\uart_irq_test_107.ucdb` |
 | uart_frame_error_test | 108 | `reports\uart_frame_error_test_108.ucdb` |
 | uart_external_rx_test | 109 | `reports\uart_external_rx_test_109.ucdb` |
-| uart_rx_fifo_full_test | 110 | `reports\uart_rx_fifo_full_test_110.ucdb` |
-| uart_reset_cdc_test | 111 | `reports\uart_reset_cdc_test_111.ucdb` |
-| uart_fifo_full_test | 112 | `reports\uart_fifo_full_test_112.ucdb` |
-| uart_bad_access_test | 113 | `reports\uart_bad_access_test_113.ucdb` |
-| uart_random_test | 114 | `reports\uart_random_test_114.ucdb` |
-| uart_recover_test | 115 | `reports\uart_recover_test_115.ucdb` |
+| uart_external_rx_baud_test | 110 | `reports\uart_external_rx_baud_test_110.ucdb` |
+| uart_rx_fifo_full_test | 111 | `reports\uart_rx_fifo_full_test_111.ucdb` |
+| uart_reset_cdc_test | 112 | `reports\uart_reset_cdc_test_112.ucdb` |
+| uart_fifo_full_test | 113 | `reports\uart_fifo_full_test_113.ucdb` |
+| uart_bad_access_test | 114 | `reports\uart_bad_access_test_114.ucdb` |
+| uart_random_test | 115 | `reports\uart_random_test_115.ucdb` |
+| uart_recover_test | 116 | `reports\uart_recover_test_116.ucdb` |
 | uart_reg_test | 201 | `reports\uart_reg_test_201.ucdb` |
 | uart_config_latency_test | 202 | `reports\uart_config_latency_test_202.ucdb` |
 | uart_ral_test | 203 | `reports\uart_ral_test_203.ucdb` |
@@ -36,12 +37,13 @@
 | uart_irq_test | 207 | `reports\uart_irq_test_207.ucdb` |
 | uart_frame_error_test | 208 | `reports\uart_frame_error_test_208.ucdb` |
 | uart_external_rx_test | 209 | `reports\uart_external_rx_test_209.ucdb` |
-| uart_rx_fifo_full_test | 210 | `reports\uart_rx_fifo_full_test_210.ucdb` |
-| uart_reset_cdc_test | 211 | `reports\uart_reset_cdc_test_211.ucdb` |
-| uart_fifo_full_test | 212 | `reports\uart_fifo_full_test_212.ucdb` |
-| uart_bad_access_test | 213 | `reports\uart_bad_access_test_213.ucdb` |
-| uart_random_test | 214 | `reports\uart_random_test_214.ucdb` |
-| uart_recover_test | 215 | `reports\uart_recover_test_215.ucdb` |
+| uart_external_rx_baud_test | 210 | `reports\uart_external_rx_baud_test_210.ucdb` |
+| uart_rx_fifo_full_test | 211 | `reports\uart_rx_fifo_full_test_211.ucdb` |
+| uart_reset_cdc_test | 212 | `reports\uart_reset_cdc_test_212.ucdb` |
+| uart_fifo_full_test | 213 | `reports\uart_fifo_full_test_213.ucdb` |
+| uart_bad_access_test | 214 | `reports\uart_bad_access_test_214.ucdb` |
+| uart_random_test | 215 | `reports\uart_random_test_215.ucdb` |
+| uart_recover_test | 216 | `reports\uart_recover_test_216.ucdb` |
 | uart_reg_test | 301 | `reports\uart_reg_test_301.ucdb` |
 | uart_config_latency_test | 302 | `reports\uart_config_latency_test_302.ucdb` |
 | uart_ral_test | 303 | `reports\uart_ral_test_303.ucdb` |
@@ -51,9 +53,10 @@
 | uart_irq_test | 307 | `reports\uart_irq_test_307.ucdb` |
 | uart_frame_error_test | 308 | `reports\uart_frame_error_test_308.ucdb` |
 | uart_external_rx_test | 309 | `reports\uart_external_rx_test_309.ucdb` |
-| uart_rx_fifo_full_test | 310 | `reports\uart_rx_fifo_full_test_310.ucdb` |
-| uart_reset_cdc_test | 311 | `reports\uart_reset_cdc_test_311.ucdb` |
-| uart_fifo_full_test | 312 | `reports\uart_fifo_full_test_312.ucdb` |
-| uart_bad_access_test | 313 | `reports\uart_bad_access_test_313.ucdb` |
-| uart_random_test | 314 | `reports\uart_random_test_314.ucdb` |
-| uart_recover_test | 315 | `reports\uart_recover_test_315.ucdb` |
+| uart_external_rx_baud_test | 310 | `reports\uart_external_rx_baud_test_310.ucdb` |
+| uart_rx_fifo_full_test | 311 | `reports\uart_rx_fifo_full_test_311.ucdb` |
+| uart_reset_cdc_test | 312 | `reports\uart_reset_cdc_test_312.ucdb` |
+| uart_fifo_full_test | 313 | `reports\uart_fifo_full_test_313.ucdb` |
+| uart_bad_access_test | 314 | `reports\uart_bad_access_test_314.ucdb` |
+| uart_random_test | 315 | `reports\uart_random_test_315.ucdb` |
+| uart_recover_test | 316 | `reports\uart_recover_test_316.ucdb` |

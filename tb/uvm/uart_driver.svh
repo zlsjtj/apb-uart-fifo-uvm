@@ -2,6 +2,7 @@ class uart_driver extends uvm_driver #(uart_item);
   `uvm_component_utils(uart_driver)
 
   virtual uart_if vif;
+  uart_env_cfg cfg;
 
   function new(string name = "uart_driver", uvm_component parent = null);
     super.new(name, parent);
@@ -11,6 +12,9 @@ class uart_driver extends uvm_driver #(uart_item);
     super.build_phase(phase);
     if (!uvm_config_db#(virtual uart_if)::get(this, "", "vif", vif)) begin
       `uvm_fatal("NOVIF", "uart_if is not set")
+    end
+    if (!uvm_config_db#(uart_env_cfg)::get(this, "", "env_cfg", cfg)) begin
+      `uvm_fatal("NOCFG", "uart_env_cfg is not set")
     end
   endfunction
 
@@ -30,32 +34,36 @@ class uart_driver extends uvm_driver #(uart_item);
   endtask
 
   task drive_frame(uart_item tr);
-    repeat (tr.gap_cycles) begin
-      wait_tick();
+    time bit_period;
+
+    if (tr.bit_cycles == 0) begin
+      `uvm_fatal("BAD_UART_ITEM", "bit_cycles must be non-zero")
+    end
+    bit_period = tr.bit_cycles * (2 * cfg.uart_half_ns) * 1ns;
+
+    // Re-anchor every frame to the public UART clock before applying the
+    // independently selected edge offset. This avoids cumulative phase drift
+    // across long bursts while still keeping the BFM independent of DUT timing pulses.
+    repeat (tr.gap_cycles * tr.bit_cycles) @(posedge vif.uart_clk);
+    #(tr.edge_offset_ps * 1ps);
+
+    vif.rx_i <= 1'b0;
+    #(bit_period);
+
+    for (int i = 0; i < UART_DATA_BITS; i++) begin
+      vif.rx_i <= tr.data[i];
+      #(bit_period);
     end
 
-    vif.drv_cb.rx_i <= 1'b0;
-    wait_tick();
-
-    for (int i = 0; i < 8; i++) begin
-      vif.drv_cb.rx_i <= tr.data[i];
-      wait_tick();
-    end
-
-    vif.drv_cb.rx_i <= tr.frame_err ? 1'b0 : 1'b1;
-    wait_tick();
+    vif.rx_i <= tr.frame_err ? 1'b0 : 1'b1;
+    #(bit_period);
 
     // Return to the idle level after the stop-bit interval. This also keeps a
     // deliberately bad stop bit from being mistaken for a second start bit.
-    vif.drv_cb.rx_i <= 1'b1;
-    wait_tick();
+    vif.rx_i <= 1'b1;
+    #(bit_period);
 
     `uvm_info("UART_DRV", tr.convert2string(), UVM_HIGH)
   endtask
 
-  task wait_tick();
-    do begin
-      @(vif.drv_cb);
-    end while (!vif.drv_cb.bit_tick);
-  endtask
 endclass

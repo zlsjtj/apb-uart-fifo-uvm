@@ -1,46 +1,16 @@
 class uart_reset_cdc_test extends uart_base_test;
   `uvm_component_utils(uart_reset_cdc_test)
 
-  virtual reset_if reset_vif;
-
   function new(string name = "uart_reset_cdc_test", uvm_component parent = null);
     super.new(name, parent);
   endfunction
 
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif)) begin
-      `uvm_fatal("NORESETVIF", "reset_if is not set")
-    end
-  endfunction
-
   task run_phase(uvm_phase phase);
-    uart_reset_midflight_seq        midflight_seq;
-    uart_reset_defaults_seq         defaults_seq;
-    uart_reset_preserved_config_seq preserved_seq;
-    uart_reset_recovery_seq         recovery_seq;
+    uart_reset_cdc_vseq vseq;
 
     phase.raise_objection(this);
-    midflight_seq = uart_reset_midflight_seq::type_id::create("midflight_seq");
-    defaults_seq  = uart_reset_defaults_seq::type_id::create("defaults_seq");
-    preserved_seq = uart_reset_preserved_config_seq::type_id::create("preserved_seq");
-    recovery_seq  = uart_reset_recovery_seq::type_id::create("recovery_seq");
-
-    // Reset both domains while a TX byte is pending, then prove clean recovery.
-    midflight_seq.start(env.apb.seqr);
-    reset_vif.pulse_both(3, 3);
-    defaults_seq.start(env.apb.seqr);
-    recovery_seq.start(env.apb.seqr);
-
-    // APB-only reset clears APB configuration and both FIFO pointer domains.
-    reset_vif.pulse_apb_reset(3);
-    defaults_seq.start(env.apb.seqr);
-    recovery_seq.start(env.apb.seqr);
-
-    // UART-only reset keeps APB configuration but flushes both FIFOs.
-    reset_vif.pulse_uart_reset(3);
-    preserved_seq.start(env.apb.seqr);
-    recovery_seq.start(env.apb.seqr);
+    vseq = uart_reset_cdc_vseq::type_id::create("vseq");
+    vseq.start(env.vseqr);
 
     #1us;
     phase.drop_objection(this);
@@ -152,4 +122,3 @@ class uart_baud_timing_test extends uart_base_test;
     phase.drop_objection(this);
   endtask
 endclass
-

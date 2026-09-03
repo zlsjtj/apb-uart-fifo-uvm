@@ -2,7 +2,7 @@
 
 ## 1. 数据来源
 
-功能闭环的首轮结果来自 2026-07-13 的 13/13 PASS 回归。P2 验证架构优化完成后，2026-09-03 使用 `scripts/run_final_regression.ps1` 完成 3 组 seed、45/45 PASS 的正式回归，并合并 45 个 UCDB；正式证据见 `docs/final_regression_evidence.md` 和 `reports/final_regression/`。`scripts/merge_coverage.ps1` 只选择摘要表中对应测试和 seed 的 UCDB，不合并目录中其他调试运行或旧 seed。
+功能闭环的首轮结果来自 2026-07-13 的 13/13 PASS 回归。验证架构收口后，2026-09-03 使用 `scripts/run_final_regression.ps1` 完成 3 组 seed、48/48 PASS 的正式回归，并合并 48 个 UCDB；正式证据见 `docs/final_regression_evidence.md` 和 `reports/final_regression/`。`scripts/merge_coverage.ps1` 只选择摘要表中对应测试和 seed 的 UCDB，不合并目录中其他调试运行或旧 seed。
 
 生成内容：
 
@@ -24,11 +24,11 @@
 | RTL FSM 状态 | 100% | 5/5 个状态命中 |
 | RTL FSM 转换 | 87.5% | 8 个转换中命中 7 个；缺项来自防御性/default 路径 |
 
-完整工程按文件统计的 code coverage 为 62.4%，这个数字包含 UVM package、testbench、接口和大量不会在普通回归中执行的库式代码，不作为 DUT 的验收指标。DUT 相关设计单元的结果如下。
+完整工程按文件统计的 code coverage 为 59.2%，这个数字包含 UVM package、testbench、接口和大量不会在普通回归中执行的库式代码，不作为 DUT 的验收指标。DUT 相关设计单元的结果如下。
 
 | 设计单元 | Statement | Branch | Condition | Expression | FSM | Toggle |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `apb_uart` | 100% | 98.0% | 100% | 96.4% | 无状态机 | 37.8% |
+| `apb_uart` | 100% | 98.0% | 100% | 96.4% | 无状态机 | 38.7% |
 | `async_fifo` | 100% | 100% | 50.0% | 100% | 无状态机 | 91.6% |
 | `reset_sync` | 100% | 100% | 无有效项 | 100% | 无状态机 | 100% |
 | `uart_rx` | 95.6% | 94.1% | 57.1% | 100% | 90.0% | 100% |

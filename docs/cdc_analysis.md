@@ -39,8 +39,8 @@ powershell -ExecutionPolicy Bypass -File scripts/run_cdc_structural_check.ps1
 - `uart_baud_timing_test`：BAUD=0/1/4/8 的 TX 位宽保持正确；
 - `uart_reset_cdc_test`：双复位、APB-only reset、UART-only reset 后均能恢复；
 - `uart_frame_error_test`、`uart_rx_fifo_full_test`：新增 STATUS 同步后，坏帧与 RX 满状态仍正确；
-- 2026-09-03 的三组 seed 正式回归为 45/45 PASS，所有 warning、error、fatal 均为 0；
-- 合并 45 个 UCDB 后，功能覆盖 65/65，断言 42/42，cover property 14/14，均为 100%；
+- 2026-09-03 的三组 seed 正式回归为 48/48 PASS，所有 warning、error、fatal 均为 0；
+- 合并 48 个 UCDB 后，功能覆盖 65/65，断言 42/42，cover property 14/14，均为 100%；
 - `uart_config_latency_test` 明确记录 APB 写完成与 UART 域 `cfg_apply` 的时刻，证明配置经过邮箱后才在目标域生效；
 - 复位定向测试另在三种时钟配置下通过：默认配置以及两组非整数时钟比和错相配置。
 

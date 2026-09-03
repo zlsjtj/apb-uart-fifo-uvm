@@ -1,6 +1,7 @@
 param(
   [int[]]$Seeds = @(101, 201, 301),
-  [int]$StressSeed = 731
+  [int]$StressSeed = 731,
+  [int]$StressSeed2 = 751
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,10 +29,15 @@ Run-Step "Three-seed final regression and coverage merge" {
 }
 Run-Step "Skewed non-integer clock regression" {
   & (Join-Path $PSScriptRoot "run_questa.ps1") `
-    -Tests uart_config_latency_test,uart_loopback_test,uart_external_rx_test,uart_reset_cdc_test `
+    -Tests uart_config_latency_test,uart_loopback_test,uart_external_rx_test,uart_external_rx_baud_test,uart_reset_cdc_test `
     -Seed $StressSeed -PclkHalfNs 7 -UartHalfNs 11 -PclkPhaseNs 2 -UartPhaseNs 5
 }
-Run-Step "Three-case mutation suite" {
+Run-Step "Second skewed clock regression" {
+  & (Join-Path $PSScriptRoot "run_questa.ps1") `
+    -Tests uart_config_latency_test,uart_frame_error_test,uart_external_rx_baud_test,uart_rx_fifo_full_test,uart_reset_cdc_test `
+    -Seed $StressSeed2 -PclkHalfNs 9 -UartHalfNs 13 -PclkPhaseNs 4 -UartPhaseNs 1
+}
+Run-Step "Four-case mutation suite" {
   & (Join-Path $PSScriptRoot "run_mutation_suite.ps1")
 }
 
@@ -42,7 +48,7 @@ $summary = @(
   "- Result: **PASS**",
   "- Elapsed seconds: ``$elapsed``",
   "- Final-regression seeds: ``$($Seeds -join ', ')``",
-  "- Stress seed: ``$StressSeed``", "",
+  "- Stress seeds: ``$StressSeed, $StressSeed2``", "",
   "| Step | Result |", "| --- | --- |"
 )
 foreach ($step in $steps) {

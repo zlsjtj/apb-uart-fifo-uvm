@@ -1,5 +1,10 @@
 package apb_uart_reg_pkg;
 
+  // The current teaching DUT implements a fixed 8N1 frame. Keep these as
+  // capability constants instead of mutable testbench configuration fields.
+  localparam int unsigned UART_DATA_BITS = 8;
+  localparam int unsigned UART_STOP_BITS = 1;
+
   localparam logic [7:0] UART_ADDR_CTRL   = 8'h00;
   localparam logic [7:0] UART_ADDR_STATUS = 8'h04;
   localparam logic [7:0] UART_ADDR_BAUD   = 8'h08;

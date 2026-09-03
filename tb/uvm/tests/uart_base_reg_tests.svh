@@ -35,7 +35,7 @@ endclass
 class uart_config_latency_test extends uart_base_test;
   `uvm_component_utils(uart_config_latency_test)
 
-  virtual uart_if timing_vif;
+  virtual uart_probe_if probe_vif;
 
   function new(string name = "uart_config_latency_test", uvm_component parent = null);
     super.new(name, parent);
@@ -43,8 +43,8 @@ class uart_config_latency_test extends uart_base_test;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual uart_if)::get(this, "", "timing_vif", timing_vif)) begin
-      `uvm_fatal("NOVIF", "timing_vif is not set")
+    if (!uvm_config_db#(virtual uart_probe_if)::get(this, "", "probe_vif", probe_vif)) begin
+      `uvm_fatal("NOPROBEVIF", "probe_vif is not set")
     end
   endfunction
 
@@ -56,15 +56,15 @@ class uart_config_latency_test extends uart_base_test;
     time effective_time;
     bit  applied;
 
-    wait (timing_vif.cfg_apply == 1'b0);
+    wait (probe_vif.cfg_apply_uart == 1'b0);
     seq = uart_config_write_seq::type_id::create($sformatf("%s_write", register_name));
     seq.cfg_addr = addr;
     seq.cfg_data = data;
     seq.start(env.apb.seqr);
     apb_done_time = $time;
 
-    if (((addr == UART_ADDR_CTRL) && (timing_vif.ctrl_uart_cfg == data[2:0])) ||
-        ((addr == UART_ADDR_BAUD) && (timing_vif.baud_uart_cfg == data))) begin
+    if (((addr == UART_ADDR_CTRL) && (probe_vif.ctrl_uart_cfg == data[2:0])) ||
+        ((addr == UART_ADDR_BAUD) && (probe_vif.baud_uart_cfg == data))) begin
       `uvm_error("CFG_LATENCY", $sformatf("%s became effective before APB completion was recorded",
                                            register_name))
     end
@@ -72,11 +72,11 @@ class uart_config_latency_test extends uart_base_test;
     fork
       begin
         if (addr == UART_ADDR_CTRL) begin
-          wait ((timing_vif.cfg_apply == 1'b1) &&
-                (timing_vif.ctrl_uart_cfg == data[2:0]));
+          wait ((probe_vif.cfg_apply_uart == 1'b1) &&
+                (probe_vif.ctrl_uart_cfg == data[2:0]));
         end else begin
-          wait ((timing_vif.cfg_apply == 1'b1) &&
-                (timing_vif.baud_uart_cfg == data));
+          wait ((probe_vif.cfg_apply_uart == 1'b1) &&
+                (probe_vif.baud_uart_cfg == data));
         end
         effective_time = $time;
         applied = 1'b1;
@@ -94,12 +94,12 @@ class uart_config_latency_test extends uart_base_test;
     end
 
     if ((effective_time <= apb_done_time) ||
-        ((addr == UART_ADDR_CTRL) && (timing_vif.ctrl_uart_cfg != data[2:0])) ||
-        ((addr == UART_ADDR_BAUD) && (timing_vif.baud_uart_cfg != data))) begin
+        ((addr == UART_ADDR_CTRL) && (probe_vif.ctrl_uart_cfg != data[2:0])) ||
+        ((addr == UART_ADDR_BAUD) && (probe_vif.baud_uart_cfg != data))) begin
       `uvm_error("CFG_LATENCY",
                  $sformatf("%s APB_done=%0t UART_apply=%0t ctrl=0x%0h baud=%0d",
                            register_name, apb_done_time, effective_time,
-                           timing_vif.ctrl_uart_cfg, timing_vif.baud_uart_cfg))
+                           probe_vif.ctrl_uart_cfg, probe_vif.baud_uart_cfg))
     end else begin
       `uvm_info("CFG_LATENCY",
                 $sformatf("%s APB_done=%0t UART_apply=%0t latency=%0t",
@@ -107,12 +107,12 @@ class uart_config_latency_test extends uart_base_test;
                           effective_time - apb_done_time), UVM_LOW)
     end
 
-    wait (timing_vif.cfg_apply == 1'b0);
+    wait (probe_vif.cfg_apply_uart == 1'b0);
   endtask
 
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
-    wait (timing_vif.uart_rst_n && timing_vif.cfg_apply == 1'b0);
+    wait (probe_vif.uart_clk_rst_n && probe_vif.cfg_apply_uart == 1'b0);
     write_and_check_apply(UART_ADDR_BAUD, 32'd7, "BAUD");
     write_and_check_apply(UART_ADDR_CTRL, 32'h5, "CTRL");
     #500ns;
@@ -212,4 +212,3 @@ class uart_ral_test extends uart_base_test;
     phase.drop_objection(this);
   endtask
 endclass
-

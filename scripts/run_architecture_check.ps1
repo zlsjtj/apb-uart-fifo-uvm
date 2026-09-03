@@ -13,6 +13,9 @@ function Forbidden([string]$Path, [string]$Pattern, [string]$Name) {
 $checks = @()
 $checks += Forbidden "tb/uvm/uart_monitor.svh" 'bit_tick' "TX monitor does not use DUT bit_tick"
 $checks += Forbidden "tb/uvm/uart_rx_monitor.svh" 'bit_tick' "RX monitor does not use DUT bit_tick"
+$checks += Forbidden "tb/uvm/uart_driver.svh" 'bit_tick' "UART driver does not use DUT bit_tick"
+$checks += Forbidden "tb/interfaces/uart_if.sv" 'bit_tick|cfg_apply|baud_uart_cfg|ctrl_uart_cfg' "Public UART interface contains no white-box probe signals"
+$checks += Required "tb/interfaces/uart_probe_if.sv" 'interface\s+uart_probe_if' "White-box probe interface exists"
 $checks += Required "tb/uvm/uart_monitor.svh" 'baud_uart_cfg' "TX monitor uses effective BAUD configuration"
 $checks += Required "tb/uvm/uart_rx_monitor.svh" 'baud_uart_cfg' "RX monitor uses effective BAUD configuration"
 $checks += Required "tb/uvm/uart_env_cfg.svh" 'class\s+uart_env_cfg' "Shared environment configuration exists"
@@ -20,10 +23,15 @@ $checks += Forbidden "tb/uvm/uart_predictor.svh" 'RX_FIFO_DEPTH\s*=\s*16' "Predi
 $checks += Required "tb/uvm/uart_predictor.svh" 'cfg\.fifo_depth\(\)' "Predictor derives FIFO depth from configuration"
 $checks += Required "tb/uvm/uart_virtual_sequencer.svh" 'class\s+uart_virtual_sequencer' "Virtual sequencer exists"
 $checks += Required "tb/uvm/uart_virtual_sequences.svh" 'class\s+uart_external_rx_vseq' "Cross-interface virtual sequence exists"
+$checks += Required "tb/uvm/uart_virtual_sequences.svh" 'class\s+uart_frame_error_vseq' "Frame-error flow uses a virtual sequence"
+$checks += Required "tb/uvm/uart_virtual_sequences.svh" 'class\s+uart_rx_fifo_full_vseq' "RX FIFO flow uses a virtual sequence"
+$checks += Required "tb/uvm/uart_virtual_sequences.svh" 'class\s+uart_reset_cdc_vseq' "Reset/CDC flow uses a virtual sequence"
+$checks += Forbidden "tb/uvm/uart_env_cfg.svh" 'data_bits|stop_bits' "Environment config exposes no unsupported frame-format knobs"
 $checks += Required "tb/uvm/uart_sequences.svh" 'sequences/uart_base_reg_sequences\.svh' "Sequence compatibility include uses feature fragments"
 $checks += Required "tb/uvm/uart_tests.svh" 'tests/uart_base_reg_tests\.svh' "Test compatibility include uses feature fragments"
 $checks += Required "scripts/run_acceptance.ps1" 'run_final_regression\.ps1' "One-command acceptance entry point exists"
 $checks += Required "scripts/run_fifo_mutation_check.ps1" 'UART_MUTATE_FIFO_FULL_STUCK_LOW' "FIFO control mutation check exists"
+$checks += Required "scripts/run_baud_mutation_check.ps1" 'UART_MUTATE_BAUD_TICK_FAST' "Baud-tick mutation check exists"
 
 $failed = @($checks | Where-Object { $_.Result -ne "PASS" })
 $reportPath = "reports/architecture_structural_summary.md"
@@ -46,4 +54,3 @@ if ($failed.Count -ne 0) {
   throw "Architecture structural check failed: $($failed.Count)/$($checks.Count) checks failed."
 }
 Write-Host "Architecture structural check passed: $($checks.Count)/$($checks.Count)"
-

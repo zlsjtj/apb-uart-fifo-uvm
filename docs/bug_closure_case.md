@@ -1,6 +1,6 @@
 # 故障注入与检查器有效性
 
-正常回归全部通过，只能说明当前实现没有触发现有检查器，并不能直接证明检查器真的能抓错。为避免验证环境“只会报通过”，本项目保留了数据通路和控制通路两类受控故障注入。
+正常回归全部通过，只能说明当前实现没有触发现有检查器，并不能直接证明检查器真的能抓错。为避免验证环境“只会报通过”，本项目保留了数据、状态控制和串行时序四个受控故障模型。
 
 ## 1. 注入方法
 
@@ -30,12 +30,14 @@ powershell -ExecutionPolicy Bypass -File scripts/run_mutation_check.ps1
 powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
 ```
 
-该故障同时被测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言发现，脚本返回 `PASS (mutation detected)`；明细见 `reports/control_mutation_summary.md`。关闭两种故障开关后执行三组正式回归，结果为 45/45 PASS，且 warning、error、fatal 均为 0。
+该故障同时被测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言发现，脚本返回 `PASS (mutation detected)`；明细见 `reports/control_mutation_summary.md`。关闭所有故障开关后执行三组正式回归，结果为 48/48 PASS，且 warning、error、fatal 均为 0。
 
 ## 4. 结论
 
 这次实验说明 TX 数据比较并非形式上的日志统计：当 DUT 的数据路径发生一位错误时，monitor、scoreboard 和端到端读回检查都能给出失败结果。同时，故障版本与正常版本使用不同仿真库，不会污染正式回归证据。
 
-第三类故障在 `async_fifo.sv` 中使用 `UART_MUTATE_FIFO_FULL_STUCK_LOW` 强制 full 标志为低，并运行 `uart_rx_fifo_full_test`（seed 91）。该故障引起 full 状态缺失、FIFO 顺序错误和恢复失败，被 `RX_FIFO_FULL`、`RX_FIFO_ORDER` 与 `SB_RX_MISMATCH` 等检查发现。三项结果统一记录在 `reports/mutation_matrix.md`。
+第三类故障在 `async_fifo.sv` 中使用 `UART_MUTATE_FIFO_FULL_STUCK_LOW` 强制 full 标志为低，并运行 `uart_rx_fifo_full_test`（seed 91）。该故障引起 full 状态缺失、FIFO 顺序错误和恢复失败，被 `RX_FIFO_FULL`、`RX_FIFO_ORDER` 与 `SB_RX_MISMATCH` 等检查发现。
 
-这三例分别证明了数据比较链路、IRQ 控制检查和 FIFO 边界检查能够抓到已知错误，不代表所有类型的设计缺陷都已覆盖。后续若继续扩展，应选择新的故障机理，没有必要为了数量重复制造相同类型的错误。
+第四类故障使用 `UART_MUTATE_BAUD_TICK_FAST`，让串行模块错误地在每个 UART 时钟推进。独立测量 `tx_o` 边沿的 `uart_baud_timing_test`（seed 96）发现 BAUD=4/8 位宽缩短，并报告 `BAUD_TIMING`。这一项尤其用于确认 driver 和 checker 没有继续跟随 DUT 内部节拍。
+
+四项结果统一记录在 `reports/mutation_matrix.md`。它们分别证明数据比较、IRQ 控制、FIFO 边界和串行时序检查能抓到选定错误，不代表所有类型的设计缺陷都已覆盖。

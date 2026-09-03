@@ -10,6 +10,7 @@ rtl/apb_uart.sv
 rtl/apb_uart_sva.sv
 tb/interfaces/apb_if.sv
 tb/interfaces/uart_if.sv
+tb/interfaces/uart_probe_if.sv
 tb/interfaces/reset_if.sv
 tb/uvm/uart_pkg.sv
 tb/top/tb_apb_uart.sv

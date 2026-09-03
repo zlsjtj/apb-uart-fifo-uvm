@@ -34,7 +34,7 @@ class uart_rx_fifo_burst_seq extends uvm_sequence #(uart_item);
       tr = uart_item::type_id::create($sformatf("rx_frame_%0d", i));
       start_item(tr);
       tr.data       = 8'h40 + i[7:0];
-      tr.gap_cycles = 1;
+      tr.gap_cycles = (i == 0) ? 10 : 1;
       tr.frame_err  = 1'b0;
       finish_item(tr);
     end
@@ -127,4 +127,3 @@ class uart_rx_fifo_recovery_check_seq extends uart_base_apb_seq;
     end
   endtask
 endclass
-

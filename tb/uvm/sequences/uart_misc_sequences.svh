@@ -133,6 +133,9 @@ class uart_rx_read_seq extends uart_base_apb_seq;
   `uvm_object_utils(uart_rx_read_seq)
 
   bit [7:0] pattern[$];
+  bit [31:0] baud_value = 32'd1;
+  int unsigned first_read_idle = 180;
+  int unsigned next_read_idle = 70;
 
   function new(string name = "uart_rx_read_seq");
     super.new(name);
@@ -142,11 +145,11 @@ class uart_rx_read_seq extends uart_base_apb_seq;
   task body();
     bit [31:0] data;
 
-    apb_write(ADDR_BAUD, 32'd1, 1);
+    apb_write(ADDR_BAUD, baud_value, 1);
     apb_write(ADDR_CTRL, 32'h1, 4);
 
     foreach (pattern[i]) begin
-      apb_read(ADDR_RXDATA, data, (i == 0) ? 180 : 70);
+      apb_read(ADDR_RXDATA, data, (i == 0) ? first_read_idle : next_read_idle);
       if (data[7:0] != pattern[i]) begin
         `uvm_error("EXT_RX", $sformatf("read 0x%02h expected 0x%02h", data[7:0], pattern[i]))
       end
@@ -158,6 +161,8 @@ class uart_external_rx_seq extends uvm_sequence #(uart_item);
   `uvm_object_utils(uart_external_rx_seq)
 
   bit [7:0] pattern[$];
+  int unsigned bit_cycles = 1;
+  int unsigned edge_offset_ps = 1000;
 
   function new(string name = "uart_external_rx_seq");
     super.new(name);
@@ -172,6 +177,8 @@ class uart_external_rx_seq extends uvm_sequence #(uart_item);
       start_item(tr);
       tr.data       = pattern[i];
       tr.gap_cycles = (i == 0) ? 10 : 3;
+      tr.bit_cycles = bit_cycles;
+      tr.edge_offset_ps = edge_offset_ps;
       finish_item(tr);
     end
   endtask
@@ -199,4 +206,3 @@ class uart_disable_recover_seq extends uart_base_apb_seq;
     end
   endtask
 endclass
-

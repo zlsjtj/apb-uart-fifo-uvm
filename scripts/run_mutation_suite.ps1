@@ -22,6 +22,13 @@ $cases = @(
     Test = "uart_rx_fifo_full_test"
     Seed = 91
     Checker = "RX_FIFO_FULL / SB_RX_MISMATCH"
+  },
+  [pscustomobject]@{
+    Name = "Baud tick stuck fast"
+    Script = "run_baud_mutation_check.ps1"
+    Test = "uart_baud_timing_test"
+    Seed = 96
+    Checker = "BAUD_TIMING"
   }
 )
 
@@ -47,7 +54,7 @@ foreach ($case in $cases) {
   $summary += "| $($case.Name) | ``$($case.Test)`` | $($case.Seed) | ``$($case.Checker)`` | KILLED |"
 }
 $summary += ""
-$summary += "The score applies only to the three deliberately selected fault models; it is not a claim of exhaustive mutation coverage."
+$summary += "The score applies only to the four deliberately selected fault models; it is not a claim of exhaustive mutation coverage."
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllLines(
   (Join-Path (Get-Location) "reports/mutation_matrix.md"),
@@ -55,4 +62,3 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding $false
   $utf8NoBom
 )
 Write-Host "Mutation suite passed: $($cases.Count)/$($cases.Count) mutants killed"
-

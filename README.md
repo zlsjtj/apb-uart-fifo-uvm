@@ -105,7 +105,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
 This check forces IRQ low in a separate simulation library and passes only
 when the IRQ test or assertion reports the injected fault.
 
-Run all three mutation cases and generate a mutation matrix:
+Run all four mutation cases and generate a mutation matrix:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/run_mutation_suite.ps1
@@ -118,7 +118,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_acceptance.ps1
 ```
 
 The acceptance flow combines structural audits, the three-seed regression,
-the skewed-clock stress subset, coverage merge, and all mutation cases.
+two skewed-clock stress subsets, coverage merge, and all mutation cases.
 
 Run the register-model structural audit:
 
@@ -132,7 +132,7 @@ Run the P2 verification-architecture audit:
 powershell -ExecutionPolicy Bypass -File scripts/run_p2_structural_check.ps1
 ```
 
-Freeze the three-seed final evidence package (45 simulations plus merged UCDB):
+Freeze the three-seed final evidence package (48 simulations plus merged UCDB):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
@@ -165,6 +165,7 @@ see [`docs/cdc_analysis.md`](docs/cdc_analysis.md).
 | `uart_irq_test` | IRQ enable/disable, pending RX data, assert and clear behavior |
 | `uart_frame_error_test` | Bad stop-bit rejection, frame-error status, and recovery |
 | `uart_external_rx_test` | External UART RX frame and APB readback |
+| `uart_external_rx_baud_test` | External RX at `BAUD=4` with an independently timed, phase-offset BFM |
 | `uart_rx_fifo_full_test` | RX FIFO full, extra-frame drop, drain, and recovery |
 | `uart_reset_cdc_test` | Mid-traffic dual reset, independent resets, and recovery |
 | `uart_fifo_full_test` | TX FIFO full and overflow error path |
@@ -188,3 +189,4 @@ Sample loopback log excerpt:
 - Register model: [`docs/register_model.md`](docs/register_model.md)
 - P2 verification architecture: [`docs/p2_verification_architecture.md`](docs/p2_verification_architecture.md)
 - Architecture optimization: [`docs/architecture_optimization.md`](docs/architecture_optimization.md)
+- Architecture closure and diagrams: [`docs/verification_architecture_closure.md`](docs/verification_architecture_closure.md)

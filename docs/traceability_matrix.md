@@ -8,7 +8,7 @@
 - **部分完成**：已有基础用例，但边界、检查独立性或覆盖率仍不足；
 - **未完成**：尚无对应测试，或没有足以支撑结论的证据。
 
-当前的 45/45 多 seed 回归结果可以作为证据，但不单独作为“已完成”的判据。
+当前的 48/48 多 seed 回归结果可以作为证据，但不单独作为“已完成”的判据。
 
 ## 1. 总表
 
@@ -16,14 +16,14 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | RQ-01 | CTRL、BAUD 的复位值、读写和非法访问正确 | `uart_reg_test`、`uart_ral_test` | 普通 sequence 检查错误访问；RAL 前门读写和 mirror 检查 CTRL/STATUS/BAUD；SVA 检查 APB 时序与非法地址 | 寄存器模型结构检查 14/14；三组 RAL 用例通过；地址、读写和错误 coverpoint 全覆盖 | 已完成 | RAL 明确建模 RW/RO/WO 和 BAUD=0 归一化；外部复位后由测试显式调用 `regmodel.reset()`，该边界需保留 |
 | RQ-02 | APB 写 TXDATA 后按顺序从 TX 串行输出 | `uart_loopback_test`、`uart_random_test`、`uart_baud_timing_test` | TX monitor 根据引脚、UART 时钟和生效 BAUD 独立解码，不读取 DUT `bit_tick`；scoreboard 比较 APB 写入和 TX 帧 | UART 数据 coverpoint；BAUD=0/1/4/8 位宽检查；默认与错相时钟 loopback 均通过 | 已完成 | 若扩展为生产级 UART，再增加半位起始确认、过采样和容差检查 |
-| RQ-03 | 外部 RX 与 loopback 数据能按顺序从 RXDATA 读回 | `uart_external_rx_test`、`uart_loopback_test`、`uart_frame_error_test`、`uart_rx_fifo_full_test` | 独立 RX 引脚 monitor 解码输入帧；predictor 处理错误帧、FIFO 容量和目标域 loopback 配置；scoreboard 只比较 APB RXDATA | UART 数据 coverpoint；外部 RX、坏帧恢复和 RX 满边界均通过 | 已完成 | 当前 monitor 按简化 DUT 的单倍 bit tick 解码；若扩展到 16 倍过采样，需要同步升级参考采样算法 |
+| RQ-03 | 外部 RX 与 loopback 数据能按顺序从 RXDATA 读回 | `uart_external_rx_test`、`uart_external_rx_baud_test`、`uart_loopback_test`、`uart_frame_error_test`、`uart_rx_fifo_full_test` | 独立 RX 引脚 monitor 解码输入帧；driver 按公开时钟参数独立生成时序；predictor 处理错误帧、FIFO 容量和目标域 loopback 配置；scoreboard 只比较 APB RXDATA | UART 数据 coverpoint；BAUD=1/4 外部 RX、相位偏移、坏帧恢复和 RX 满边界均通过 | 已完成 | 当前 monitor 按简化 DUT 的单倍 bit tick 解码；若扩展到 16 倍过采样，需要同步升级参考采样算法 |
 | RQ-04 | TX/RX FIFO 的满、空、溢出、下溢和恢复行为明确 | `uart_fifo_full_test`、`uart_rx_fifo_full_test`、`uart_bad_access_test` | scoreboard 检查 RX 顺序与满时丢弃；SVA 区分 APB 请求与 `tx_push`/`rx_pop`，检查满写、空读和只读写拒绝时无 FIFO 副作用 | RX 空/部分/满状态、满/清除转换及四类拒绝访问 cover property 均已覆盖 | 已完成 | 保留满、空和恢复用例；若修改 FIFO 接口语义，需要同步更新请求与接受操作断言 |
 | RQ-05 | IRQ、frame error、STATUS 位可验证 | `uart_irq_test`、`uart_frame_error_test` | sequence 检查 STATUS、IRQ、坏帧拒收和正常帧恢复；SVA 检查 IRQ 关系及坏帧不写 RX FIFO | IRQ 四种状态和转换、frame error 检测和恢复均已覆盖 | 已完成 | 保留回归和覆盖率证据；后续若修改 RX/STATUS 语义，需要同步重跑这两个用例 |
-| RQ-06 | BAUD 边界、常用分频和配置更新行为可解释 | `uart_baud_loopback_test`、`uart_baud_timing_test`、`uart_config_latency_test` | 从 `tx_o` 边沿独立测量位宽；分别记录 APB 写完成和 UART 域 `cfg_apply`，SVA 约束配置只能在 apply 时改变 | BAUD=0/1/4/8 交叉覆盖 100%；默认与错相异比时钟下配置生效均晚于 APB 完成 | 已完成 | 当前约定只在帧间更新 BAUD；异步邮箱延迟不固定，测试只检查事件顺序和目标值 |
-| RQ-07 | CDC、时钟比例和独立复位下稳定 | `uart_reset_cdc_test`、`uart_config_latency_test`、CDC 结构检查、三组正式回归 | 双复位/APB-only/UART-only 恢复；异步 FIFO Gray 指针；CTRL/BAUD 请求应答邮箱及目标域 apply 事件；状态两级同步 | `reset_cg` 100%；CDC 结构规则 22/22；新增配置断言无失败；45/45 PASS | 部分完成 | 本科范围内的结构审计和动态压力验证已完成；仍缺商业 CDC/lint 与 reset-domain signoff，不能据此作流片级结论 |
-| RQ-08 | UVM 环境能将遗漏、顺序错误和错误响应判为失败 | predictor、scoreboard、SVA 与 mutation suite | 期望生成与比较分离；残留数据报错；TX 位翻转、IRQ 恒低和 FIFO full 恒低故障注入 | 三类 mutation 全部 KILLED；正常回归保持通过 | 已完成 | 三个故障版本均使用独立仿真库；mutation score 只针对已选故障模型 |
+| RQ-06 | BAUD 边界、常用分频和配置更新行为可解释 | `uart_baud_loopback_test`、`uart_baud_timing_test`、`uart_external_rx_baud_test`、`uart_config_latency_test` | 从 `tx_o` 边沿独立测量位宽；RX driver 不读取 DUT 节拍；分别记录 APB 写完成和 UART 域 `cfg_apply` | BAUD=0/1/4/8 交叉覆盖 100%；baud-tick 过快 mutation 被检出；默认与错相异比时钟下配置生效均晚于 APB 完成 | 已完成 | 当前约定只在帧间更新 BAUD；异步邮箱延迟不固定，测试只检查事件顺序和目标值 |
+| RQ-07 | CDC、时钟比例和独立复位下稳定 | `uart_reset_cdc_test`、`uart_config_latency_test`、CDC 结构检查、三组正式回归 | 双复位/APB-only/UART-only 恢复；异步 FIFO Gray 指针；CTRL/BAUD 请求应答邮箱及目标域 apply 事件；状态两级同步 | `reset_cg` 100%；CDC 结构规则 22/22；两组错相异比压力测试 10/10；48/48 PASS | 部分完成 | 本科范围内的结构审计和动态压力验证已完成；仍缺商业 CDC/lint 与 reset-domain signoff，不能据此作流片级结论 |
+| RQ-08 | UVM 环境能将遗漏、顺序错误、时序错误和错误响应判为失败 | predictor、scoreboard、SVA 与 mutation suite | 期望生成与比较分离；残留数据报错；TX 位翻转、IRQ 恒低、FIFO full 恒低和 baud tick 过快故障注入 | 四类 mutation 全部 KILLED；正常回归保持通过 | 已完成 | 四个故障版本均使用独立仿真库；mutation score 只针对已选故障模型 |
 | RQ-09 | 验证范围有量化结论 | `run_questa.ps1` 保存单例 UCDB，`merge_coverage.ps1` 按最新回归表合并 | 功能、代码、断言及 HTML/text 报告均已生成 | 功能覆盖率 100%，断言 42/42、cover directive 14/14 且无失败；核心 RTL statement 95% 以上 | 已完成 | 保留 `coverage_closure.md` 中的 scope 和 waiver；RTL 或 coverage model 修改后必须重跑完整闭环 |
-| RQ-10 | 最终结果可复现 | `scripts/run_final_regression.ps1`、45 次回归摘要、源码哈希和 45-UCDB 合并报告 | 脚本统计 warning/error/fatal，记录时钟配置、seed、工具/UVM 版本、工作区状态和 SHA-256 | 2026-09-03 的 45/45 PASS；功能 65/65、断言 42/42、cover property 14/14 | 已完成 | 当前证据由源码 SHA-256 标识；如后续提交代码，应在该提交上再生成一次干净工作区 manifest |
+| RQ-10 | 最终结果可复现 | `scripts/run_final_regression.ps1`、48 次回归摘要、源码哈希和 48-UCDB 合并报告 | 脚本统计 warning/error/fatal，记录时钟配置、seed、工具/UVM 版本、源码相对基线状态和 SHA-256 | 2026-09-03 的 48/48 PASS；功能 65/65、断言 42/42、cover property 14/14 | 已完成 | 本轮提交作为源码锚点；证据精确输入以 `source_manifest.md` 为准，源码改变后应重跑 |
 
 ## 2. 现有文件与 RQ 的对应关系
 
@@ -54,13 +54,14 @@
 | T-04（已完成）：补 reset/CDC 压力测试 | RQ-07 | 已覆盖传输中双复位、独立 reset、两组非整数时钟比和不同初相位，并验证复位后恢复 |
 | T-05（已完成）：补 BAUD 时序检查 | RQ-06 | 已独立验证 BAUD=0/1/4/8 下 TX 帧位宽，并在两种 UART 时钟周期下通过 |
 | T-06（已完成）：加强 scoreboard 和 SVA | RQ-04、08 | 已检查 TX 满写/禁用写、RX 空读/只读写、非法地址无 FIFO 副作用；寄存器可见状态保持不变；TX 位翻转 mutation 被 scoreboard 检出 |
-| T-07（已完成）：补覆盖率闭环脚本 | RQ-09 | 已按最新回归表合并 45 个 UCDB，输出文本/HTML 报告，并完成未覆盖项和 waiver 说明 |
-| T-08（已完成）：冻结正式回归证据 | RQ-10 | 3 组 seed、45/45 PASS；报告包含版本、工具、命令、seed、45-UCDB 合并覆盖率、工作区状态和源码 SHA-256 |
-| T-09（已完成）：CDC 结构审计与修正 | RQ-07 | CTRL/BAUD 原子配置邮箱、RX full/frame error 同步、FIFO/邮箱同步器标注；22/22 结构规则通过，45/45 回归通过 |
+| T-07（已完成）：补覆盖率闭环脚本 | RQ-09 | 已按最新回归表合并 48 个 UCDB，输出文本/HTML 报告，并完成未覆盖项和 waiver 说明 |
+| T-08（已完成）：冻结正式回归证据 | RQ-10 | 3 组 seed、48/48 PASS；报告包含版本、工具、命令、seed、48-UCDB 合并覆盖率、工作区状态和源码 SHA-256 |
+| T-09（已完成）：CDC 结构审计与修正 | RQ-07 | CTRL/BAUD 原子配置邮箱、RX full/frame error 同步、FIFO/邮箱同步器标注；22/22 结构规则通过，48/48 回归通过 |
 | T-10（本轮完成）：P0 复位释放收口 | RQ-07、09、10 | APB、UART 与 FIFO 两侧均采用异步断言、两级同步释放；三组错相/异比定向测试通过，新增复位断言与 cover 全部命中 |
 | T-11（已完成）：P1 统一寄存器模型 | RQ-01、10 | 单一寄存器定义 package；轻量 RAL、adapter、predictor 接入 APB agent；访问策略和复位镜像检查通过；结构检查 14/14 |
-| T-12（本轮完成）：P2 提高检查独立性 | RQ-03、06、08、10 | 独立 RX monitor；参考 predictor 与纯比较 scoreboard；UART 域配置生效事件和时延测试；IRQ 控制 mutation；P2 结构检查 11/11，完整回归 45/45 |
-| T-13（本轮完成）：架构解耦与统一验收 | RQ-02、03、07、08、10 | TX/RX monitor 不依赖 DUT bit_tick；统一 env config；FIFO 深度参数共享；sequence/test 分片；virtual sequence；三类 mutation 和一键 acceptance |
+| T-12（已完成）：P2 提高检查独立性 | RQ-03、06、08、10 | 独立 RX monitor；参考 predictor 与纯比较 scoreboard；UART 域配置生效事件和时延测试；IRQ 控制 mutation；P2 结构检查 11/11 |
+| T-13（已完成）：架构解耦与统一验收 | RQ-02、03、07、08、10 | TX/RX monitor 不依赖 DUT bit_tick；统一 env config；FIFO 深度参数共享；sequence/test 分片；virtual sequence 和一键 acceptance |
+| T-14（本轮完成）：独立时序与探针边界收口 | RQ-03、06、07、08、10 | UART driver 不读取 DUT bit_tick；BAUD=4 相位偏移外部 RX；公共接口与白盒 probe 分离；复杂场景迁入 virtual sequence；baud-tick mutation 被检出；21/21 架构规则、48/48 正常回归、10/10 压力子集和 4/4 mutation 通过 |
 
 ## 4. 更新规则
 
