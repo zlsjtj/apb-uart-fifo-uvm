@@ -18,4 +18,10 @@ class uart_serial_cfg extends uvm_object;
   function int unsigned divisor();
     return (baud == 0) ? UART_BAUD_MIN : baud;
   endfunction
+
+  function void snapshot(output bit [2:0] frame_ctrl,
+                         output bit [31:0] frame_baud);
+    frame_ctrl = ctrl;
+    frame_baud = baud;
+  endfunction
 endclass

@@ -120,6 +120,109 @@ class uart_config_latency_test extends uart_base_test;
   endtask
 endclass
 
+class uart_config_stress_test extends uart_base_test;
+  `uvm_component_utils(uart_config_stress_test)
+
+  virtual uart_probe_if probe_vif;
+  virtual reset_if      reset_vif;
+
+  function new(string name = "uart_config_stress_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction
+
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    if (!uvm_config_db#(virtual uart_probe_if)::get(this, "", "probe_vif", probe_vif)) begin
+      `uvm_fatal("NOPROBEVIF", "probe_vif is not set")
+    end
+    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif)) begin
+      `uvm_fatal("NORESETVIF", "reset_if is not set")
+    end
+  endfunction
+
+  task automatic wait_for_config(input bit [2:0] expected_ctrl,
+                                 input bit [31:0] expected_baud,
+                                 input string check_name);
+    bit matched;
+    fork
+      begin
+        wait (probe_vif.uart_clk_rst_n && !probe_vif.cfg_busy &&
+              (probe_vif.ctrl_uart_cfg == expected_ctrl) &&
+              (probe_vif.baud_uart_cfg == expected_baud));
+        matched = 1'b1;
+      end
+      begin
+        #4us;
+      end
+    join_any
+    disable fork;
+    if (!matched) begin
+      `uvm_error("CFG_STRESS",
+                 $sformatf("%s did not converge: busy=%0b pending=%0b ctrl=0x%0h baud=%0d",
+                           check_name, probe_vif.cfg_busy, probe_vif.cfg_pending,
+                           probe_vif.ctrl_uart_cfg, probe_vif.baud_uart_cfg))
+    end
+  endtask
+
+  task run_phase(uvm_phase phase);
+    uart_config_burst_seq burst;
+    uart_config_write_seq write_seq;
+    bit saw_busy_write;
+
+    phase.raise_objection(this);
+    wait (probe_vif.pclk_rst_n && probe_vif.uart_clk_rst_n &&
+          probe_vif.cfg_uart_initialized);
+
+    fork
+      begin
+        forever begin
+          @(posedge probe_vif.pclk);
+          if (probe_vif.cfg_write && probe_vif.cfg_busy) begin
+            saw_busy_write = 1'b1;
+          end
+        end
+      end
+      begin
+        burst = uart_config_burst_seq::type_id::create("burst");
+        burst.start(env.apb.seqr);
+      end
+    join_any
+    disable fork;
+
+    wait_for_config(3'b011, 32'd9, "back-to-back writes");
+    if (!saw_busy_write) begin
+      `uvm_error("CFG_STRESS", "the burst did not exercise a write while the mailbox was busy")
+    end
+
+    // Reset the APB side while a request is in flight. Both visible registers
+    // and the effective UART-domain copy must return to their specified reset
+    // values; stale pending data must not be applied afterwards.
+    write_seq = uart_config_write_seq::type_id::create("pre_apb_reset_write");
+    write_seq.cfg_addr = UART_ADDR_BAUD;
+    write_seq.cfg_data = 32'd13;
+    write_seq.start(env.apb.seqr);
+    wait (probe_vif.cfg_busy || probe_vif.cfg_apply_uart);
+    reset_vif.pulse_apb_reset(3);
+    wait_for_config(UART_CTRL_RESET[2:0], UART_BAUD_RESET, "APB reset recovery");
+
+    // UART-only reset keeps the APB register file alive. The mailbox startup
+    // handshake must restore the retained APB configuration exactly once.
+    burst = uart_config_burst_seq::type_id::create("retained_burst");
+    burst.final_ctrl = 3'b110;
+    burst.final_baud = 32'd11;
+    burst.start(env.apb.seqr);
+    wait_for_config(3'b110, 32'd11, "pre UART-only reset");
+    reset_vif.pulse_uart_reset(3);
+    wait_for_config(3'b110, 32'd11, "UART-only reset recovery");
+
+    `uvm_info("CFG_STRESS",
+              "busy coalescing and APB/UART reset recovery converged to the final register values",
+              UVM_LOW)
+    #500ns;
+    phase.drop_objection(this);
+  endtask
+endclass
+
 class uart_ral_test extends uart_base_test;
   `uvm_component_utils(uart_ral_test)
 

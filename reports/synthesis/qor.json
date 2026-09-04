@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-09-04 23:46:19",
+  "tool": "Vivado 2023.2",
+  "flow": "out-of-context RTL synthesis",
+  "part": "xc7a35tcpg236-1",
+  "top": "apb_uart",
+  "constraints": {
+    "pclkPeriodNs": 10.0,
+    "uartClockPeriodNs": 40.0,
+    "clockGroupsAsynchronous": true
+  },
+  "utilization": {
+    "lutCells": 312,
+    "sequentialCells": 326,
+    "distributedRamCells": 30
+  },
+  "timing": {
+    "pclk": {
+      "wnsNs": 6.025,
+      "estimatedFmaxMHz": 251.572
+    },
+    "uartClock": {
+      "wnsNs": 31.993,
+      "estimatedFmaxMHz": 124.891
+    }
+  },
+  "evidenceBoundary": "Generic Artix-7 post-synthesis evidence only; no implementation, bitstream, board measurement, or commercial CDC signoff claim.",
+  "synthesisWarningCount": 5
+}

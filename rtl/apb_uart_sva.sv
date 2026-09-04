@@ -16,8 +16,13 @@ module apb_uart_sva (
   input logic        pready,
   input logic        pslverr,
   input logic        cfg_busy,
+  input logic        cfg_write,
+  input logic        cfg_pending,
   input logic        cfg_req_tgl,
+  input logic        cfg_ack_tgl,
   input logic        cfg_ack_pclk_q2,
+  input logic [2:0]  cfg_ctrl_hold,
+  input logic [31:0] cfg_baud_hold,
   input logic        cfg_uart_initialized,
   input logic        cfg_apply_uart,
   input logic [2:0]  ctrl_uart_cfg,
@@ -101,6 +106,18 @@ module apb_uart_sva (
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
       !cfg_busy |-> (cfg_req_tgl == cfg_ack_pclk_q2));
 
+  config_payload_stable_while_busy:
+    assert property (@(posedge pclk) disable iff (!pclk_rst_n)
+      cfg_busy |=> $stable({cfg_ctrl_hold, cfg_baud_hold}));
+
+  config_request_eventually_ack:
+    assert property (@(posedge pclk) disable iff (!pclk_rst_n)
+      $changed(cfg_req_tgl) |-> ##[1:64] (cfg_ack_pclk_q2 == cfg_req_tgl));
+
+  config_pending_is_known:
+    assert property (@(posedge pclk) disable iff (!pclk_rst_n)
+      !$isunknown({cfg_write, cfg_busy, cfg_pending}));
+
   config_payload_known:
     assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
       cfg_uart_initialized |-> !$isunknown({ctrl_uart_cfg, baud_uart_cfg}));
@@ -112,6 +129,14 @@ module apb_uart_sva (
   config_apply_payload_known:
     assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
       cfg_apply_uart |-> !$isunknown({ctrl_uart_cfg, baud_uart_cfg}));
+
+  config_apply_is_single_cycle:
+    assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
+      cfg_apply_uart |=> !cfg_apply_uart);
+
+  config_ack_changes_with_apply:
+    assert property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
+      $changed(cfg_ack_tgl) |-> cfg_apply_uart);
 
   status_cdc_flags_known:
     assert property (@(posedge pclk) disable iff (!pclk_rst_n)
@@ -156,6 +181,10 @@ module apb_uart_sva (
   config_uart_apply_seen:
     cover property (@(posedge uart_clk) disable iff (!fifo_uart_rst_n)
       cfg_apply_uart);
+
+  config_pending_write_seen:
+    cover property (@(posedge pclk) disable iff (!pclk_rst_n)
+      cfg_busy && cfg_write ##[1:64] !cfg_pending);
 
   bad_frame_not_written:
     assert property (@(posedge uart_clk) disable iff (!uart_clk_rst_n)
@@ -204,6 +233,22 @@ module apb_uart_sva (
   fifo_uart_reset_releases_only_when_sources_high:
     assert property (@(posedge uart_clk)
       $rose(fifo_uart_rst_n) |-> (presetn && uart_rst_n));
+
+  pclk_reset_release_has_sync_latency:
+    assert property (@(posedge pclk)
+      $rose(presetn) |-> !pclk_rst_n);
+
+  uart_reset_release_has_sync_latency:
+    assert property (@(posedge uart_clk)
+      $rose(uart_rst_n) |-> !uart_clk_rst_n);
+
+  fifo_pclk_reset_release_has_sync_latency:
+    assert property (@(posedge pclk)
+      $rose(fifo_async_rst_n) |-> !fifo_pclk_rst_n);
+
+  fifo_uart_reset_release_has_sync_latency:
+    assert property (@(posedge uart_clk)
+      $rose(fifo_async_rst_n) |-> !fifo_uart_rst_n);
 
   pclk_reset_release_seen:
     cover property (@(posedge pclk) $rose(pclk_rst_n));

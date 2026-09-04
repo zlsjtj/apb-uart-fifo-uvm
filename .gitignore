@@ -1,6 +1,7 @@
 work/
 work_mutation/
 work_*/
+.Xil/
 transcript
 simv
 simv.daidir/

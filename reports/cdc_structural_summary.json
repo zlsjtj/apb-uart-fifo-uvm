@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-09-04 23:46:20",
+  "result": "PASS",
+  "passed": 30,
+  "total": 30,
+  "commercialCdcSignoffPerformed": false,
+  "checks": [
+    {
+      "Name": "Configuration mailbox holds a stable CTRL payload",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Configuration mailbox holds a stable BAUD payload",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Configuration request uses a toggle",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Configuration acknowledgement uses a toggle",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "UART-to-APB acknowledgement synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "APB-to-UART request synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Reset-release synchronizer stages are marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Shared FIFO reset asserts on either external reset",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "APB domain uses a reset-release synchronizer",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "UART domain uses a reset-release synchronizer",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO APB side uses a reset-release synchronizer",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO UART side uses a reset-release synchronizer",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "UART mailbox uses the synchronized shared reset",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO ports do not deassert directly from external resets",
+      "Result": "PASS",
+      "Detail": "legacy structure absent"
+    },
+    {
+      "Name": "Legacy per-bit CTRL/BAUD synchronizers removed",
+      "Result": "PASS",
+      "Detail": "legacy structure absent"
+    },
+    {
+      "Name": "RX full status synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Frame error status synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "STATUS uses synchronized UART-domain flags supplied by the top level",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO read-pointer synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO write-pointer synchronizer is marked",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO Gray-code conversion is present",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO uses second-stage synchronized pointers",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Mailbox payload stability is asserted",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Request-to-acknowledgement progress is asserted",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Configuration apply is asserted to be one cycle",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Acknowledgement changes are tied to apply",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "APB reset-release latency is asserted",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "UART reset-release latency is asserted",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Mailbox busy and independent-reset stress test exists",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "UART-only reset recovery is exercised",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    }
+  ]
+}

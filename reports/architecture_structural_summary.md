@@ -1,8 +1,8 @@
 # Architecture Structural Summary
 
-- Time: `2026-09-03 17:51:45`
+- Time: `2026-09-04 23:46:20`
 - Result: `PASS`
-- Checks: `37/37`
+- Checks: `45/45`
 
 | Check | Result |
 | --- | --- |
@@ -43,3 +43,11 @@
 | Final regression contains no hard-coded run count | PASS |
 | RTL-only coverage policy exists | PASS |
 | Machine-readable RTL coverage gate exists | PASS |
+| TX monitor freezes its frame configuration | PASS |
+| RX monitor freezes its frame configuration | PASS |
+| Configuration busy/reset stress test exists | PASS |
+| Reproducible RTL lint entry point exists | PASS |
+| Reproducible synthesis and timing report flow exists | PASS |
+| Vivado CDC report is generated | PASS |
+| Declarative mutation plan exists | PASS |
+| Machine-readable mutation result exists | PASS |

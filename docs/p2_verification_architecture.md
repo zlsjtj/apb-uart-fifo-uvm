@@ -69,16 +69,16 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 
 ## 6. 本地验证结果
 
-- P2 结构检查：15/15 PASS；
+- P2 结构检查：21/21 PASS；
 - 寄存器模型结构检查：16/16 PASS；
-- CDC 结构检查：22/22 PASS；
+- CDC/RDC 结构检查：30/30 PASS；
 - P2 关键定向测试：5/5 PASS；
 - 非整数时钟比和错相定向测试：3/3 PASS；
 - TX 数据 mutation：PASS，已检出；
 - IRQ 控制 mutation：PASS，已检出；
 - FIFO full 控制 mutation：PASS，已检出；
-- 三组完整回归：48/48 PASS，warning、error、fatal 均为 0；
-- 合并 48 个 UCDB：功能覆盖 65/65，断言 42/42，cover property 14/14，RTL-only 门禁 17/17。
+- 三组完整回归：51/51 PASS，warning、error、fatal 均为 0；
+- 合并 51 个 UCDB：功能覆盖 65/65，断言 51/51，cover property 15/15，RTL-only 门禁 17/17。
 
 详细证据分别保存在 `reports/p2_structural_summary.md`、`reports/config_latency_summary.md`、`reports/mutation_matrix.md` 和 `reports/final_regression/`。
 

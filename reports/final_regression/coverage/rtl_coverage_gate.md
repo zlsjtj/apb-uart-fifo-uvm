@@ -1,6 +1,6 @@
 # RTL-only Coverage Gate
 
-- Time: `2026-09-03 17:51:11`
+- Time: `2026-09-04 23:52:00`
 - Result: **PASS**
 - Source: `reports\final_regression\coverage\dut_bydu_coverage.txt`
 

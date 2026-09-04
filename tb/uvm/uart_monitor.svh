@@ -23,6 +23,8 @@ class uart_monitor extends uvm_component;
   task run_phase(uvm_phase phase);
     uart_item tr;
     bit prev_tx;
+    bit [2:0] frame_ctrl;
+    bit [31:0] frame_baud;
     int unsigned divisor;
 
     prev_tx = 1'b1;
@@ -32,7 +34,11 @@ class uart_monitor extends uvm_component;
         prev_tx = 1'b1;
       end else if ((prev_tx == 1'b1) && (vif.mon_cb.tx_o == 1'b0)) begin
         tr = uart_item::type_id::create("tr", this);
-        divisor = serial_cfg.divisor();
+        // Configuration changes are allowed while a frame is on the wire.
+        // Freeze the APB-observed values at the start edge so one frame is
+        // never decoded with two different divisors.
+        serial_cfg.snapshot(frame_ctrl, frame_baud);
+        divisor = (frame_baud == 0) ? UART_BAUD_MIN : frame_baud;
 
         for (int i = 0; i < UART_DATA_BITS; i++) begin
           wait_uart_cycles(divisor);

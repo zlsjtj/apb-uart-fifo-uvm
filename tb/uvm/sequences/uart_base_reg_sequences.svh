@@ -93,6 +93,28 @@ class uart_config_write_seq extends uart_base_apb_seq;
   endtask
 endclass
 
+class uart_config_burst_seq extends uart_base_apb_seq;
+  `uvm_object_utils(uart_config_burst_seq)
+
+  bit [2:0]  final_ctrl = 3'b011;
+  bit [31:0] final_baud = 32'd9;
+
+  function new(string name = "uart_config_burst_seq");
+    super.new(name);
+  endfunction
+
+  task body();
+    // Keep the APB writes back-to-back. The first transfer starts the CDC
+    // mailbox; later transfers exercise the single-entry pending/coalescing
+    // path while the UART clock domain is still acknowledging it.
+    apb_write(ADDR_BAUD, 32'd4, 0);
+    apb_write(ADDR_CTRL, 32'h5, 0);
+    apb_write(ADDR_BAUD, 32'd7, 0);
+    apb_write(ADDR_CTRL, final_ctrl, 0);
+    apb_write(ADDR_BAUD, final_baud, 0);
+  endtask
+endclass
+
 class uart_reg_seq extends uart_base_apb_seq;
   `uvm_object_utils(uart_reg_seq)
 
@@ -133,4 +155,3 @@ class uart_reg_seq extends uart_base_apb_seq;
     expect_error(slverr, "STATUS write did not report pslverr");
   endtask
 endclass
-

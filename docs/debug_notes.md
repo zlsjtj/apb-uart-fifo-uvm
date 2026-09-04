@@ -122,4 +122,4 @@ APB 写 CTRL 或 BAUD 只表示软件侧寄存器更新完成，并不等于 UAR
 
 # 受控故障注入
 
-为确认验证环境不是“只会跑通”，目前保留了四类编译期故障：TX FIFO 写数据最低位翻转、IRQ 输出恒低、异步 FIFO full 恒低、baud tick 过快。四个故障版本使用彼此隔离的仿真库运行：TX 用例由 `SB_TX_MISMATCH` 检出，IRQ 用例由状态检查和断言检出，FIFO full 用例由满状态、顺序和 scoreboard 检出，baud tick 故障由独立位宽检查检出。默认编译不定义这些开关，三组正式回归为 48/48 PASS。完整记录见 `docs/bug_closure_case.md` 和 `reports/mutation_matrix.md`。
+为确认验证环境不是“只会跑通”，目前保留了十一类编译期故障，覆盖 TX/RX 数据、FIFO 状态、IRQ、baud tick、配置握手、frame error 和同步复位释放。每个故障版本使用独立仿真库，必须同时出现指定检出器和真实 error/fatal 才算 KILLED。默认编译不定义这些开关，三组正式回归为 51/51 PASS。完整记录见 `docs/bug_closure_case.md` 和 `reports/mutation_campaign.md`。

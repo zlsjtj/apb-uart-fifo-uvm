@@ -82,8 +82,13 @@ module tb_apb_uart;
     .pready  (apb_vif.pready),
     .pslverr (apb_vif.pslverr),
     .cfg_busy(probe_vif.cfg_busy),
+    .cfg_write(probe_vif.cfg_write),
+    .cfg_pending(probe_vif.cfg_pending),
     .cfg_req_tgl(probe_vif.cfg_req_tgl),
+    .cfg_ack_tgl(probe_vif.cfg_ack_tgl),
     .cfg_ack_pclk_q2(probe_vif.cfg_ack_pclk_q2),
+    .cfg_ctrl_hold(probe_vif.cfg_ctrl_hold),
+    .cfg_baud_hold(probe_vif.cfg_baud_hold),
     .cfg_uart_initialized(probe_vif.cfg_uart_initialized),
     .cfg_apply_uart(probe_vif.cfg_apply_uart),
     .ctrl_uart_cfg(probe_vif.ctrl_uart_cfg),
@@ -110,8 +115,13 @@ module tb_apb_uart;
   assign probe_vif.fifo_pclk_rst_n = u_dut.fifo_pclk_rst_n;
   assign probe_vif.fifo_uart_rst_n = u_dut.fifo_uart_rst_n;
   assign probe_vif.cfg_busy = u_dut.cfg_busy;
+  assign probe_vif.cfg_write = u_dut.cfg_write;
+  assign probe_vif.cfg_pending = u_dut.cfg_pending;
   assign probe_vif.cfg_req_tgl = u_dut.cfg_req_tgl;
+  assign probe_vif.cfg_ack_tgl = u_dut.cfg_ack_tgl;
   assign probe_vif.cfg_ack_pclk_q2 = u_dut.cfg_ack_pclk_q2;
+  assign probe_vif.cfg_ctrl_hold = u_dut.cfg_ctrl_hold;
+  assign probe_vif.cfg_baud_hold = u_dut.cfg_baud_hold;
   assign probe_vif.cfg_uart_initialized = u_dut.cfg_uart_initialized;
   assign probe_vif.cfg_apply_uart = u_dut.cfg_apply_uart;
   assign probe_vif.ctrl_uart_cfg = u_dut.ctrl_uart_cfg;

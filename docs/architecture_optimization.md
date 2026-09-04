@@ -55,12 +55,14 @@ tb/uvm/tests/
 `scripts/run_acceptance.ps1` 是新的总入口，依次执行：
 
 1. 架构结构检查；
-2. 三组 seed 的完整回归和覆盖率合并；
-3. 两组非整数时钟比、错相压力回归；
-4. 四类 mutation。
+2. RTL lint 与 CDC/RDC 结构审计；
+3. Vivado 通用器件综合与 QoR 检查；
+4. 三组 seed 的完整回归和覆盖率合并；
+5. 两组非整数时钟比、错相压力回归；
+6. 声明式 mutation campaign。
 
-mutation 现包含 TX 数据位翻转、IRQ 恒低、FIFO full 恒低和 baud tick 过快。`run_mutation_suite.ps1` 生成统一矩阵，给出测试、seed、主要检出器和 mutation score。该分数只针对这四个预先选定的故障模型，不能解释为穷尽性故障覆盖率。
+mutation 现包含 TX/RX 数据、RX empty、FIFO full、IRQ 高低、baud、配置 apply/ack、frame error 和复位释放等十一类代表性故障。`run_mutation_campaign.ps1` 生成统一矩阵和 JSON，给出测试、seed、主要检出器和 mutation score。该分数只针对清单中的故障模型，不能解释为穷尽性故障覆盖率。
 
 ## 6. 架构边界
 
-这一轮提高的是验证独立性、配置一致性和工程可维护性，没有把简化 UART 扩展为生产级 IP。商业 CDC/lint、门级仿真、综合时序和 FPGA 板级测试仍不在现有证据内。论文中应继续把这些内容列为边界，而不是用 100% 功能覆盖率替代它们。
+这一轮提高的是验证独立性、配置一致性和工程可维护性，没有把简化 UART 扩展为生产级 IP。当前已有 lint 和综合后时序，但商业 CDC signoff、布局布线时序、bitstream 和 FPGA 板级测试仍不在现有证据内。论文中应继续把这些内容列为边界，而不是用 100% 功能覆盖率替代它们。

@@ -10,7 +10,7 @@
 powershell -ExecutionPolicy Bypass -File scripts/run_cdc_structural_check.ps1
 ```
 
-本轮结果为 22/22 通过，详见 `reports/cdc_structural_summary.md`。
+本轮结果为 30/30 通过，详见 `reports/cdc_structural_summary.md` 和对应 JSON。Vivado 同时生成了综合网表 CDC 报告，但它仍没有经过商业 signoff 流程的路径复核和 waiver 审批。
 
 ## 2. 跨时钟路径与处理方式
 
@@ -39,13 +39,15 @@ powershell -ExecutionPolicy Bypass -File scripts/run_cdc_structural_check.ps1
 - `uart_baud_timing_test`：BAUD=0/1/4/8 的 TX 位宽保持正确；
 - `uart_reset_cdc_test`：双复位、APB-only reset、UART-only reset 后均能恢复；
 - `uart_frame_error_test`、`uart_rx_fifo_full_test`：新增 STATUS 同步后，坏帧与 RX 满状态仍正确；
-- 2026-09-03 的三组 seed 正式回归为 48/48 PASS，所有 warning、error、fatal 均为 0；
-- 合并 48 个 UCDB 后，功能覆盖 65/65，断言 42/42，cover property 14/14，均为 100%；
+- 2026-09-04 的三组 seed 正式回归为 51/51 PASS，所有 warning、error、fatal 均为 0；
+- 合并 51 个 UCDB 后，功能覆盖 65/65，断言 51/51，cover property 15/15，均为 100%；
 - `uart_config_latency_test` 明确记录 APB 写完成与 UART 域 `cfg_apply` 的时刻，证明配置经过邮箱后才在目标域生效；
+- `uart_config_stress_test` 覆盖 mailbox busy 时连续写入、APB reset 竞争以及 UART-only reset 后恢复保留配置；
+- 邮箱 payload 稳定、request/ack、单周期 apply、ack/apply 关系和四路同步复位释放延迟均有 SVA；
 - 复位定向测试另在三种时钟配置下通过：默认配置以及两组非整数时钟比和错相配置。
 
 ## 5. 边界与后续要求
 
 当前配置邮箱保证跨域传递的原子性，但并不支持在一个正在发送或接收的 UART 帧中切换 BAUD。软件应在帧间配置 CTRL、BAUD；这也是本项目已经声明的接口使用约束。
 
-当前已经完成 RTL 层面的异步断言、同步释放，但动态回归和文本结构检查仍不能替代库单元恢复/移除时间、约束文件和专用 RDC/CDC 工具的静态检查。若学校或实验室能够提供 CDC/lint 工具，下一步应在同一版 RTL 上运行商业 CDC 与 reset-domain 分析，并把未处理告警逐项记录。
+当前已经完成 RTL lint、RTL 层面的异步断言、同步释放、结构规则和 Vivado `report_cdc`，但这些结果仍不能替代专用 RDC/CDC 工具的路径分类与 waiver 审核。若学校或实验室能够提供相应工具，下一步应在同一版 RTL 上运行正式分析，并把每一条未处理告警记录下来。

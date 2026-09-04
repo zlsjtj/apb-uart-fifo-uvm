@@ -106,7 +106,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
 This check forces IRQ low in a separate simulation library and passes only
 when the IRQ test or assertion reports the injected fault.
 
-Run all four mutation cases and generate a mutation matrix:
+Run the declared representative mutation campaign and generate Markdown/JSON results:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/run_mutation_suite.ps1
@@ -118,8 +118,9 @@ Run the complete local acceptance flow:
 powershell -ExecutionPolicy Bypass -File scripts/run_acceptance.ps1
 ```
 
-The acceptance flow combines structural audits, the three-seed regression,
-two skewed-clock stress subsets, coverage merge, and all mutation cases.
+The acceptance flow combines RTL lint, CDC/RDC structural audit, generic FPGA
+synthesis, the three-seed regression, two skewed-clock stress subsets, coverage
+merge, and all declared mutation cases.
 The regression list and stress profiles come from
 `config/verification_plan.psd1`; RTL coverage thresholds and waivers come from
 `config/rtl_coverage_policy.psd1`.
@@ -136,7 +137,7 @@ Run the P2 verification-architecture audit:
 powershell -ExecutionPolicy Bypass -File scripts/run_p2_structural_check.ps1
 ```
 
-Freeze the three-seed final evidence package (48 simulations plus merged UCDB):
+Freeze the three-seed final evidence package (51 simulations plus merged UCDB):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
@@ -156,12 +157,28 @@ The audit checks project CDC structures and writes
 `reports/cdc_structural_summary.md`. It does not replace commercial CDC signoff;
 see [`docs/cdc_analysis.md`](docs/cdc_analysis.md).
 
+Run zero-warning RTL lint and the structural CDC/RDC audit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_static_checks.ps1
+```
+
+Run reproducible Vivado out-of-context synthesis on the generic Artix-7 evidence part:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_vivado_synth.ps1
+```
+
+The resulting QoR is a post-synthesis baseline. It is not a placed-and-routed
+timing result, a board frequency claim, a bitstream, or commercial CDC signoff.
+
 ## Tests
 
 | Test | Main check |
 | --- | --- |
 | `uart_reg_test` | Reset values, register read/write, illegal access |
 | `uart_config_latency_test` | APB configuration-write time versus UART-domain apply time |
+| `uart_config_stress_test` | Back-to-back configuration writes, mailbox busy coalescing, APB/UART independent reset recovery |
 | `uart_ral_test` | RAL access policy, frontdoor access, passive prediction, reset mirror |
 | `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
 | `uart_baud_loopback_test` | Loopback with `BAUD=4` to check bit tick timing |
@@ -195,3 +212,4 @@ Sample loopback log excerpt:
 - Architecture optimization: [`docs/architecture_optimization.md`](docs/architecture_optimization.md)
 - Architecture closure and diagrams: [`docs/verification_architecture_closure.md`](docs/verification_architecture_closure.md)
 - P0-P4 optimization closure: [`docs/p0_p4_optimization_closure.md`](docs/p0_p4_optimization_closure.md)
+- Current architecture and latest optimization: [`docs/current_architecture_and_optimization.md`](docs/current_architecture_and_optimization.md)

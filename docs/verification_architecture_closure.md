@@ -65,10 +65,10 @@ flowchart TB
 
 UART transaction 提供 `bit_cycles` 和 `edge_offset_ps`。driver 根据公开的 UART 时钟参数计算位周期，并允许起始边沿相对时钟发生偏移。新增的 `uart_external_rx_baud_test` 在 BAUD=4 下发送相位偏移帧，用来证明外部 RX 激励不是写死在 BAUD=1 上。
 
-新增 `UART_MUTATE_BAUD_TICK_FAST` 后，DUT 会错误地把每个 UART 时钟都当作 bit tick。`uart_baud_timing_test` 仍按外部边沿独立测量位宽，因此能够检出该故障。它和 TX 数据位翻转、IRQ 恒低、FIFO full 恒低一起组成四类 mutation。四项全部检出只证明这四种选定故障没有逃逸，不代表穷尽性覆盖。
+新增 `UART_MUTATE_BAUD_TICK_FAST` 后，DUT 会错误地把每个 UART 时钟都当作 bit tick。`uart_baud_timing_test` 仍按外部边沿独立测量位宽，因此能够检出该故障。当前声明式 campaign 已扩展到十一类，覆盖 TX/RX 数据、FIFO 状态、IRQ、baud、配置握手、frame error 和复位释放。全部检出只证明这些选定故障没有逃逸，不代表穷尽性覆盖。
 
 ## 6. 证据口径
 
-最终证据由一键验收生成，包括 37 项架构规则、16 项寄存器模型规则、22 项 CDC 规则、15 项 P2 规则、三组 seed 的 48 次正常仿真、两组错相异比时钟压力测试、四类 mutation、17 项 RTL-only 覆盖率门禁和源码 SHA-256。测试清单来自 `config/verification_plan.psd1`，门禁与 waiver 来自 `config/rtl_coverage_policy.psd1`。
+最终证据由一键验收生成，包括 RTL lint、通用器件综合、45 项架构规则、16 项寄存器模型规则、30 项 CDC/RDC 规则、21 项 P2 规则、三组 seed 的 51 次正常仿真、两组共 12 次错相异比压力测试、十一类 mutation、17 项 RTL-only 覆盖率门禁和源码 SHA-256。测试清单、mutation 清单和门禁策略均由 `config/` 下的声明式文件维护。
 
 提交后的 commit 是源码版本锚点；本轮仿真时的精确输入仍以 `source_manifest.md` 为准。若之后改动 RTL、testbench、filelist 或验证脚本，原证据不能自动沿用，必须重新执行验收。

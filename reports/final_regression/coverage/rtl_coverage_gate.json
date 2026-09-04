@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T17:51:11+08:00",
+  "generatedAt": "2026-09-04T23:52:00+08:00",
   "result": "PASS",
   "sourceReport": "reports\\final_regression\\coverage\\dut_bydu_coverage.txt",
   "policy": "config/rtl_coverage_policy.psd1",
@@ -145,24 +145,24 @@
   ],
   "waivers": [
     {
-      "Reason": "宽寄存器和总线高位在固定8N1教学场景中没有逐位翻转要求，toggle仅作观察指标。",
       "Scope": "RTL toggle coverage",
-      "Id": "RTL-COV-W001"
+      "Id": "RTL-COV-W001",
+      "Reason": "宽寄存器和总线高位在固定8N1教学场景中没有逐位翻转要求，toggle仅作观察指标。"
     },
     {
-      "Reason": "枚举状态机的非法状态需要人为破坏编码，不属于正常功能回归。",
       "Scope": "uart_tx/uart_rx defensive default transitions",
-      "Id": "RTL-COV-W002"
+      "Id": "RTL-COV-W002",
+      "Reason": "枚举状态机的非法状态需要人为破坏编码，不属于正常功能回归。"
     },
     {
-      "Reason": "无独立功能含义的短路真值组合不设门禁，由功能覆盖、分支和断言补充说明。",
       "Scope": "short-circuit condition combinations",
-      "Id": "RTL-COV-W003"
+      "Id": "RTL-COV-W003",
+      "Reason": "无独立功能含义的短路真值组合不设门禁，由功能覆盖、分支和断言补充说明。"
     },
     {
-      "Reason": "APB寄存器层会把BAUD=0规范化为1，因此集成回归无法把0送到波特率子模块；保留子模块本地防御并将唯一不可达分支显式豁免。",
       "Scope": "uart_baud_gen divisor zero defensive branch",
-      "Id": "RTL-COV-W004"
+      "Id": "RTL-COV-W004",
+      "Reason": "APB寄存器层会把BAUD=0规范化为1，因此集成回归无法把0送到波特率子模块；保留子模块本地防御并将唯一不可达分支显式豁免。"
     }
   ]
 }

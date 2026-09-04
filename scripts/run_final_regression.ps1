@@ -115,7 +115,9 @@ if ($LASTEXITCODE -ne 0) {
 
 $sourcePaths = @(
   "filelist.f",
+  "rtl_filelist.f",
   "config/verification_plan.psd1",
+  "config/mutation_plan.psd1",
   "config/rtl_coverage_policy.psd1",
   "scripts/run_questa.ps1",
   "scripts/merge_coverage.ps1",
@@ -130,7 +132,11 @@ $sourcePaths = @(
   "scripts/run_acceptance.ps1",
   "scripts/run_fifo_mutation_check.ps1",
   "scripts/run_baud_mutation_check.ps1",
-  "scripts/run_mutation_suite.ps1"
+  "scripts/run_mutation_suite.ps1",
+  "scripts/run_mutation_campaign.ps1",
+  "scripts/run_static_checks.ps1",
+  "scripts/run_vivado_synth.ps1",
+  "scripts/vivado_synth.tcl"
 )
 $sourcePaths += Get-ChildItem -Path "rtl", "tb" -Recurse -File |
   Where-Object { $_.Extension -in @(".sv", ".svh") } |

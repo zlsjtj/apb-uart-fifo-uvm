@@ -82,15 +82,27 @@ module apb_uart_cfg_cdc (
         ctrl_uart_cfg <= cfg_ctrl_hold;
         baud_uart_cfg <= cfg_baud_hold;
         cfg_req_seen <= cfg_req_sync;
+`ifdef UART_MUTATE_CFG_ACK_STUCK
+        cfg_ack_tgl <= 1'b0;
+`else
         cfg_ack_tgl <= cfg_req_sync;
+`endif
         cfg_uart_initialized <= 1'b1;
+`ifndef UART_MUTATE_CFG_APPLY_DROP
         cfg_apply_uart <= 1'b1;
+`endif
       end else if (cfg_req_sync != cfg_req_seen) begin
         ctrl_uart_cfg <= cfg_ctrl_hold;
         baud_uart_cfg <= cfg_baud_hold;
         cfg_req_seen <= cfg_req_sync;
+`ifdef UART_MUTATE_CFG_ACK_STUCK
+        cfg_ack_tgl <= 1'b0;
+`else
         cfg_ack_tgl <= cfg_req_sync;
+`endif
+`ifndef UART_MUTATE_CFG_APPLY_DROP
         cfg_apply_uart <= 1'b1;
+`endif
       end
     end
   end

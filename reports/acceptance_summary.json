@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-09-04 23:54:39",
+  "result": "PASS",
+  "elapsedSeconds": 547.0,
+  "seeds": [
+    101,
+    201,
+    301
+  ],
+  "stressProfiles": [
+    "skew_7_11",
+    "skew_9_13"
+  ],
+  "steps": [
+    {
+      "Name": "RTL lint and CDC/RDC structural audit",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Generic FPGA out-of-context synthesis",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Architecture structural audit",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Three-seed final regression and coverage merge",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Skewed non-integer clock regression",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Second skewed clock regression",
+      "Result": "PASS"
+    },
+    {
+      "Name": "Declared representative mutation campaign",
+      "Result": "PASS"
+    }
+  ]
+}

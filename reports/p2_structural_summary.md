@@ -1,8 +1,8 @@
 # P2 Structural Summary
 
-- Time: `2026-09-03 17:51:45`
+- Time: `2026-09-04 23:46:20`
 - Result: `PASS`
-- Checks: `15/15`
+- Checks: `21/21`
 
 | Check | Result |
 | --- | --- |
@@ -21,3 +21,9 @@
 | UART-domain configuration apply event exists | PASS |
 | APB-write versus UART-apply timing test exists | PASS |
 | IRQ control mutation check exists | PASS |
+| TX monitor freezes configuration at frame start | PASS |
+| RX monitor freezes configuration at frame start | PASS |
+| Configuration busy/reset stress test exists | PASS |
+| RX-data mutation is declared | PASS |
+| Configuration-apply mutation is declared | PASS |
+| Reset-release mutation is declared | PASS |

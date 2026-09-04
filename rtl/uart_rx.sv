@@ -60,7 +60,11 @@ module uart_rx (
           RX_STOP: begin
             // Keep a bad-frame indication visible until reset, disable, or a
             // later well-formed frame completes.
+`ifdef UART_MUTATE_FRAME_ERR_MASK
+            frame_err_o <= 1'b0;
+`else
             frame_err_o <= (rx_i != 1'b1);
+`endif
             if (ready_i && rx_i == 1'b1) begin
               data_o  <= shifter;
               valid_o <= 1'b1;

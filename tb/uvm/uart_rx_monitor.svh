@@ -23,6 +23,8 @@ class uart_rx_monitor extends uvm_component;
   task run_phase(uvm_phase phase);
     uart_item tr;
     bit prev_rx;
+    bit [2:0] frame_ctrl;
+    bit [31:0] frame_baud;
     int unsigned divisor;
 
     prev_rx = 1'b1;
@@ -32,7 +34,10 @@ class uart_rx_monitor extends uvm_component;
         prev_rx = 1'b1;
       end else if ((prev_rx == 1'b1) && (vif.mon_cb.rx_i == 1'b0)) begin
         tr = uart_item::type_id::create("rx_pin_tr", this);
-        divisor = serial_cfg.divisor();
+        // Decode the complete frame with the configuration visible when its
+        // start edge was observed, even if software writes BAUD mid-frame.
+        serial_cfg.snapshot(frame_ctrl, frame_baud);
+        divisor = (frame_baud == 0) ? UART_BAUD_MIN : frame_baud;
 
         for (int i = 0; i < UART_DATA_BITS; i++) begin
           wait_uart_cycles(divisor);

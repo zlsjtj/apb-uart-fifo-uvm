@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-09-04 23:45:33",
+  "result": "PASS",
+  "rtlLint": {
+    "tool": "Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014",
+    "errors": 0,
+    "warnings": 0,
+    "log": "logs/rtl_lint.log"
+  },
+  "cdcRdcStructuralAudit": {
+    "result": "PASS",
+    "report": "reports/cdc_structural_summary.md"
+  },
+  "commercialCdcSignoff": {
+    "available": false,
+    "performed": false,
+    "boundary": "The automated result is an RTL structural audit, not a commercial CDC/RDC signoff waiver review."
+  }
+}

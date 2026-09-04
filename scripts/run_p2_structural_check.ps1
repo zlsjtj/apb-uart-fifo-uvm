@@ -26,6 +26,12 @@ $checks += Test-RequiredPattern "tb/uvm/uart_env.svh" 'pred\.exp_rx_ap\.connect\
 $checks += Test-RequiredPattern "rtl/apb_uart_cfg_cdc.sv" 'cfg_apply_uart' "UART-domain configuration apply event exists"
 $checks += Test-RequiredPattern "tb/uvm/tests/uart_base_reg_tests.svh" 'class\s+uart_config_latency_test' "APB-write versus UART-apply timing test exists"
 $checks += Test-RequiredPattern "scripts/run_control_mutation_check.ps1" 'UART_MUTATE_IRQ_STUCK_LOW' "IRQ control mutation check exists"
+$checks += Test-RequiredPattern "tb/uvm/uart_monitor.svh" 'serial_cfg\.snapshot' "TX monitor freezes configuration at frame start"
+$checks += Test-RequiredPattern "tb/uvm/uart_rx_monitor.svh" 'serial_cfg\.snapshot' "RX monitor freezes configuration at frame start"
+$checks += Test-RequiredPattern "tb/uvm/tests/uart_base_reg_tests.svh" 'class\s+uart_config_stress_test' "Configuration busy/reset stress test exists"
+$checks += Test-RequiredPattern "config/mutation_plan.psd1" 'UART_MUTATE_RX_LSB' "RX-data mutation is declared"
+$checks += Test-RequiredPattern "config/mutation_plan.psd1" 'UART_MUTATE_CFG_APPLY_DROP' "Configuration-apply mutation is declared"
+$checks += Test-RequiredPattern "config/mutation_plan.psd1" 'UART_MUTATE_RESET_RELEASE_DIRECT' "Reset-release mutation is declared"
 
 $failed = @($checks | Where-Object { $_.Result -ne "PASS" })
 $reportPath = "reports/p2_structural_summary.md"

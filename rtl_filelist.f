@@ -1,0 +1,10 @@
+rtl/apb_uart_reg_pkg.sv
+rtl/reset_sync.sv
+rtl/async_fifo.sv
+rtl/uart_tx.sv
+rtl/uart_rx.sv
+rtl/uart_baud_gen.sv
+rtl/apb_uart_serial_core.sv
+rtl/apb_uart_regs.sv
+rtl/apb_uart_cfg_cdc.sv
+rtl/apb_uart.sv

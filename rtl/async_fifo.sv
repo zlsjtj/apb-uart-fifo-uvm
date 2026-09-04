@@ -55,9 +55,16 @@ module async_fifo #(
     end else begin
       wbin  <= wbin_next;
       wgray <= wgray_next;
-      if (wr_en && !wr_full) begin
-        mem[wbin[ADDR_WIDTH-1:0]] <= wr_data;
-      end
+    end
+  end
+
+  // Resetting the pointers makes all old entries unreachable, so the storage
+  // array itself needs no reset. Keeping RAM writes in a reset-free process
+  // also lets FPGA synthesis infer memory instead of expanding every bit into
+  // an asynchronously reset flip-flop.
+  always_ff @(posedge wr_clk) begin
+    if (wr_en && !wr_full) begin
+      mem[wbin[ADDR_WIDTH-1:0]] <= wr_data;
     end
   end
 

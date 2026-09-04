@@ -13,8 +13,13 @@ interface uart_probe_if (
   logic        fifo_pclk_rst_n;
   logic        fifo_uart_rst_n;
   logic        cfg_busy;
+  logic        cfg_write;
+  logic        cfg_pending;
   logic        cfg_req_tgl;
+  logic        cfg_ack_tgl;
   logic        cfg_ack_pclk_q2;
+  logic [2:0]  cfg_ctrl_hold;
+  logic [31:0] cfg_baud_hold;
   logic        cfg_uart_initialized;
   logic        cfg_apply_uart;
   logic [2:0]  ctrl_uart_cfg;

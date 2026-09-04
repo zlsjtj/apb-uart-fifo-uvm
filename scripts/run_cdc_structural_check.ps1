@@ -43,6 +43,14 @@ $checks += Test-RequiredPattern -Path "rtl/async_fifo.sv" -Pattern 'ASYNC_REG = 
 $checks += Test-RequiredPattern -Path "rtl/async_fifo.sv" -Pattern 'ASYNC_REG = "TRUE".*wgray_rclk_q1' -Name "FIFO write-pointer synchronizer is marked"
 $checks += Test-RequiredPattern -Path "rtl/async_fifo.sv" -Pattern 'bin2gray' -Name "FIFO Gray-code conversion is present"
 $checks += Test-RequiredPattern -Path "rtl/async_fifo.sv" -Pattern 'rgray_wclk_q2|wgray_rclk_q2' -Name "FIFO uses second-stage synchronized pointers"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'config_payload_stable_while_busy' -Name "Mailbox payload stability is asserted"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'config_request_eventually_ack' -Name "Request-to-acknowledgement progress is asserted"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'config_apply_is_single_cycle' -Name "Configuration apply is asserted to be one cycle"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'config_ack_changes_with_apply' -Name "Acknowledgement changes are tied to apply"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'pclk_reset_release_has_sync_latency' -Name "APB reset-release latency is asserted"
+$checks += Test-RequiredPattern -Path "rtl/apb_uart_sva.sv" -Pattern 'uart_reset_release_has_sync_latency' -Name "UART reset-release latency is asserted"
+$checks += Test-RequiredPattern -Path "tb/uvm/tests/uart_base_reg_tests.svh" -Pattern 'class\s+uart_config_stress_test' -Name "Mailbox busy and independent-reset stress test exists"
+$checks += Test-RequiredPattern -Path "tb/uvm/tests/uart_base_reg_tests.svh" -Pattern 'pulse_uart_reset' -Name "UART-only reset recovery is exercised"
 
 $availableCdcTool = @("questa_cdc", "qverify", "spyglass") |
   Where-Object { Get-Command $_ -ErrorAction SilentlyContinue } |
@@ -70,6 +78,16 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding $false
   $report,
   $utf8NoBom
 )
+
+$json = [ordered]@{
+  generatedAt = $now
+  result = if ($passed -eq $checks.Count) { "PASS" } else { "FAIL" }
+  passed = $passed
+  total = $checks.Count
+  commercialCdcSignoffPerformed = $false
+  checks = $checks
+}
+$json | ConvertTo-Json -Depth 5 | Set-Content -Encoding UTF8 reports/cdc_structural_summary.json
 
 if ($passed -ne $checks.Count) {
   throw "CDC structural check failed. See reports/cdc_structural_summary.md"

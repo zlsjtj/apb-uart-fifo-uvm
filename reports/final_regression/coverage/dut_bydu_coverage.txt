@@ -26,7 +26,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    776       285       491      36.7
+    Toggle Bins                    794       307       487      38.6
 
 =================================================================================
 === Design Unit: work.apb_uart_cfg_cdc
@@ -40,7 +40,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    320       100       220      31.2
+    Toggle Bins                    320       103       217      32.1
 
 =================================================================================
 === Design Unit: work.apb_uart_reg_pkg
@@ -68,7 +68,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    394       128       266      32.4
+    Toggle Bins                    394       130       264      32.9
 
 =================================================================================
 === Design Unit: work.apb_uart_serial_core
@@ -82,7 +82,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    254        86       168      33.8
+    Toggle Bins                    254        88       166      34.6
 
 =================================================================================
 === Design Unit: work.apb_uart_sva
@@ -96,14 +96,14 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    214       107       107      50.0
+    Toggle Bins                    290       129       161      44.4
 
 =================================================================================
 === Design Unit: work.async_fifo
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           29        29         0     100.0
+    Stmts                           30        30         0     100.0
     Branches                        10        10         0     100.0
     FEC Condition Terms              2         1         1      50.0
     FEC Expression Terms             0         0         0     100.0
@@ -159,7 +159,7 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           64        63         1      98.4
+    Stmts                           69        68         1      98.5
     Branches                         2         0         2       0.0
     FEC Condition Terms              0         0         0     100.0
     FEC Expression Terms             0         0         0     100.0
@@ -180,7 +180,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    200        32       168      16.0
+    Toggle Bins                    200        34       166      17.0
 
 =================================================================================
 === Design Unit: work.uart_if
@@ -201,9 +201,9 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                         1728       842       886      48.7
-    Branches                      1275       194      1081      15.2
-    FEC Condition Terms             82        35        47      42.6
+    Stmts                         1789       887       902      49.5
+    Branches                      1309       202      1107      15.4
+    FEC Condition Terms             84        37        47      44.0
     FEC Expression Terms             0         0         0     100.0
     FSMs                                                       100.0
         States                       0         0         0     100.0
@@ -222,7 +222,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    116        61        55      52.5
+    Toggle Bins                    192        83       109      43.2
 
 =================================================================================
 === Design Unit: work.uart_rx
@@ -253,5 +253,5 @@ Coverage Report Summary Data by DU
     Toggle Bins                     58        56         2      96.5
 
 
-Total Coverage By Design Unit (filtered view): 59.3%
+Total Coverage By Design Unit (filtered view): 59.6%
 

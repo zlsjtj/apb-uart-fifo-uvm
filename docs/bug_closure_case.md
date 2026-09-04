@@ -30,7 +30,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_mutation_check.ps1
 powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
 ```
 
-该故障同时被测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言发现，脚本返回 `PASS (mutation detected)`；明细见 `reports/control_mutation_summary.md`。关闭所有故障开关后执行三组正式回归，结果为 48/48 PASS，且 warning、error、fatal 均为 0。
+该故障同时被测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言发现，脚本返回 `PASS (mutation detected)`；明细见 `reports/control_mutation_summary.md`。关闭所有故障开关后执行三组正式回归，结果为 51/51 PASS，且 warning、error、fatal 均为 0。
 
 ## 4. 结论
 
@@ -40,4 +40,4 @@ powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
 
 第四类故障使用 `UART_MUTATE_BAUD_TICK_FAST`，让串行模块错误地在每个 UART 时钟推进。独立测量 `tx_o` 边沿的 `uart_baud_timing_test`（seed 96）发现 BAUD=4/8 位宽缩短，并报告 `BAUD_TIMING`。这一项尤其用于确认 driver 和 checker 没有继续跟随 DUT 内部节拍。
 
-四项结果统一记录在 `reports/mutation_matrix.md`。它们分别证明数据比较、IRQ 控制、FIFO 边界和串行时序检查能抓到选定错误，不代表所有类型的设计缺陷都已覆盖。
+当前 campaign 已扩展为十一项，结果统一记录在 `reports/mutation_campaign.md` 和 JSON。除原有四项外，还覆盖 RX 数据/empty、IRQ 恒高、配置 apply/ack、frame error 和复位释放。全部检出只证明这些选定故障没有逃逸，不代表所有类型的设计缺陷都已覆盖。

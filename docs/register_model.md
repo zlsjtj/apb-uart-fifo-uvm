@@ -44,8 +44,8 @@ APB monitor -> register predictor -> RAL mirror
 
 - 寄存器模型结构检查：16/16 PASS；
 - RAL 定向测试：前门读写、访问属性、被动预测、BAUD=0 归一化和 reset mirror 全部通过；
-- 三组 seed 完整回归：48/48 PASS，warning、error、fatal 均为 0；
-- 48 个 UCDB 合并后，功能覆盖 65/65、断言 42/42、cover property 14/14；
+- 三组 seed 完整回归：51/51 PASS，warning、error、fatal 均为 0；
+- 51 个 UCDB 合并后，功能覆盖 65/65、断言 51/51、cover property 15/15；
 - TX LSB mutation 仍被 scoreboard 检出，6 个发送字节全部产生 `SB_TX_MISMATCH`。
 
 结构检查报告在 `reports/register_model_structural_summary.md`，完整回归明细在 `reports/final_regression/final_regression_summary.md`。

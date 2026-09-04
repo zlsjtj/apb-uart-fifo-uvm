@@ -13,8 +13,8 @@ module apb_uart #(
   import apb_uart_reg_pkg::*;
 
   logic [31:0] ctrl_reg, baud_reg;
-  logic tx_push, rx_pop, tx_full, tx_empty, rx_full_uart, rx_empty;
-  logic [7:0] tx_fifo_rdata, tx_fifo_wdata, rx_fifo_rdata;
+  logic tx_push, rx_pop, tx_full, tx_empty, rx_full_uart, rx_empty, rx_empty_raw;
+  logic [7:0] tx_fifo_rdata, tx_fifo_wdata, rx_fifo_rdata, rx_fifo_wdata;
   logic enable_uart, loopback_en, irq_en;
 
   logic [2:0] cfg_ctrl_hold, cfg_ctrl_value;
@@ -44,10 +44,24 @@ module apb_uart #(
   assign enable_uart_clk = ctrl_uart_cfg[UART_CTRL_ENABLE_BIT];
   assign loopback_uart_clk = ctrl_uart_cfg[UART_CTRL_LOOPBACK_BIT];
 
-`ifdef UART_MUTATE_IRQ_STUCK_LOW
+`ifdef UART_MUTATE_IRQ_STUCK_HIGH
+  assign irq_o = 1'b1;
+`elsif UART_MUTATE_IRQ_STUCK_LOW
   assign irq_o = 1'b0;
 `else
   assign irq_o = irq_en && !rx_empty;
+`endif
+
+`ifdef UART_MUTATE_RX_EMPTY_STUCK_HIGH
+  assign rx_empty = 1'b1;
+`else
+  assign rx_empty = rx_empty_raw;
+`endif
+
+`ifdef UART_MUTATE_RX_LSB
+  assign rx_fifo_wdata = rx_data ^ 8'h01;
+`else
+  assign rx_fifo_wdata = rx_data;
 `endif
 
 `ifdef UART_MUTATE_TX_LSB
@@ -114,12 +128,14 @@ module apb_uart #(
     .rd_rst_n(fifo_uart_rst_n), .rd_en(tx_rd_en),
     .rd_data(tx_fifo_rdata), .rd_empty(tx_empty)
   );
+  // synthesis translate_off
   async_fifo_sva #(.DATA_WIDTH(8), .ADDR_WIDTH(FIFO_ADDR_WIDTH)) u_tx_fifo_sva (
     .wr_clk(pclk), .wr_rst_n(fifo_pclk_rst_n), .wr_en(tx_push),
     .wr_data(tx_fifo_wdata), .wr_full(tx_full), .rd_clk(uart_clk),
     .rd_rst_n(fifo_uart_rst_n), .rd_en(tx_rd_en),
     .rd_data(tx_fifo_rdata), .rd_empty(tx_empty)
   );
+  // synthesis translate_on
 
   apb_uart_serial_core u_serial_core (
     .uart_clk(uart_clk), .uart_rst_n(uart_clk_rst_n),
@@ -136,14 +152,16 @@ module apb_uart #(
 
   async_fifo #(.DATA_WIDTH(8), .ADDR_WIDTH(FIFO_ADDR_WIDTH)) u_rx_fifo (
     .wr_clk(uart_clk), .wr_rst_n(fifo_uart_rst_n), .wr_en(rx_wr_en),
-    .wr_data(rx_data), .wr_full(rx_full_uart), .rd_clk(pclk),
+    .wr_data(rx_fifo_wdata), .wr_full(rx_full_uart), .rd_clk(pclk),
     .rd_rst_n(fifo_pclk_rst_n), .rd_en(rx_pop),
-    .rd_data(rx_fifo_rdata), .rd_empty(rx_empty)
+    .rd_data(rx_fifo_rdata), .rd_empty(rx_empty_raw)
   );
+  // synthesis translate_off
   async_fifo_sva #(.DATA_WIDTH(8), .ADDR_WIDTH(FIFO_ADDR_WIDTH)) u_rx_fifo_sva (
     .wr_clk(uart_clk), .wr_rst_n(fifo_uart_rst_n), .wr_en(rx_wr_en),
-    .wr_data(rx_data), .wr_full(rx_full_uart), .rd_clk(pclk),
+    .wr_data(rx_fifo_wdata), .wr_full(rx_full_uart), .rd_clk(pclk),
     .rd_rst_n(fifo_pclk_rst_n), .rd_en(rx_pop),
-    .rd_data(rx_fifo_rdata), .rd_empty(rx_empty)
+    .rd_data(rx_fifo_rdata), .rd_empty(rx_empty_raw)
   );
+  // synthesis translate_on
 endmodule

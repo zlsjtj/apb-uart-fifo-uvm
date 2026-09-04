@@ -25,6 +25,12 @@ function Run-Step([string]$Name, [scriptblock]$Action) {
   $script:steps += [pscustomobject]@{ Name = $Name; Result = "PASS" }
 }
 
+Run-Step "RTL lint and CDC/RDC structural audit" {
+  & (Join-Path $PSScriptRoot "run_static_checks.ps1")
+}
+Run-Step "Generic FPGA out-of-context synthesis" {
+  & (Join-Path $PSScriptRoot "run_vivado_synth.ps1")
+}
 Run-Step "Architecture structural audit" {
   & (Join-Path $PSScriptRoot "run_architecture_check.ps1")
 }
@@ -45,7 +51,7 @@ Run-Step "Second skewed clock regression" {
     -PclkHalfNs $profile.PclkHalfNs -UartHalfNs $profile.UartHalfNs `
     -PclkPhaseNs $profile.PclkPhaseNs -UartPhaseNs $profile.UartPhaseNs
 }
-Run-Step "Four-case mutation suite" {
+Run-Step "Declared representative mutation campaign" {
   & (Join-Path $PSScriptRoot "run_mutation_suite.ps1")
 }
 
@@ -68,4 +74,13 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding $false
   $summary,
   $utf8NoBom
 )
+$machine = [ordered]@{
+  generatedAt = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+  result = "PASS"
+  elapsedSeconds = $elapsed
+  seeds = $Seeds
+  stressProfiles = @($stressProfiles.Name)
+  steps = $steps
+}
+$machine | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 reports/acceptance_summary.json
 Write-Host "Acceptance passed: $($steps.Count)/$($steps.Count) steps"

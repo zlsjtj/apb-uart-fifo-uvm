@@ -2,6 +2,7 @@
   RegressionTests = @(
     'uart_reg_test'
     'uart_config_latency_test'
+    'uart_config_stress_test'
     'uart_ral_test'
     'uart_loopback_test'
     'uart_baud_loopback_test'
@@ -28,6 +29,7 @@
       UartPhaseNs = 5
       Tests = @(
         'uart_config_latency_test'
+        'uart_config_stress_test'
         'uart_loopback_test'
         'uart_external_rx_test'
         'uart_external_rx_baud_test'
@@ -43,6 +45,7 @@
       UartPhaseNs = 1
       Tests = @(
         'uart_config_latency_test'
+        'uart_config_stress_test'
         'uart_frame_error_test'
         'uart_external_rx_baud_test'
         'uart_rx_fifo_full_test'

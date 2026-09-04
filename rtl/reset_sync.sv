@@ -22,6 +22,10 @@ module reset_sync #(
     end
   end
 
+`ifdef UART_MUTATE_RESET_RELEASE_DIRECT
+  assign sync_rst_n = async_rst_n;
+`else
   assign sync_rst_n = sync_pipe[STAGES-1];
+`endif
 
 endmodule
