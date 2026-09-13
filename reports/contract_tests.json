@@ -1,0 +1,118 @@
+{
+  "cases": [
+    {
+      "width": 1,
+      "depth": 2,
+      "mode": "functional_wraparound",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_1.log"
+    },
+    {
+      "width": 2,
+      "depth": 4,
+      "mode": "functional_wraparound",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_2.log"
+    },
+    {
+      "width": 3,
+      "depth": 8,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_3.log"
+    },
+    {
+      "width": 4,
+      "depth": 16,
+      "mode": "functional_wraparound",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_4.log"
+    },
+    {
+      "width": 5,
+      "depth": 32,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_5.log"
+    },
+    {
+      "width": 6,
+      "depth": 64,
+      "mode": "functional_wraparound",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_6.log"
+    },
+    {
+      "width": 7,
+      "depth": 128,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_7.log"
+    },
+    {
+      "width": 8,
+      "depth": 256,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_8.log"
+    },
+    {
+      "width": 9,
+      "depth": 512,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_9.log"
+    },
+    {
+      "width": 10,
+      "depth": 1024,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_10.log"
+    },
+    {
+      "width": 11,
+      "depth": 2048,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_11.log"
+    },
+    {
+      "width": 12,
+      "depth": 4096,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_12.log"
+    },
+    {
+      "width": 13,
+      "depth": 8192,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_13.log"
+    },
+    {
+      "width": 14,
+      "depth": 16384,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_14.log"
+    },
+    {
+      "width": 15,
+      "depth": 32768,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_15.log"
+    },
+    {
+      "width": 16,
+      "depth": 65536,
+      "mode": "elaboration_only",
+      "result": "PASS",
+      "log": "logs/apb_contract_width_16.log"
+    }
+  ],
+  "result": "PASS",
+  "boundary": "Strict completion-edge APB and FIFO wraparound, widths explicitly listed"
+}

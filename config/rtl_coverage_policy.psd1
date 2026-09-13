@@ -1,5 +1,7 @@
 @{
   Gates = @(
+    @{ Module = 'tx_completion_cdc';    Metric = 'Statements'; Minimum = 95.0 }
+    @{ Module = 'tx_completion_cdc';    Metric = 'Branches';   Minimum = 90.0 }
     @{ Module = 'apb_uart';             Metric = 'Statements'; Minimum = 95.0 }
     @{ Module = 'apb_uart_regs';        Metric = 'Statements'; Minimum = 95.0 }
     @{ Module = 'apb_uart_regs';        Metric = 'Branches';   Minimum = 90.0 }

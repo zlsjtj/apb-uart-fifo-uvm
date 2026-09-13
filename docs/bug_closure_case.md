@@ -1,43 +1,41 @@
-# 故障注入与检查器有效性
+# APB 晚响应缺陷与检查器对照
 
-正常回归全部通过，只能说明当前实现没有触发现有检查器，并不能直接证明检查器真的能抓错。为避免验证环境“只会报通过”，本项目保留了数据、状态控制和串行时序四个受控故障模型。
+## 发现过程
 
-## 1. 注入方法
+2026-09-05 复查代码时发现：PREADY 固定为 1，但 PRDATA 和 PSLVERR 到传输完成沿之后才由非阻塞赋值更新。driver 和 monitor 又都延后 2 ns 读取，所以正常回归一直看不到这段空窗。
 
-在 `apb_uart.sv` 的 TX FIFO 写数据入口保留一个编译期开关 `UART_MUTATE_TX_LSB`。开关打开后，写入 FIFO 的数据最低位会被翻转；默认编译不开启该开关，DUT 行为不受影响。
+独立小测试没有使用原来的 APB BFM，在真正的完成沿直接采样，得到：
 
-故障版本使用独立的 `work_mutation` 仿真库，不覆盖正常回归使用的 `work` 库。执行命令如下：
+| 操作 | 完成沿读到 | 延后 2 ns 读到 | 规格要求 |
+| --- | --- | --- | --- |
+| 复位后读 BAUD | 0 | 16 | 完成沿应为 16 |
+| 非法地址读取 | PSLVERR=0 | PSLVERR=1 | 完成沿应报错 |
+
+这说明问题不只是 DUT 的时序写法，也包括检查器重复了 DUT 的错误假设。历史的 51/51 PASS 不能证明 APB 协议已经正确。
+
+## 修复
+
+寄存器层改成组合读数据和组合错误响应，保证完成沿前有效；配置寄存器写入、TX push 和 RX pop 仍在握手沿更新。driver/monitor 改用 clocking block 的 input #1step 采样，错误响应 SVA 也改为同拍检查。
+
+独立的 tb/unit/apb_contract_tb.sv 保留在仓库，连续访问时 PSEL 不插空闲周期，检查默认值、读写、非法地址、受限访问、loopback 出队和 FIFO 回绕。它不调用 UVM 的 APB driver，因此能对 driver 之外的接口行为作第二次核对。
+
+## 如何防止同类问题回来
+
+UART_MUTATE_APB_LATE_RESPONSE 会让 APB 响应重新晚一拍。campaign 对同一个 uart_reg_test 和相同 seed 先运行正确版本，再运行故障版本：
+
+- 正确版本必须完整结束，无 warning/error/fatal。
+- 故障版本必须命中实际错误记录里的 REG_DEFAULT、REG_RW、SEQ_EXP_ERR 或对应 APB SVA。
+- 日志只有检测器名字、但错误来自别处，不算检出。
+- 许可证、加载失败和超时不算检出。
+
+命令：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_mutation_check.ps1
+pwsh -NoProfile -Command '& ./scripts/run_mutation_campaign.ps1 -CaseIds apb_late'
 ```
 
-## 2. 预期结果
+完整清单在 config/mutation_plan.psd1，还覆盖 TX/RX 数据、FIFO 状态、IRQ、波特率、配置握手、帧错误和同步复位。每项使用独立故障库，baseline 与 mutant 的日志和匹配错误记录写入 mutation_campaign.json。
 
-故障注入用例采用 `uart_loopback_test`，Seed 为 71。APB 侧写入的原始数据仍进入 scoreboard 期望队列，而 TX monitor 会观察到最低位已经翻转的数据，因此 scoreboard 应报告 `SB_TX_MISMATCH`。
+## 论文里可以怎样说明
 
-这里的通过条件与普通回归相反：只有已知故障被明确检出，脚本才返回成功；如果仿真零报错，反而说明故障逃逸，脚本必须失败。
-
-## 3. 实际结果
-
-本次运行中，6 个发送字节均触发 `SB_TX_MISMATCH`。例如期望 `0x55` 时实际发送为 `0x54`，期望 `0xaa` 时实际发送为 `0xab`。最终 UVM 共报告 12 个 error，其中包括 6 次 TX 数据不一致和 6 次 loopback 读回不一致。RX predictor 以引脚上实际出现的帧建立 FIFO 期望，因此不会把同一处 TX mutation 重复记成 RX scoreboard 错误。
-
-故障注入脚本判定为 `PASS (mutation detected)`，详细结果见 `reports/mutation_summary.md`。
-
-第二类故障使用 `UART_MUTATE_IRQ_STUCK_LOW` 强制 IRQ 输出保持低电平，并在独立的 `work_irq_mutation` 库中运行 `uart_irq_test`（seed 81）。执行命令为：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
-```
-
-该故障同时被测试中的 `IRQ_STATUS` 检查和 `irq_matches_rx_state` 断言发现，脚本返回 `PASS (mutation detected)`；明细见 `reports/control_mutation_summary.md`。关闭所有故障开关后执行三组正式回归，结果为 51/51 PASS，且 warning、error、fatal 均为 0。
-
-## 4. 结论
-
-这次实验说明 TX 数据比较并非形式上的日志统计：当 DUT 的数据路径发生一位错误时，monitor、scoreboard 和端到端读回检查都能给出失败结果。同时，故障版本与正常版本使用不同仿真库，不会污染正式回归证据。
-
-第三类故障在 `async_fifo.sv` 中使用 `UART_MUTATE_FIFO_FULL_STUCK_LOW` 强制 full 标志为低，并运行 `uart_rx_fifo_full_test`（seed 91）。该故障引起 full 状态缺失、FIFO 顺序错误和恢复失败，被 `RX_FIFO_FULL`、`RX_FIFO_ORDER` 与 `SB_RX_MISMATCH` 等检查发现。
-
-第四类故障使用 `UART_MUTATE_BAUD_TICK_FAST`，让串行模块错误地在每个 UART 时钟推进。独立测量 `tx_o` 边沿的 `uart_baud_timing_test`（seed 96）发现 BAUD=4/8 位宽缩短，并报告 `BAUD_TIMING`。这一项尤其用于确认 driver 和 checker 没有继续跟随 DUT 内部节拍。
-
-当前 campaign 已扩展为十一项，结果统一记录在 `reports/mutation_campaign.md` 和 JSON。除原有四项外，还覆盖 RX 数据/empty、IRQ 恒高、配置 apply/ack、frame error 和复位释放。全部检出只证明这些选定故障没有逃逸，不代表所有类型的设计缺陷都已覆盖。
+本案例的价值是“通过独立接口采样发现 DUT 与 BFM 的共同盲区，再用故障对照验证修复后的检查器”，不是把多跑一次测试当成创新。mutation 的检出率仅针对清单声明的故障模型，不外推为全部 RTL 错误的覆盖率。

@@ -1,10 +1,35 @@
 {
-  "generatedAt": "2026-09-04 23:46:20",
+  "generatedAt": "2026-09-13 11:59:54",
   "result": "PASS",
-  "passed": 30,
-  "total": 30,
+  "passed": 35,
+  "total": 35,
   "commercialCdcSignoffPerformed": false,
   "checks": [
+    {
+      "Name": "Both mailbox domains reset with the shared FIFO epoch",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "APB sees the returned synchronized TX empty flag",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "Startup cannot bypass the synchronized request",
+      "Result": "PASS",
+      "Detail": "legacy structure absent"
+    },
+    {
+      "Name": "FIFO full flag is registered in its source domain",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
+    {
+      "Name": "FIFO empty flag is registered in its source domain",
+      "Result": "PASS",
+      "Detail": "required structure found"
+    },
     {
       "Name": "Configuration mailbox holds a stable CTRL payload",
       "Result": "PASS",

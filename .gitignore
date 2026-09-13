@@ -23,3 +23,10 @@ reports/coverage/html/
 reports/final_regression/coverage/html/
 __pycache__/
 *.pyc
+reports/acceptance_runs/
+reports/gate_selftests/
+reports/synthesis/*.dcp
+reports/synthesis/*.dcp.bak
+toolchain.local.psd1
+deliveries/
+reports/workflow_selftests/

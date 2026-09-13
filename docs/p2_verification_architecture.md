@@ -48,7 +48,7 @@ scoreboard 只负责比较：
 
 ## 4. 区分 APB 写入和 UART 域生效
 
-CTRL、BAUD 在 APB 域写入后，通过请求/应答邮箱跨到 UART 域。P2 在 UART 域配置真正装载时增加单周期 `cfg_apply_uart`，并同时暴露已经生效的 CTRL、BAUD 值。当前架构中，配置 monitor 只用于白盒 CDC 时延观察；predictor 和串行 monitor 的运行配置来自 APB monitor 看到的成功写事务，不把 DUT 内部生效值当作数据检查标准答案。
+CTRL、BAUD 在 APB 域写入后通过请求/应答邮箱跨域。cfg_apply_uart 只用于白盒时延和握手观察；predictor 先记录成功 APB 写的请求值，再在公开 STATUS.CFG_BUSY 清零时确认配置。串行 monitor 使用该确认值并每帧冻结，不把 DUT 内部生效值当作数据检查标准答案。被 reset 打断的帧通过统一 reset epoch 中止，不能在新复位周期继续发布。
 
 `uart_config_latency_test` 单独记录两个时刻：
 
@@ -67,7 +67,9 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 
 原有 TX 最低位翻转 mutation 也重新执行，6 个发送字节全部触发 `SB_TX_MISMATCH`。后续架构优化又补充了 FIFO full 恒低和 baud tick 过快故障；当前四项 mutation 分别覆盖数据、IRQ 控制、FIFO 控制和串行时序，但不代表所有故障类型都已经被证明可检出。
 
-## 6. 本地验证结果
+## 6. 历史阶段验证结果（截至 2026-09-04）
+
+以下数量来自旧版，不作为 2026-09-05 修改后的验收。当前完整结果以 acceptance_summary.json 指向的运行目录为准。
 
 - P2 结构检查：21/21 PASS；
 - 寄存器模型结构检查：16/16 PASS；
@@ -86,4 +88,4 @@ SVA 同时检查 UART 域配置只能伴随 apply 事件变化，并检查 apply
 
 P2 完成后，RX 检查不再信任 driver 事务，参考预测和结果比较也有了清楚的职责边界；配置跨域的“写入”和“生效”能够被单独观察和验证。这使验证环境更适合在论文中说明检查独立性，而不只是展示测试数量。
 
-当前结论仍属于 RTL 仿真、结构审计和 mutation 证据。没有商业 CDC/lint 报告，也没有 FPGA 板级结果，因此不能把本轮通过表述成流片级 signoff 或硬件实测完成。
+当前结论属于 RTL 仿真、RTL lint、结构与 Vivado 网表路径审查、OOC 综合和 mutation 证据。没有商业 CDC/RDC signoff 或 FPGA 板级结果，不能把通过表述成流片级 signoff 或硬件实测完成。

@@ -1,12 +1,17 @@
 # CDC Structural Check Summary
 
-- Time: `2026-09-04 23:46:20`
+- Time: `2026-09-13 11:59:54`
 - Commercial CDC tool available: `False`
 - Scope: RTL structural rules only; this is not a replacement for signoff CDC analysis.
-- Result: 30/30 checks passed.
+- Result: 35/35 checks passed.
 
 | Check | Result | Detail |
 | --- | --- | --- |
+| Both mailbox domains reset with the shared FIFO epoch | PASS | required structure found |
+| APB sees the returned synchronized TX empty flag | PASS | required structure found |
+| Startup cannot bypass the synchronized request | PASS | legacy structure absent |
+| FIFO full flag is registered in its source domain | PASS | required structure found |
+| FIFO empty flag is registered in its source domain | PASS | required structure found |
 | Configuration mailbox holds a stable CTRL payload | PASS | required structure found |
 | Configuration mailbox holds a stable BAUD payload | PASS | required structure found |
 | Configuration request uses a toggle | PASS | required structure found |

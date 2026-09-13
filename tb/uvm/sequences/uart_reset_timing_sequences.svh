@@ -12,6 +12,36 @@ class uart_reset_midflight_seq extends uart_base_apb_seq;
   endtask
 endclass
 
+class uart_one_rx_frame_seq extends uvm_sequence #(uart_item);
+  `uvm_object_utils(uart_one_rx_frame_seq)
+  function new(string name = "uart_one_rx_frame_seq"); super.new(name); endfunction
+  task body();
+    uart_item tr;
+    tr = uart_item::type_id::create("frame");
+    start_item(tr);
+    tr.data=8'h55; tr.bit_cycles=4; tr.gap_cycles=2; tr.edge_offset_ps=1000; tr.frame_err=0;
+    finish_item(tr);
+  endtask
+endclass
+
+class uart_fifo_reset_access_seq extends uart_base_apb_seq;
+  `uvm_object_utils(uart_fifo_reset_access_seq)
+  function new(string name="uart_fifo_reset_access_seq"); super.new(name); endfunction
+  task body();
+    bit err;
+    bit [31:0] data;
+    apb_write_status(ADDR_TXDATA, 8'haa, 0, err);
+    expect_error(err,"TXDATA succeeded while UART reset held the FIFO in reset");
+    apb_read_status(ADDR_RXDATA, data, 0, err);
+    expect_error(err,"RXDATA succeeded while UART reset held the FIFO in reset");
+    // Register storage is still usable and must be replayed after reset.
+    apb_write_status(ADDR_BAUD, 3, 0, err);
+    if (err) `uvm_error("RESET_REGISTER","BAUD write rejected during UART-only reset")
+    apb_read(ADDR_BAUD,data);
+    if (data!=3) `uvm_error("RESET_REGISTER","BAUD did not retain the write during UART-only reset")
+  endtask
+endclass
+
 class uart_reset_defaults_seq extends uart_base_apb_seq;
   `uvm_object_utils(uart_reset_defaults_seq)
 
@@ -113,4 +143,3 @@ class uart_baud_tx_seq extends uart_base_apb_seq;
     apb_write(ADDR_TXDATA, 32'h55, 2);
   endtask
 endclass
-

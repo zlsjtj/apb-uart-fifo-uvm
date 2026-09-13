@@ -19,28 +19,28 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           13        13         0     100.0
+    Stmts                           17        17         0     100.0
     Branches                         2         2         0     100.0
     FEC Condition Terms              0         0         0     100.0
     FEC Expression Terms             6         5         1      83.3
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    794       307       487      38.6
+    Toggle Bins                    868       338       530      38.9
 
 =================================================================================
 === Design Unit: work.apb_uart_cfg_cdc
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           41        41         0     100.0
-    Branches                        12        12         0     100.0
+    Stmts                           37        37         0     100.0
+    Branches                        11        11         0     100.0
     FEC Condition Terms              2         2         0     100.0
-    FEC Expression Terms             0         0         0     100.0
+    FEC Expression Terms             2         2         0     100.0
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    320       103       217      32.1
+    Toggle Bins                    322       106       216      32.9
 
 =================================================================================
 === Design Unit: work.apb_uart_reg_pkg
@@ -61,14 +61,14 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           29        29         0     100.0
-    Branches                        29        29         0     100.0
+    Stmts                           25        25         0     100.0
+    Branches                        25        25         0     100.0
     FEC Condition Terms              8         8         0     100.0
-    FEC Expression Terms            15        15         0     100.0
+    FEC Expression Terms            26        24         2      92.3
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    394       130       264      32.9
+    Toggle Bins                    398       134       264      33.6
 
 =================================================================================
 === Design Unit: work.apb_uart_serial_core
@@ -82,7 +82,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    254        88       166      34.6
+    Toggle Bins                    256        94       162      36.7
 
 =================================================================================
 === Design Unit: work.apb_uart_sva
@@ -96,21 +96,21 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    290       129       161      44.4
+    Toggle Bins                    358       150       208      41.8
 
 =================================================================================
 === Design Unit: work.async_fifo
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           30        30         0     100.0
+    Stmts                           32        32         0     100.0
     Branches                        10        10         0     100.0
-    FEC Condition Terms              2         1         1      50.0
+    FEC Condition Terms              3         2         1      66.6
     FEC Expression Terms             0         0         0     100.0
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    168       154        14      91.6
+    Toggle Bins                    170       170         0     100.0
 
 =================================================================================
 === Design Unit: work.async_fifo_sva
@@ -159,7 +159,7 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           69        68         1      98.5
+    Stmts                           72        71         1      98.6
     Branches                         2         0         2       0.0
     FEC Condition Terms              0         0         0     100.0
     FEC Expression Terms             0         0         0     100.0
@@ -167,6 +167,20 @@ Coverage Report Summary Data by DU
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
     Toggle Bins                    266        10       256       3.7
+
+=================================================================================
+=== Design Unit: work.tx_completion_cdc
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           19        19         0     100.0
+    Branches                         7         7         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             2         2         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     98        98         0     100.0
 
 =================================================================================
 === Design Unit: work.uart_baud_gen
@@ -180,7 +194,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    200        34       166      17.0
+    Toggle Bins                    200        38       162      19.0
 
 =================================================================================
 === Design Unit: work.uart_if
@@ -201,9 +215,9 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                         1789       887       902      49.5
-    Branches                      1309       202      1107      15.4
-    FEC Condition Terms             84        37        47      44.0
+    Stmts                         2107      1076      1031      51.0
+    Branches                      1550       265      1285      17.0
+    FEC Condition Terms            114        47        67      41.2
     FEC Expression Terms             0         0         0     100.0
     FSMs                                                       100.0
         States                       0         0         0     100.0
@@ -222,7 +236,7 @@ Coverage Report Summary Data by DU
     FSMs                                                       100.0
         States                       0         0         0     100.0
         Transitions                  0         0         0     100.0
-    Toggle Bins                    192        83       109      43.2
+    Toggle Bins                    196        88       108      44.8
 
 =================================================================================
 === Design Unit: work.uart_rx
@@ -233,9 +247,9 @@ Coverage Report Summary Data by DU
     Branches                        17        16         1      94.1
     FEC Condition Terms              7         4         3      57.1
     FEC Expression Terms             0         0         0     100.0
-    FSMs                                                        90.0
+    FSMs                                                       100.0
         States                       3         3         0     100.0
-        Transitions                  5         4         1      80.0
+        Transitions                  5         5         0     100.0
     Toggle Bins                     57        57         0     100.0
 
 =================================================================================
@@ -243,15 +257,15 @@ Coverage Report Summary Data by DU
 =================================================================================
     Enabled Coverage            Active      Hits    Misses % Covered
     ----------------            ------      ----    ------ ---------
-    Stmts                           20        19         1      95.0
-    Branches                        12        11         1      91.6
-    FEC Condition Terms              2         1         1      50.0
-    FEC Expression Terms             0         0         0     100.0
+    Stmts                           28        27         1      96.4
+    Branches                        14        13         1      92.8
+    FEC Condition Terms              4         3         1      75.0
+    FEC Expression Terms             2         0         2       0.0
     FSMs                                                       100.0
         States                       2         2         0     100.0
         Transitions                  3         3         0     100.0
-    Toggle Bins                     58        56         2      96.5
+    Toggle Bins                     62        60         2      96.7
 
 
-Total Coverage By Design Unit (filtered view): 59.6%
+Total Coverage By Design Unit (filtered view): 59.7%
 

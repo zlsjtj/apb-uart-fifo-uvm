@@ -17,6 +17,78 @@ class uart_reset_cdc_test extends uart_base_test;
   endtask
 endclass
 
+class uart_frame_reset_test extends uart_base_test;
+  `uvm_component_utils(uart_frame_reset_test)
+  virtual uart_if timing_vif;
+  virtual reset_if reset_vif;
+  function new(string name = "uart_frame_reset_test", uvm_component parent=null); super.new(name,parent); endfunction
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    if (!uvm_config_db#(virtual uart_if)::get(this,"","timing_vif",timing_vif))
+      `uvm_fatal("NOVIF","timing interface missing")
+    if (!uvm_config_db#(virtual reset_if)::get(this,"","reset_vif",reset_vif))
+      `uvm_fatal("NOVIF","reset interface missing")
+  endfunction
+  task run_phase(uvm_phase phase);
+    uart_reset_midflight_seq tx_seq;
+    uart_reset_recovery_seq recover;
+    uart_rx_config_seq configure_rx;
+    uart_one_rx_frame_seq rx_seq;
+    uart_fifo_reset_access_seq reset_access;
+    uart_wait_config_seq settle;
+    int unsigned old_aborts;
+    phase.raise_objection(this);
+    tx_seq=uart_reset_midflight_seq::type_id::create("tx_seq");
+    recover=uart_reset_recovery_seq::type_id::create("recover");
+    old_aborts=env.uart.mon.aborted_frames;
+    fork
+      tx_seq.start(env.apb.seqr);
+      begin
+        @(negedge timing_vif.tx_o);
+        repeat (3) @(posedge timing_vif.uart_clk);
+        reset_vif.pulse_apb_reset(3);
+      end
+    join
+    repeat (3) @(posedge timing_vif.uart_clk);
+    if (env.uart.mon.aborted_frames != old_aborts+1)
+      `uvm_error("FRAME_RESET","TX monitor did not abort exactly one interrupted frame")
+    recover.start(env.apb.seqr);
+
+    configure_rx=uart_rx_config_seq::type_id::create("configure_rx");
+    configure_rx.baud_value=4;
+    configure_rx.start(env.apb.seqr);
+    rx_seq=uart_one_rx_frame_seq::type_id::create("rx_seq");
+    old_aborts=env.uart.rx_mon.aborted_frames;
+    fork
+      rx_seq.start(env.uart.seqr);
+      begin
+        @(negedge timing_vif.rx_i);
+        repeat (6) @(posedge timing_vif.uart_clk);
+        reset_vif.pulse_uart_reset(3);
+      end
+    join
+    repeat (3) @(posedge timing_vif.uart_clk);
+    if (env.uart.rx_mon.aborted_frames != old_aborts+1)
+      `uvm_error("FRAME_RESET","RX monitor did not abort exactly one interrupted frame")
+    recover.start(env.apb.seqr);
+    #1us;
+    reset_access=uart_fifo_reset_access_seq::type_id::create("reset_access");
+    settle=uart_wait_config_seq::type_id::create("settle");
+    fork
+      reset_vif.pulse_uart_reset(12);
+      begin
+        @(negedge reset_vif.uart_rst_n);
+        reset_access.start(env.apb.seqr);
+      end
+    join
+    settle.start(env.apb.seqr);
+    recover.start(env.apb.seqr);
+    #1us;
+    `uvm_info("FRAME_RESET","TX/APB-reset and RX/UART-reset aborted old frames; recovery data checked",UVM_LOW)
+    phase.drop_objection(this);
+  endtask
+endclass
+
 class uart_baud_timing_test extends uart_base_test;
   `uvm_component_utils(uart_baud_timing_test)
 

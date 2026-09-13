@@ -32,6 +32,7 @@ class uart_reg_test extends uart_base_test;
   endtask
 endclass
 
+`ifndef UART_NO_WHITEBOX
 class uart_config_latency_test extends uart_base_test;
   `uvm_component_utils(uart_config_latency_test)
 
@@ -168,6 +169,7 @@ class uart_config_stress_test extends uart_base_test;
     uart_config_burst_seq burst;
     uart_config_write_seq write_seq;
     bit saw_busy_write;
+    int unsigned restore_applies;
 
     phase.raise_objection(this);
     wait (probe_vif.pclk_rst_n && probe_vif.uart_clk_rst_n &&
@@ -212,8 +214,24 @@ class uart_config_stress_test extends uart_base_test;
     burst.final_baud = 32'd11;
     burst.start(env.apb.seqr);
     wait_for_config(3'b110, 32'd11, "pre UART-only reset");
-    reset_vif.pulse_uart_reset(3);
-    wait_for_config(3'b110, 32'd11, "UART-only reset recovery");
+    wait (probe_vif.cfg_apply_uart == 0);
+    restore_applies=0;
+    fork
+      begin
+        forever begin
+          @(posedge probe_vif.cfg_apply_uart);
+          restore_applies++;
+        end
+      end
+      begin
+        reset_vif.pulse_uart_reset(3);
+        wait_for_config(3'b110, 32'd11, "UART-only reset recovery");
+        repeat (3) @(posedge probe_vif.uart_clk);
+      end
+    join_any
+    disable fork;
+    if (restore_applies != 1)
+      `uvm_error("CFG_STRESS", $sformatf("retained config applied %0d times, expected exactly one",restore_applies))
 
     `uvm_info("CFG_STRESS",
               "busy coalescing and APB/UART reset recovery converged to the final register values",
@@ -223,6 +241,7 @@ class uart_config_stress_test extends uart_base_test;
   endtask
 endclass
 
+`endif
 class uart_ral_test extends uart_base_test;
   `uvm_component_utils(uart_ral_test)
 
@@ -243,8 +262,11 @@ class uart_ral_test extends uart_base_test;
     uvm_status_e status;
     uvm_reg_data_t value;
     uart_ral_predict_seq predict_seq;
+    uart_wait_config_seq settle_seq;
 
     phase.raise_objection(this);
+    settle_seq = uart_wait_config_seq::type_id::create("settle_seq");
+    settle_seq.start(env.apb.seqr);
     if (env.regmodel.ctrl.get_rights(env.regmodel.default_map) != "RW" ||
         env.regmodel.status.get_rights(env.regmodel.default_map) != "RO" ||
         env.regmodel.baud.get_rights(env.regmodel.default_map) != "RW" ||
@@ -295,6 +317,7 @@ class uart_ral_test extends uart_base_test;
     end
 
     reset_vif.pulse_apb_reset(3);
+    settle_seq.start(env.apb.seqr);
     env.regmodel.ctrl.mirror(status, UVM_CHECK, UVM_FRONTDOOR,
                              env.regmodel.default_map);
     env.regmodel.status.mirror(status, UVM_CHECK, UVM_FRONTDOOR,

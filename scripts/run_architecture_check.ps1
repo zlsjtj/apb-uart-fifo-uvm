@@ -11,6 +11,11 @@ function Forbidden([string]$Path, [string]$Pattern, [string]$Name) {
 }
 
 $checks = @()
+$checks += Forbidden "tb/uvm/uart_agent.svh" 'uart_config_monitor|probe_vif|uart_probe_if' "UART agent has no white-box dependencies"
+$checks += Required "tb/uvm/uart_env.svh" 'cfg_mon\.ap\.connect\(cfg_checker\.analysis_export\)' "Optional config events have an explicit consumer"
+$checks += Required "tb/top/tb_apb_uart.sv" 'parameter int FIFO_ADDR_WIDTH' "UVM top FIFO width is an elaboration parameter"
+$checks += Required "scripts/run_acceptance.ps1" 'run_parameter_regression.ps1' "Full acceptance includes parameter and no-probe tests"
+$checks += Required "rtl/tx_completion_cdc.sv" 'COUNT_WIDTH=ADDR_WIDTH\+2' "TX completion modulo includes FIFO and retirement pipeline margin"
 $checks += Forbidden "tb/uvm/uart_monitor.svh" 'bit_tick' "TX monitor does not use DUT bit_tick"
 $checks += Forbidden "tb/uvm/uart_rx_monitor.svh" 'bit_tick' "RX monitor does not use DUT bit_tick"
 $checks += Forbidden "tb/uvm/uart_driver.svh" 'bit_tick' "UART driver does not use DUT bit_tick"

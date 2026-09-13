@@ -20,15 +20,14 @@ class apb_monitor extends uvm_component;
     apb_item tr;
 
     forever begin
-      @(posedge vif.pclk);
-      #2ns;
-      if (vif.psel && vif.penable && vif.pready) begin
+      @(vif.mon_cb);
+      if (vif.presetn && vif.mon_cb.psel && vif.mon_cb.penable && vif.mon_cb.pready) begin
         tr = apb_item::type_id::create("tr", this);
-        tr.kind   = vif.pwrite ? apb_item::APB_WRITE : apb_item::APB_READ;
-        tr.addr   = vif.paddr;
-        tr.data   = vif.pwdata;
-        tr.rdata  = vif.prdata;
-        tr.slverr = vif.pslverr;
+        tr.kind   = vif.mon_cb.pwrite ? apb_item::APB_WRITE : apb_item::APB_READ;
+        tr.addr   = vif.mon_cb.paddr;
+        tr.data   = vif.mon_cb.pwdata;
+        tr.rdata  = vif.mon_cb.prdata;
+        tr.slverr = vif.mon_cb.pslverr;
         ap.write(tr);
         `uvm_info("APB_MON", tr.convert2string(), UVM_HIGH)
       end

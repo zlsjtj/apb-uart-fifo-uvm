@@ -21,6 +21,11 @@ function Test-ForbiddenPattern([string[]]$Path, [string]$Pattern, [string]$Name)
 New-Item -ItemType Directory -Force reports | Out-Null
 
 $checks = @()
+$checks += Test-RequiredPattern -Path 'rtl/apb_uart.sv' -Pattern '\.pclk_rst_n\(fifo_pclk_rst_n\)' -Name 'Both mailbox domains reset with the shared FIFO epoch'
+$checks += Test-RequiredPattern -Path 'rtl/apb_uart.sv' -Pattern '\.tx_empty\(tx_empty_pclk_q2\)' -Name 'APB sees the returned synchronized TX empty flag'
+$checks += Test-ForbiddenPattern -Path 'rtl/apb_uart_cfg_cdc.sv' -Pattern 'if\s*\(!cfg_uart_initialized\)' -Name 'Startup cannot bypass the synchronized request'
+$checks += Test-RequiredPattern -Path 'rtl/async_fifo.sv' -Pattern 'wr_full_q\s*<=' -Name 'FIFO full flag is registered in its source domain'
+$checks += Test-RequiredPattern -Path 'rtl/async_fifo.sv' -Pattern 'rd_empty\s*<=' -Name 'FIFO empty flag is registered in its source domain'
 $checks += Test-RequiredPattern -Path "rtl/apb_uart_cfg_cdc.sv" -Pattern 'cfg_ctrl_hold' -Name "Configuration mailbox holds a stable CTRL payload"
 $checks += Test-RequiredPattern -Path "rtl/apb_uart_cfg_cdc.sv" -Pattern 'cfg_baud_hold' -Name "Configuration mailbox holds a stable BAUD payload"
 $checks += Test-RequiredPattern -Path "rtl/apb_uart_cfg_cdc.sv" -Pattern 'cfg_req_tgl' -Name "Configuration request uses a toggle"

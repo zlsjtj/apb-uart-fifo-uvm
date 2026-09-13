@@ -4,105 +4,135 @@ ASSERTION RESULTS:
 Name                 File(Line)           Failure Pass 
                                           Count   Count 
 -------------------------------------------------------
+/tb_apb_uart/u_dut/u_tx_fifo/write_gray_single_step
+                     rtl/async_fifo.sv(108)       0 66634
+/tb_apb_uart/u_dut/u_tx_fifo/read_gray_single_step
+                     rtl/async_fifo.sv(111)       0 16454
+/tb_apb_uart/u_dut/u_tx_fifo/write_pointer_holds_without_accept
+                     rtl/async_fifo.sv(114)       0 66349
+/tb_apb_uart/u_dut/u_tx_fifo/read_pointer_holds_without_accept
+                     rtl/async_fifo.sv(117)       0 16172
 /tb_apb_uart/u_dut/u_tx_fifo_sva/no_overflow_write
-                     rtl/async_fifo_sva.sv(19)       0 38677
+                     rtl/async_fifo_sva.sv(19)       0 66808
 /tb_apb_uart/u_dut/u_tx_fifo_sva/no_underflow_read
-                     rtl/async_fifo_sva.sv(23)       0  9607
+                     rtl/async_fifo_sva.sv(23)       0 16628
 /tb_apb_uart/u_dut/u_tx_fifo_sva/write_side_flags_known
-                     rtl/async_fifo_sva.sv(27)       0 38677
+                     rtl/async_fifo_sva.sv(27)       0 66808
 /tb_apb_uart/u_dut/u_tx_fifo_sva/read_side_flags_known
-                     rtl/async_fifo_sva.sv(31)       0  9607
+                     rtl/async_fifo_sva.sv(31)       0 16628
 /tb_apb_uart/u_dut/u_tx_fifo_sva/read_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(35)       0   139
+                     rtl/async_fifo_sva.sv(35)       0   369
 /tb_apb_uart/u_dut/u_tx_fifo_sva/write_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(39)       0   142
+                     rtl/async_fifo_sva.sv(39)       0   372
+/tb_apb_uart/u_dut/u_tx_completion/retired_gray_single_step
+                     rtl/tx_completion_cdc.sv(51)       0 16454
+/tb_apb_uart/u_dut/u_rx_fifo/write_gray_single_step
+                     rtl/async_fifo.sv(108)       0 16454
+/tb_apb_uart/u_dut/u_rx_fifo/read_gray_single_step
+                     rtl/async_fifo.sv(111)       0 66634
+/tb_apb_uart/u_dut/u_rx_fifo/write_pointer_holds_without_accept
+                     rtl/async_fifo.sv(114)       0 16160
+/tb_apb_uart/u_dut/u_rx_fifo/read_pointer_holds_without_accept
+                     rtl/async_fifo.sv(117)       0 66340
 /tb_apb_uart/u_dut/u_rx_fifo_sva/no_overflow_write
-                     rtl/async_fifo_sva.sv(19)       0  9607
+                     rtl/async_fifo_sva.sv(19)       0 16628
 /tb_apb_uart/u_dut/u_rx_fifo_sva/no_underflow_read
-                     rtl/async_fifo_sva.sv(23)       0 38677
+                     rtl/async_fifo_sva.sv(23)       0 66808
 /tb_apb_uart/u_dut/u_rx_fifo_sva/write_side_flags_known
-                     rtl/async_fifo_sva.sv(27)       0  9607
+                     rtl/async_fifo_sva.sv(27)       0 16628
 /tb_apb_uart/u_dut/u_rx_fifo_sva/read_side_flags_known
-                     rtl/async_fifo_sva.sv(31)       0 38677
+                     rtl/async_fifo_sva.sv(31)       0 66808
 /tb_apb_uart/u_dut/u_rx_fifo_sva/read_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(35)       0   157
+                     rtl/async_fifo_sva.sv(35)       0   381
 /tb_apb_uart/u_dut/u_rx_fifo_sva/write_data_known_when_accepted
-                     rtl/async_fifo_sva.sv(39)       0   157
-/tb_apb_uart/u_apb_uart_sva/apb_setup_to_access
-                     rtl/apb_uart_sva.sv(50)       0   679
-/tb_apb_uart/u_apb_uart_sva/apb_access_has_ready
-                     rtl/apb_uart_sva.sv(54)       0   679
-/tb_apb_uart/u_apb_uart_sva/apb_addr_stable_in_access
-                     rtl/apb_uart_sva.sv(58)       0   679
-/tb_apb_uart/u_apb_uart_sva/invalid_addr_reports_error
-                     rtl/apb_uart_sva.sv(62)       0     6
-/tb_apb_uart/u_apb_uart_sva/status_write_reports_error
-                     rtl/apb_uart_sva.sv(66)       0     3
-/tb_apb_uart/u_apb_uart_sva/rejected_tx_write_reports_error
-                     rtl/apb_uart_sva.sv(71)       0    24
-/tb_apb_uart/u_apb_uart_sva/rejected_tx_write_has_no_push
-                     rtl/apb_uart_sva.sv(76)       0    24
-/tb_apb_uart/u_apb_uart_sva/accepted_tx_write_pushes
-                     rtl/apb_uart_sva.sv(81)       0   142
-/tb_apb_uart/u_apb_uart_sva/empty_rx_read_reports_error
-                     rtl/apb_uart_sva.sv(86)       0     6
-/tb_apb_uart/u_apb_uart_sva/rx_write_reports_error
-                     rtl/apb_uart_sva.sv(90)       0     3
-/tb_apb_uart/u_apb_uart_sva/rejected_rx_access_has_no_pop
-                     rtl/apb_uart_sva.sv(95)       0     9
-/tb_apb_uart/u_apb_uart_sva/invalid_addr_has_no_fifo_side_effect
-                     rtl/apb_uart_sva.sv(99)       0     6
-/tb_apb_uart/u_apb_uart_sva/baud_div_not_zero_after_write
-                     rtl/apb_uart_sva.sv(103)       0     6
-/tb_apb_uart/u_apb_uart_sva/config_mailbox_idle_matches_ack
-                     rtl/apb_uart_sva.sv(107)       0 36955
-/tb_apb_uart/u_apb_uart_sva/config_payload_stable_while_busy
-                     rtl/apb_uart_sva.sv(111)       0  1818
-/tb_apb_uart/u_apb_uart_sva/config_request_eventually_ack
-                     rtl/apb_uart_sva.sv(115)       0   150
-/tb_apb_uart/u_apb_uart_sva/config_pending_is_known
-                     rtl/apb_uart_sva.sv(119)       0 38782
-/tb_apb_uart/u_apb_uart_sva/config_payload_known
-                     rtl/apb_uart_sva.sv(123)       0  9469
-/tb_apb_uart/u_apb_uart_sva/config_changes_only_on_apply
-                     rtl/apb_uart_sva.sv(127)       0   135
-/tb_apb_uart/u_apb_uart_sva/config_apply_payload_known
-                     rtl/apb_uart_sva.sv(131)       0   216
-/tb_apb_uart/u_apb_uart_sva/config_apply_is_single_cycle
-                     rtl/apb_uart_sva.sv(135)       0   210
-/tb_apb_uart/u_apb_uart_sva/config_ack_changes_with_apply
-                     rtl/apb_uart_sva.sv(139)       0   147
-/tb_apb_uart/u_apb_uart_sva/status_cdc_flags_known
-                     rtl/apb_uart_sva.sv(143)       0 38782
-/tb_apb_uart/u_apb_uart_sva/irq_is_known
-                     rtl/apb_uart_sva.sv(147)       0 38782
-/tb_apb_uart/u_apb_uart_sva/irq_matches_rx_state
-                     rtl/apb_uart_sva.sv(151)       0 38782
-/tb_apb_uart/u_apb_uart_sva/bad_frame_not_written
-                     rtl/apb_uart_sva.sv(191)       0    48
-/tb_apb_uart/u_apb_uart_sva/rx_full_blocks_write
-                     rtl/apb_uart_sva.sv(199)       0    51
-/tb_apb_uart/u_apb_uart_sva/pclk_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(207)       0   444
-/tb_apb_uart/u_apb_uart_sva/uart_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(211)       0   129
-/tb_apb_uart/u_apb_uart_sva/fifo_pclk_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(215)       0   543
-/tb_apb_uart/u_apb_uart_sva/fifo_uart_reset_asserts_with_source
-                     rtl/apb_uart_sva.sv(219)       0   132
-/tb_apb_uart/u_apb_uart_sva/pclk_reset_releases_only_when_source_high
-                     rtl/apb_uart_sva.sv(223)       0    63
-/tb_apb_uart/u_apb_uart_sva/uart_reset_releases_only_when_source_high
-                     rtl/apb_uart_sva.sv(227)       0    60
-/tb_apb_uart/u_apb_uart_sva/fifo_pclk_reset_releases_only_when_sources_high
-                     rtl/apb_uart_sva.sv(231)       0    69
-/tb_apb_uart/u_apb_uart_sva/fifo_uart_reset_releases_only_when_sources_high
-                     rtl/apb_uart_sva.sv(235)       0    69
-/tb_apb_uart/u_apb_uart_sva/pclk_reset_release_has_sync_latency
-                     rtl/apb_uart_sva.sv(239)       0    63
-/tb_apb_uart/u_apb_uart_sva/uart_reset_release_has_sync_latency
-                     rtl/apb_uart_sva.sv(243)       0    60
-/tb_apb_uart/u_apb_uart_sva/fifo_pclk_reset_release_has_sync_latency
-                     rtl/apb_uart_sva.sv(247)       0    69
-/tb_apb_uart/u_apb_uart_sva/fifo_uart_reset_release_has_sync_latency
-                     rtl/apb_uart_sva.sv(251)       0    63
+                     rtl/async_fifo_sva.sv(39)       0   381
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/apb_setup_to_access
+                     rtl/apb_uart_sva.sv(53)       0  7794
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/apb_access_has_ready
+                     rtl/apb_uart_sva.sv(57)       0  7794
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/apb_response_is_known
+                     rtl/apb_uart_sva.sv(62)       0  7794
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/apb_addr_stable_in_access
+                     rtl/apb_uart_sva.sv(66)       0  7794
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/invalid_addr_reports_error
+                     rtl/apb_uart_sva.sv(70)       0     6
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/status_write_reports_error
+                     rtl/apb_uart_sva.sv(74)       0     3
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/rejected_tx_write_reports_error
+                     rtl/apb_uart_sva.sv(79)       0    72
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/rejected_tx_write_has_no_push
+                     rtl/apb_uart_sva.sv(84)       0    72
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/accepted_tx_write_pushes
+                     rtl/apb_uart_sva.sv(89)       0   372
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/empty_rx_read_reports_error
+                     rtl/apb_uart_sva.sv(94)       0     9
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/rx_write_reports_error
+                     rtl/apb_uart_sva.sv(98)       0     3
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/rejected_rx_access_has_no_pop
+                     rtl/apb_uart_sva.sv(103)       0    12
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/invalid_addr_has_no_fifo_side_effect
+                     rtl/apb_uart_sva.sv(107)       0     6
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/reset_fifo_access_reports_error
+                     rtl/apb_uart_sva.sv(112)       0     6
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/reset_fifo_access_has_no_side_effect
+                     rtl/apb_uart_sva.sv(116)       0   381
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/baud_div_not_zero_after_write
+                     rtl/apb_uart_sva.sv(124)       0     6
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_mailbox_idle_matches_ack
+                     rtl/apb_uart_sva.sv(128)       0 62563
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_payload_stable_while_busy
+                     rtl/apb_uart_sva.sv(132)       0  4053
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_request_eventually_ack
+                     rtl/apb_uart_sva.sv(136)       0   309
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_pending_is_known
+                     rtl/apb_uart_sva.sv(140)       0 67102
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_payload_known
+                     rtl/apb_uart_sva.sv(144)       0 16280
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_changes_only_on_apply
+                     rtl/apb_uart_sva.sv(148)       0   201
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_apply_payload_known
+                     rtl/apb_uart_sva.sv(152)       0   309
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_apply_is_single_cycle
+                     rtl/apb_uart_sva.sv(156)       0   303
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_ack_changes_with_apply
+                     rtl/apb_uart_sva.sv(160)       0   309
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_apply_changes_ack
+                     rtl/apb_uart_sva.sv(164)       0   309
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_initialization_requires_apply
+                     rtl/apb_uart_sva.sv(168)       0    87
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/config_apply_requires_synced_request
+                     rtl/apb_uart_sva.sv(172)       0   309
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/status_cdc_flags_known
+                     rtl/apb_uart_sva.sv(176)       0 67102
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/irq_is_known
+                     rtl/apb_uart_sva.sv(180)       0 67102
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/irq_matches_rx_state
+                     rtl/apb_uart_sva.sv(184)       0 67102
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/bad_frame_not_written
+                     rtl/apb_uart_sva.sv(224)       0    48
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/rx_full_blocks_write
+                     rtl/apb_uart_sva.sv(232)       0    54
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/pclk_reset_asserts_with_source
+                     rtl/apb_uart_sva.sv(240)       0   525
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/uart_reset_asserts_with_source
+                     rtl/apb_uart_sva.sv(244)       0   192
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_pclk_reset_asserts_with_source
+                     rtl/apb_uart_sva.sv(248)       0   807
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_uart_reset_asserts_with_source
+                     rtl/apb_uart_sva.sv(252)       0   204
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/pclk_reset_releases_only_when_source_high
+                     rtl/apb_uart_sva.sv(256)       0    75
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/uart_reset_releases_only_when_source_high
+                     rtl/apb_uart_sva.sv(260)       0    75
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_pclk_reset_releases_only_when_sources_high
+                     rtl/apb_uart_sva.sv(264)       0    87
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_uart_reset_releases_only_when_sources_high
+                     rtl/apb_uart_sva.sv(268)       0    87
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/pclk_reset_release_has_sync_latency
+                     rtl/apb_uart_sva.sv(272)       0    75
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/uart_reset_release_has_sync_latency
+                     rtl/apb_uart_sva.sv(276)       0    75
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_pclk_reset_release_has_sync_latency
+                     rtl/apb_uart_sva.sv(280)       0    87
+/tb_apb_uart/g_whitebox/u_apb_uart_sva/fifo_uart_reset_release_has_sync_latency
+                     rtl/apb_uart_sva.sv(284)       0    87

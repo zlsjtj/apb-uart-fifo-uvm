@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "full 3876-file package verifies after relocation",
+    "running acceptance rejected and published pointer unchanged",
+    "existing immutable package refused and published pointer unchanged",
+    "modified README in relocated full package rejected by hash"
+  ],
+  "sourceSha256": "801771a6c2ea8619f01c11ef8486d560b72c1799655f4894328f3d0c6915ff85",
+  "runId": "20260913_132829_989e141d",
+  "relocated": "E:\\UVM\\apb-uart-fifo-uvm\\deliveries\\relocation_check_20260913_132829_989e141d",
+  "result": "PASS"
+}

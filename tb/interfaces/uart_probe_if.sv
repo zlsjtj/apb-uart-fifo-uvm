@@ -16,6 +16,8 @@ interface uart_probe_if (
   logic        cfg_write;
   logic        cfg_pending;
   logic        cfg_req_tgl;
+  logic        cfg_req_uart_q2;
+  logic        cfg_req_seen;
   logic        cfg_ack_tgl;
   logic        cfg_ack_pclk_q2;
   logic [2:0]  cfg_ctrl_hold;

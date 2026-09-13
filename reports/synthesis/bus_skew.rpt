@@ -1,0 +1,454 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
+| Date         : Sun Sep 13 11:59:51 2026
+| Host         : zlsjtj running 64-bit major release  (build 9200)
+| Command      : report_bus_skew -file reports/synthesis/bus_skew.rpt
+| Design       : apb_uart
+| Device       : 7a35t-cpg236
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Bus Skew Report
+
+Table of Contents
+-----------------
+1. Bus Skew Report Summary
+2. Bus Skew Report Per Constraint
+
+1. Bus Skew Report Summary
+--------------------------
+
+Id  Position  From                            To                              Corner  Requirement(ns)  Actual(ns)  Slack(ns)
+--  --------  ------------------------------  ------------------------------  ------  ---------------  ----------  ---------
+1   16        [get_cells -hier -quiet -regexp {.*u_tx_fifo/(rgray|rbin)_reg\[.*}]
+                                              [get_cells -hier -quiet -regexp {.*u_tx_fifo/rgray_wclk_q1_reg\[.*}]
+                                                                              Slow             10.000       0.518      9.482
+2   18        [get_cells -hier -quiet -regexp {.*u_tx_fifo/(wgray|wbin)_reg\[.*}]
+                                              [get_cells -hier -quiet -regexp {.*u_tx_fifo/wgray_rclk_q1_reg\[.*}]
+                                                                              Slow             10.000       0.512      9.488
+3   20        [get_cells -hier -quiet -regexp {.*u_rx_fifo/(rgray|rbin)_reg\[.*}]
+                                              [get_cells -hier -quiet -regexp {.*u_rx_fifo/rgray_wclk_q1_reg\[.*}]
+                                                                              Slow             10.000       0.512      9.488
+4   22        [get_cells -hier -quiet -regexp {.*u_rx_fifo/(wgray|wbin)_reg\[.*}]
+                                              [get_cells -hier -quiet -regexp {.*u_rx_fifo/wgray_rclk_q1_reg\[.*}]
+                                                                              Slow             10.000       0.518      9.482
+5   24        [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_(gray|bin)_reg\[.*}]
+                                              [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_q1_reg\[.*}]
+                                                                              Slow             10.000       0.512      9.488
+
+
+2. Bus Skew Report Per Constraint
+---------------------------------
+
+Id: 1
+set_bus_skew -from [get_cells -hier -quiet -regexp {.*u_tx_fifo/(rgray|rbin)_reg\[.*}] -to [get_cells -hier -quiet -regexp {.*u_tx_fifo/rgray_wclk_q1_reg\[.*}] 10.000
+Requirement: 10.000ns
+Endpoints: 5
+
+From Clock            To Clock              Endpoint Pin                    Reference Pin                   Corner  Actual(ns)  Slack(ns)
+--------------------  --------------------  ------------------------------  ------------------------------  ------  ----------  ---------
+uart_clk              pclk                  u_tx_fifo/rgray_wclk_q1_reg[4]/D
+                                                                            u_tx_fifo/rgray_wclk_q1_reg[0]/D
+                                                                                                            Slow         0.518      9.482
+
+
+Slack (MET) :             9.482ns  (requirement - actual skew)
+  Endpoint Source:        u_tx_fifo/rbin_reg[4]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Endpoint Destination:   u_tx_fifo/rgray_wclk_q1_reg[4]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Reference Source:       u_tx_fifo/rgray_reg[0]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Reference Destination:  u_tx_fifo/rgray_wclk_q1_reg[0]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Path Type:              Bus Skew (Max at Slow Process Corner)
+  Requirement:            10.000ns
+  Endpoint Relative Delay:    1.098ns
+  Reference Relative Delay:   0.580ns
+  Relative CRPR:              0.000ns
+  Actual Bus Skew:            0.518ns  (Endpoint Relative Delay - Reference Relative Delay - Relative CRPR)
+
+Endpoint path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.973     0.973    u_tx_fifo/uart_clk
+                         FDCE                                         r  u_tx_fifo/rbin_reg[4]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.456     1.429 r  u_tx_fifo/rbin_reg[4]/Q
+                         net (fo=4, unplaced)         0.358     1.787    u_tx_fifo/rbin_reg[4]
+                         FDCE                                         r  u_tx_fifo/rgray_wclk_q1_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.924     0.924    u_tx_fifo/pclk
+                         FDCE                                         r  u_tx_fifo/rgray_wclk_q1_reg[4]/C
+                         clock pessimism              0.000     0.924    
+                         FDCE (Setup_fdce_C_D)       -0.235     0.689    u_tx_fifo/rgray_wclk_q1_reg[4]
+  -------------------------------------------------------------------
+                         data arrival                           1.787    
+                         clock arrival                          0.689    
+  -------------------------------------------------------------------
+                         relative delay                         1.098    
+
+Reference path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.924     0.924    u_tx_fifo/uart_clk
+                         FDCE                                         r  u_tx_fifo/rgray_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.367     1.291 r  u_tx_fifo/rgray_reg[0]/Q
+                         net (fo=1, unplaced)         0.317     1.609    u_tx_fifo/rgray[0]
+                         FDCE                                         r  u_tx_fifo/rgray_wclk_q1_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.973     0.973    u_tx_fifo/pclk
+                         FDCE                                         r  u_tx_fifo/rgray_wclk_q1_reg[0]/C
+                         clock pessimism              0.000     0.973    
+                         FDCE (Hold_fdce_C_D)         0.056     1.029    u_tx_fifo/rgray_wclk_q1_reg[0]
+  -------------------------------------------------------------------
+                         data arrival                           1.609    
+                         clock arrival                          1.029    
+  -------------------------------------------------------------------
+                         relative delay                         0.580    
+
+
+
+Id: 2
+set_bus_skew -from [get_cells -hier -quiet -regexp {.*u_tx_fifo/(wgray|wbin)_reg\[.*}] -to [get_cells -hier -quiet -regexp {.*u_tx_fifo/wgray_rclk_q1_reg\[.*}] 10.000
+Requirement: 10.000ns
+Endpoints: 5
+
+From Clock            To Clock              Endpoint Pin                    Reference Pin                   Corner  Actual(ns)  Slack(ns)
+--------------------  --------------------  ------------------------------  ------------------------------  ------  ----------  ---------
+pclk                  uart_clk              u_tx_fifo/wgray_rclk_q1_reg[4]/D
+                                                                            u_tx_fifo/wgray_rclk_q1_reg[0]/D
+                                                                                                            Slow         0.512      9.488
+
+
+Slack (MET) :             9.488ns  (requirement - actual skew)
+  Endpoint Source:        u_tx_fifo/wbin_reg[4]/C
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Endpoint Destination:   u_tx_fifo/wgray_rclk_q1_reg[4]/D
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Reference Source:       u_tx_fifo/wgray_reg[0]/C
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Reference Destination:  u_tx_fifo/wgray_rclk_q1_reg[0]/D
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Path Type:              Bus Skew (Max at Slow Process Corner)
+  Requirement:            10.000ns
+  Endpoint Relative Delay:    1.092ns
+  Reference Relative Delay:   0.580ns
+  Relative CRPR:              0.000ns
+  Actual Bus Skew:            0.512ns  (Endpoint Relative Delay - Reference Relative Delay - Relative CRPR)
+
+Endpoint path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.973     0.973    u_tx_fifo/pclk
+                         FDCE                                         r  u_tx_fifo/wbin_reg[4]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.456     1.429 r  u_tx_fifo/wbin_reg[4]/Q
+                         net (fo=3, unplaced)         0.352     1.781    u_tx_fifo/wbin_reg_n_0_[4]
+                         FDCE                                         r  u_tx_fifo/wgray_rclk_q1_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.924     0.924    u_tx_fifo/uart_clk
+                         FDCE                                         r  u_tx_fifo/wgray_rclk_q1_reg[4]/C
+                         clock pessimism              0.000     0.924    
+                         FDCE (Setup_fdce_C_D)       -0.235     0.689    u_tx_fifo/wgray_rclk_q1_reg[4]
+  -------------------------------------------------------------------
+                         data arrival                           1.781    
+                         clock arrival                          0.689    
+  -------------------------------------------------------------------
+                         relative delay                         1.092    
+
+Reference path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.924     0.924    u_tx_fifo/pclk
+                         FDCE                                         r  u_tx_fifo/wgray_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.367     1.291 r  u_tx_fifo/wgray_reg[0]/Q
+                         net (fo=1, unplaced)         0.317     1.609    u_tx_fifo/wgray[0]
+                         FDCE                                         r  u_tx_fifo/wgray_rclk_q1_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.973     0.973    u_tx_fifo/uart_clk
+                         FDCE                                         r  u_tx_fifo/wgray_rclk_q1_reg[0]/C
+                         clock pessimism              0.000     0.973    
+                         FDCE (Hold_fdce_C_D)         0.056     1.029    u_tx_fifo/wgray_rclk_q1_reg[0]
+  -------------------------------------------------------------------
+                         data arrival                           1.609    
+                         clock arrival                          1.029    
+  -------------------------------------------------------------------
+                         relative delay                         0.580    
+
+
+
+Id: 3
+set_bus_skew -from [get_cells -hier -quiet -regexp {.*u_rx_fifo/(rgray|rbin)_reg\[.*}] -to [get_cells -hier -quiet -regexp {.*u_rx_fifo/rgray_wclk_q1_reg\[.*}] 10.000
+Requirement: 10.000ns
+Endpoints: 5
+
+From Clock            To Clock              Endpoint Pin                    Reference Pin                   Corner  Actual(ns)  Slack(ns)
+--------------------  --------------------  ------------------------------  ------------------------------  ------  ----------  ---------
+pclk                  uart_clk              u_rx_fifo/rgray_wclk_q1_reg[4]/D
+                                                                            u_rx_fifo/rgray_wclk_q1_reg[0]/D
+                                                                                                            Slow         0.512      9.488
+
+
+Slack (MET) :             9.488ns  (requirement - actual skew)
+  Endpoint Source:        u_rx_fifo/rbin_reg[4]/C
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Endpoint Destination:   u_rx_fifo/rgray_wclk_q1_reg[4]/D
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Reference Source:       u_rx_fifo/rgray_reg[0]/C
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Reference Destination:  u_rx_fifo/rgray_wclk_q1_reg[0]/D
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Path Type:              Bus Skew (Max at Slow Process Corner)
+  Requirement:            10.000ns
+  Endpoint Relative Delay:    1.092ns
+  Reference Relative Delay:   0.580ns
+  Relative CRPR:              0.000ns
+  Actual Bus Skew:            0.512ns  (Endpoint Relative Delay - Reference Relative Delay - Relative CRPR)
+
+Endpoint path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.973     0.973    u_rx_fifo/pclk
+                         FDCE                                         r  u_rx_fifo/rbin_reg[4]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.456     1.429 r  u_rx_fifo/rbin_reg[4]/Q
+                         net (fo=3, unplaced)         0.352     1.781    u_rx_fifo/rbin_reg[4]
+                         FDCE                                         r  u_rx_fifo/rgray_wclk_q1_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.924     0.924    u_rx_fifo/uart_clk
+                         FDCE                                         r  u_rx_fifo/rgray_wclk_q1_reg[4]/C
+                         clock pessimism              0.000     0.924    
+                         FDCE (Setup_fdce_C_D)       -0.235     0.689    u_rx_fifo/rgray_wclk_q1_reg[4]
+  -------------------------------------------------------------------
+                         data arrival                           1.781    
+                         clock arrival                          0.689    
+  -------------------------------------------------------------------
+                         relative delay                         1.092    
+
+Reference path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.924     0.924    u_rx_fifo/pclk
+                         FDCE                                         r  u_rx_fifo/rgray_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.367     1.291 r  u_rx_fifo/rgray_reg[0]/Q
+                         net (fo=1, unplaced)         0.317     1.609    u_rx_fifo/rgray[0]
+                         FDCE                                         r  u_rx_fifo/rgray_wclk_q1_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.973     0.973    u_rx_fifo/uart_clk
+                         FDCE                                         r  u_rx_fifo/rgray_wclk_q1_reg[0]/C
+                         clock pessimism              0.000     0.973    
+                         FDCE (Hold_fdce_C_D)         0.056     1.029    u_rx_fifo/rgray_wclk_q1_reg[0]
+  -------------------------------------------------------------------
+                         data arrival                           1.609    
+                         clock arrival                          1.029    
+  -------------------------------------------------------------------
+                         relative delay                         0.580    
+
+
+
+Id: 4
+set_bus_skew -from [get_cells -hier -quiet -regexp {.*u_rx_fifo/(wgray|wbin)_reg\[.*}] -to [get_cells -hier -quiet -regexp {.*u_rx_fifo/wgray_rclk_q1_reg\[.*}] 10.000
+Requirement: 10.000ns
+Endpoints: 5
+
+From Clock            To Clock              Endpoint Pin                    Reference Pin                   Corner  Actual(ns)  Slack(ns)
+--------------------  --------------------  ------------------------------  ------------------------------  ------  ----------  ---------
+uart_clk              pclk                  u_rx_fifo/wgray_rclk_q1_reg[4]/D
+                                                                            u_rx_fifo/wgray_rclk_q1_reg[0]/D
+                                                                                                            Slow         0.518      9.482
+
+
+Slack (MET) :             9.482ns  (requirement - actual skew)
+  Endpoint Source:        u_rx_fifo/wbin_reg[4]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Endpoint Destination:   u_rx_fifo/wgray_rclk_q1_reg[4]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Reference Source:       u_rx_fifo/wgray_reg[0]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Reference Destination:  u_rx_fifo/wgray_rclk_q1_reg[0]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Path Type:              Bus Skew (Max at Slow Process Corner)
+  Requirement:            10.000ns
+  Endpoint Relative Delay:    1.098ns
+  Reference Relative Delay:   0.580ns
+  Relative CRPR:              0.000ns
+  Actual Bus Skew:            0.518ns  (Endpoint Relative Delay - Reference Relative Delay - Relative CRPR)
+
+Endpoint path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.973     0.973    u_rx_fifo/uart_clk
+                         FDCE                                         r  u_rx_fifo/wbin_reg[4]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.456     1.429 r  u_rx_fifo/wbin_reg[4]/Q
+                         net (fo=4, unplaced)         0.358     1.787    u_rx_fifo/wbin_reg_n_0_[4]
+                         FDCE                                         r  u_rx_fifo/wgray_rclk_q1_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.924     0.924    u_rx_fifo/pclk
+                         FDCE                                         r  u_rx_fifo/wgray_rclk_q1_reg[4]/C
+                         clock pessimism              0.000     0.924    
+                         FDCE (Setup_fdce_C_D)       -0.235     0.689    u_rx_fifo/wgray_rclk_q1_reg[4]
+  -------------------------------------------------------------------
+                         data arrival                           1.787    
+                         clock arrival                          0.689    
+  -------------------------------------------------------------------
+                         relative delay                         1.098    
+
+Reference path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.924     0.924    u_rx_fifo/uart_clk
+                         FDCE                                         r  u_rx_fifo/wgray_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.367     1.291 r  u_rx_fifo/wgray_reg[0]/Q
+                         net (fo=1, unplaced)         0.317     1.609    u_rx_fifo/wgray[0]
+                         FDCE                                         r  u_rx_fifo/wgray_rclk_q1_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.973     0.973    u_rx_fifo/pclk
+                         FDCE                                         r  u_rx_fifo/wgray_rclk_q1_reg[0]/C
+                         clock pessimism              0.000     0.973    
+                         FDCE (Hold_fdce_C_D)         0.056     1.029    u_rx_fifo/wgray_rclk_q1_reg[0]
+  -------------------------------------------------------------------
+                         data arrival                           1.609    
+                         clock arrival                          1.029    
+  -------------------------------------------------------------------
+                         relative delay                         0.580    
+
+
+
+Id: 5
+set_bus_skew -from [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_(gray|bin)_reg\[.*}] -to [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_q1_reg\[.*}] 10.000
+Requirement: 10.000ns
+Endpoints: 6
+
+From Clock            To Clock              Endpoint Pin                    Reference Pin                   Corner  Actual(ns)  Slack(ns)
+--------------------  --------------------  ------------------------------  ------------------------------  ------  ----------  ---------
+uart_clk              pclk                  u_tx_completion/retired_q1_reg[5]/D
+                                                                            u_tx_completion/retired_q1_reg[0]/D
+                                                                                                            Slow         0.512      9.488
+
+
+Slack (MET) :             9.488ns  (requirement - actual skew)
+  Endpoint Source:        u_tx_completion/retired_gray_reg[5]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Endpoint Destination:   u_tx_completion/retired_q1_reg[5]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Reference Source:       u_tx_completion/retired_gray_reg[0]/C
+                            (rising edge-triggered cell FDCE clocked by uart_clk)
+  Reference Destination:  u_tx_completion/retired_q1_reg[0]/D
+                            (rising edge-triggered cell FDCE clocked by pclk)
+  Path Type:              Bus Skew (Max at Slow Process Corner)
+  Requirement:            10.000ns
+  Endpoint Relative Delay:    1.092ns
+  Reference Relative Delay:   0.580ns
+  Relative CRPR:              0.000ns
+  Actual Bus Skew:            0.512ns  (Endpoint Relative Delay - Reference Relative Delay - Relative CRPR)
+
+Endpoint path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.973     0.973    u_tx_completion/uart_clk
+                         FDCE                                         r  u_tx_completion/retired_gray_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.456     1.429 r  u_tx_completion/retired_gray_reg[5]/Q
+                         net (fo=3, unplaced)         0.352     1.781    u_tx_completion/retired_gray[5]
+                         FDCE                                         r  u_tx_completion/retired_q1_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.924     0.924    u_tx_completion/pclk
+                         FDCE                                         r  u_tx_completion/retired_q1_reg[5]/C
+                         clock pessimism              0.000     0.924    
+                         FDCE (Setup_fdce_C_D)       -0.235     0.689    u_tx_completion/retired_q1_reg[5]
+  -------------------------------------------------------------------
+                         data arrival                           1.781    
+                         clock arrival                          0.689    
+  -------------------------------------------------------------------
+                         relative delay                         1.092    
+
+Reference path:
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock uart_clk rise edge)
+                                                      0.000     0.000 r  
+                                                      0.000     0.000 r  uart_clk (IN)
+                         net (fo=175, unset)          0.924     0.924    u_tx_completion/uart_clk
+                         FDCE                                         r  u_tx_completion/retired_gray_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDCE (Prop_fdce_C_Q)         0.367     1.291 r  u_tx_completion/retired_gray_reg[0]/Q
+                         net (fo=1, unplaced)         0.317     1.609    u_tx_completion/retired_gray[0]
+                         FDCE                                         r  u_tx_completion/retired_q1_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock pclk rise edge)       0.000     0.000 r  
+                                                      0.000     0.000 r  pclk (IN)
+                         net (fo=152, unset)          0.973     0.973    u_tx_completion/pclk
+                         FDCE                                         r  u_tx_completion/retired_q1_reg[0]/C
+                         clock pessimism              0.000     0.973    
+                         FDCE (Hold_fdce_C_D)         0.056     1.029    u_tx_completion/retired_q1_reg[0]
+  -------------------------------------------------------------------
+                         data arrival                           1.609    
+                         clock arrival                          1.029    
+  -------------------------------------------------------------------
+                         relative delay                         0.580    
+
+
+

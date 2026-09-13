@@ -3,6 +3,7 @@ class uart_monitor extends uvm_component;
 
   virtual uart_if vif;
   uart_serial_cfg serial_cfg;
+  int unsigned aborted_frames;
   uvm_analysis_port #(uart_item) ap;
 
   function new(string name = "uart_monitor", uvm_component parent = null);
@@ -26,26 +27,45 @@ class uart_monitor extends uvm_component;
     bit [2:0] frame_ctrl;
     bit [31:0] frame_baud;
     int unsigned divisor;
+    int unsigned epoch;
+    bit aborted;
 
     prev_tx = 1'b1;
     forever begin
       @(vif.mon_cb);
-      if (!vif.uart_rst_n || !serial_cfg.ctrl[UART_CTRL_ENABLE_BIT]) begin
+      if (!vif.uart_rst_n) begin
         prev_tx = 1'b1;
       end else if ((prev_tx == 1'b1) && (vif.mon_cb.tx_o == 1'b0)) begin
+        if (!serial_cfg.ready) begin
+          `uvm_error("UART_CFG_UNSETTLED", "Frame started before public STATUS not-busy observation")
+          prev_tx = vif.mon_cb.tx_o;
+          continue;
+        end
+        if (!serial_cfg.ctrl[UART_CTRL_ENABLE_BIT]) begin
+          prev_tx = vif.mon_cb.tx_o;
+          continue;
+        end
         tr = uart_item::type_id::create("tr", this);
-        // Configuration changes are allowed while a frame is on the wire.
-        // Freeze the APB-observed values at the start edge so one frame is
-        // never decoded with two different divisors.
+        // Normal software changes configuration only between frames. Freeze
+        // the public configuration so an illegal mid-frame change cannot
+        // silently change the checker along with the DUT.
         serial_cfg.snapshot(frame_ctrl, frame_baud);
         divisor = (frame_baud == 0) ? UART_BAUD_MIN : frame_baud;
+        epoch = serial_cfg.reset_epoch;
+        aborted = 1'b0;
 
         for (int i = 0; i < UART_DATA_BITS; i++) begin
-          wait_uart_cycles(divisor);
+          wait_uart_cycles(divisor, epoch, aborted);
+          if (aborted) break;
           tr.data[i] = vif.mon_cb.tx_o;
         end
 
-        wait_uart_cycles(divisor);
+        if (!aborted) wait_uart_cycles(divisor, epoch, aborted);
+        if (aborted) begin
+          aborted_frames++;
+          prev_tx = 1'b1;
+          continue;
+        end
         tr.frame_err = (vif.mon_cb.tx_o != 1'b1);
         ap.write(tr);
         `uvm_info("UART_MON", tr.convert2string(), UVM_HIGH)
@@ -54,7 +74,14 @@ class uart_monitor extends uvm_component;
     end
   endtask
 
-  task wait_uart_cycles(int unsigned cycles);
-    repeat (cycles) @(vif.mon_cb);
+  task wait_uart_cycles(int unsigned cycles, int unsigned epoch, output bit aborted);
+    aborted = 1'b0;
+    repeat (cycles) begin
+      @(vif.mon_cb);
+      if (!vif.uart_rst_n || serial_cfg.reset_epoch != epoch) begin
+        aborted = 1'b1;
+        return;
+      end
+    end
   endtask
 endclass

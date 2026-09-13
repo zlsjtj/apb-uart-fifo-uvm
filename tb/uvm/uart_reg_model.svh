@@ -17,6 +17,8 @@ class uart_status_reg extends uvm_reg;
   `uvm_object_utils(uart_status_reg)
 
   uvm_reg_field value;
+  uvm_reg_field cfg_busy;
+  uvm_reg_field tx_busy;
 
   function new(string name = "uart_status_reg");
     super.new(name, 32, UVM_NO_COVERAGE);
@@ -24,7 +26,13 @@ class uart_status_reg extends uvm_reg;
 
   virtual function void build();
     value = uvm_reg_field::type_id::create("value");
-    value.configure(this, 8, 0, "RO", 1, UART_STATUS_RESET, 1, 0, 0);
+    value.configure(this, 6, 0, "RO", 1, UART_STATUS_RESET, 1, 0, 0);
+    cfg_busy = uvm_reg_field::type_id::create("cfg_busy");
+    cfg_busy.configure(this, 1, UART_STATUS_CFG_BUSY_BIT, "RO", 1, 1, 1, 0, 0);
+    cfg_busy.set_compare(UVM_NO_CHECK);
+    tx_busy = uvm_reg_field::type_id::create("tx_busy");
+    tx_busy.configure(this, 1, UART_STATUS_TX_BUSY_BIT, "RO", 1, 0, 1, 0, 0);
+    tx_busy.set_compare(UVM_NO_CHECK);
   endfunction
 endclass
 

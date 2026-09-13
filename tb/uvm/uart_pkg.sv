@@ -32,7 +32,10 @@ package uart_pkg;
   `include "uart_driver.svh"
   `include "uart_monitor.svh"
   `include "uart_rx_monitor.svh"
+`ifndef UART_NO_WHITEBOX
   `include "uart_config_monitor.svh"
+  `include "uart_config_checker.svh"
+`endif
   `include "uart_agent.svh"
   `include "uart_predictor.svh"
   `include "uart_scoreboard.svh"

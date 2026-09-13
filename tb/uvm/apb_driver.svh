@@ -46,12 +46,11 @@ class apb_driver extends uvm_driver #(apb_item);
     vif.penable <= 1'b1;
 
     do begin
-      @(posedge vif.pclk);
-    end while (vif.pready !== 1'b1);
+      @(vif.drv_cb);
+    end while (vif.drv_cb.pready !== 1'b1);
 
-    #2ns;
-    tr.rdata  = vif.prdata;
-    tr.slverr = vif.pslverr;
+    tr.rdata  = vif.drv_cb.prdata;
+    tr.slverr = vif.drv_cb.pslverr;
 
     @(negedge vif.pclk);
     vif.psel    <= 1'b0;

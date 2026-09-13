@@ -24,6 +24,10 @@ module async_fifo #(
   logic [PTR_WIDTH-1:0] rbin,  rbin_next;
   logic [PTR_WIDTH-1:0] wgray, wgray_next;
   logic [PTR_WIDTH-1:0] rgray, rgray_next;
+  logic wr_full_q;
+  localparam logic [PTR_WIDTH-1:0] FULL_XOR_MASK =
+    ({{(PTR_WIDTH-1){1'b0}}, 1'b1} << (PTR_WIDTH-1)) |
+    ({{(PTR_WIDTH-1){1'b0}}, 1'b1} << (PTR_WIDTH-2));
 
   (* ASYNC_REG = "TRUE" *) logic [PTR_WIDTH-1:0] rgray_wclk_q1, rgray_wclk_q2;
   (* ASYNC_REG = "TRUE" *) logic [PTR_WIDTH-1:0] wgray_rclk_q1, wgray_rclk_q2;
@@ -40,21 +44,19 @@ module async_fifo #(
 `ifdef UART_MUTATE_FIFO_FULL_STUCK_LOW
   assign wr_full = 1'b0;
 `else
-  assign wr_full = (wgray == {
-                    ~rgray_wclk_q2[PTR_WIDTH-1:PTR_WIDTH-2],
-                     rgray_wclk_q2[PTR_WIDTH-3:0]
-                  });
+  assign wr_full = wr_full_q;
 `endif
-  assign rd_empty = (rgray == wgray_rclk_q2);
   assign rd_data  = mem[rbin[ADDR_WIDTH-1:0]];
 
   always_ff @(posedge wr_clk or negedge wr_rst_n) begin
     if (!wr_rst_n) begin
       wbin  <= '0;
       wgray <= '0;
+      wr_full_q <= 1'b0;
     end else begin
       wbin  <= wbin_next;
       wgray <= wgray_next;
+      wr_full_q <= (wgray_next == (rgray_wclk_q2 ^ FULL_XOR_MASK));
     end
   end
 
@@ -63,7 +65,7 @@ module async_fifo #(
   // also lets FPGA synthesis infer memory instead of expanding every bit into
   // an asynchronously reset flip-flop.
   always_ff @(posedge wr_clk) begin
-    if (wr_en && !wr_full) begin
+    if (wr_rst_n && wr_en && !wr_full) begin
       mem[wbin[ADDR_WIDTH-1:0]] <= wr_data;
     end
   end
@@ -72,9 +74,11 @@ module async_fifo #(
     if (!rd_rst_n) begin
       rbin  <= '0;
       rgray <= '0;
+      rd_empty <= 1'b1;
     end else begin
       rbin  <= rbin_next;
       rgray <= rgray_next;
+      rd_empty <= (rgray_next == wgray_rclk_q2);
     end
   end
 
@@ -98,4 +102,18 @@ module async_fifo #(
     end
   end
 
+  // synthesis translate_off
+  write_gray_single_step:
+    assert property (@(posedge wr_clk) disable iff (!wr_rst_n)
+      $past(wr_rst_n) |-> $onehot0(wgray ^ $past(wgray)));
+  read_gray_single_step:
+    assert property (@(posedge rd_clk) disable iff (!rd_rst_n)
+      $past(rd_rst_n) |-> $onehot0(rgray ^ $past(rgray)));
+  write_pointer_holds_without_accept:
+    assert property (@(posedge wr_clk) disable iff (!wr_rst_n)
+      (!wr_en || wr_full) |=> $stable(wbin));
+  read_pointer_holds_without_accept:
+    assert property (@(posedge rd_clk) disable iff (!rd_rst_n)
+      (!rd_en || rd_empty) |=> $stable(rbin));
+  // synthesis translate_on
 endmodule

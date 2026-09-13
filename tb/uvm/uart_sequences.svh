@@ -5,3 +5,4 @@
 `include "sequences/uart_rx_fifo_sequences.svh"
 `include "sequences/uart_reset_timing_sequences.svh"
 `include "sequences/uart_misc_sequences.svh"
+`include "sequences/uart_completion_sequences.svh"

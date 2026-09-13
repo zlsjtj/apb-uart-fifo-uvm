@@ -27,6 +27,8 @@ package apb_uart_reg_pkg;
   localparam int unsigned UART_STATUS_RX_FULL_BIT   = 3;
   localparam int unsigned UART_STATUS_IRQ_BIT       = 4;
   localparam int unsigned UART_STATUS_FRAME_ERR_BIT = 5;
+  localparam int unsigned UART_STATUS_CFG_BUSY_BIT  = 6;
+  localparam int unsigned UART_STATUS_TX_BUSY_BIT   = 7;
 
   function automatic logic uart_addr_is_legal(input logic [7:0] addr);
     return (addr == UART_ADDR_CTRL)   ||

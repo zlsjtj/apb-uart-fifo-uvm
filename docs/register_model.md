@@ -13,7 +13,7 @@
 | 寄存器 | 访问属性 | 复位值 | 说明 |
 | --- | --- | --- | --- |
 | CTRL | RW | 0 | 只有低 3 位有效，写入值会按掩码处理 |
-| STATUS | RO | 0x5 | 状态随 FIFO、IRQ 和帧错误变化，按 volatile 处理 |
+| STATUS | RO | 低 6 位为 0x5 | bit6 CFG_BUSY；bit7 TX_BUSY；复位恢复完成且无在途发送时为 0x5 |
 | BAUD | RW | 16 | 写 0 时硬件实际保存 1 |
 | TXDATA | WO | 无稳定复位镜像 | 写操作可能推进 TX FIFO |
 | RXDATA | RO | 无稳定复位镜像 | 读操作可能弹出 RX FIFO |
@@ -36,11 +36,13 @@ APB monitor -> register predictor -> RAL mirror
 
 ## 4. reset mirror 的处理
 
-外部复位并不是一个 APB 事务，predictor 不会凭空知道硬件已经复位。因此测试在拉低 APB reset 后显式调用 `regmodel.reset()`，再通过前门 mirror 读取 CTRL、STATUS 和 BAUD，并用 `UVM_CHECK` 对照模型复位值。
+外部复位由独立 reset monitor 观察，并统一通知 predictor、scoreboard、coverage 和 RAL。只有 APB reset 才重置寄存器镜像；UART-only reset 保留 APB 配置。测试不手工调用 regmodel.reset() 来修正镜像。
 
-这是一条有意保留的边界：当前环境没有增加独立 reset predictor。以后如果大量测试都需要随机复位，可以再把 reset monitor 接入模型；对现在的项目规模，显式处理更直观，也便于定位失败。
+STATUS 拆为低 6 位状态、CFG_BUSY、TX_BUSY 三个字段。两个 busy 字段为 volatile，关闭固定镜像比较；对应的公开状态检查不能省略。CFG_BUSY 由配置轮询检查；TX_BUSY 由发送完成测试检查写入后置位、完整停止位结束前保持和最终清零。
 
-## 5. 本轮验证结果
+正常配置流程为：停止提交 TX 数据并保证外部 RX 无在途帧，等待 TX_BUSY=0 且 CFG_BUSY=0，再写 CTRL/BAUD，最后等待 CFG_BUSY=0。普通 APB sequence 已封装 TX 排空及配置轮询；故障注入、邮箱突发和显式中止使用原始访问接口，不暗中套用正常流程。
+
+## 5. 历史验证结果（2026-09-04，不能代替本轮结果）
 
 - 寄存器模型结构检查：16/16 PASS；
 - RAL 定向测试：前门读写、访问属性、被动预测、BAUD=0 归一化和 reset mirror 全部通过；

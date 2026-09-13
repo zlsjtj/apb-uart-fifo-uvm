@@ -3,6 +3,10 @@ class uart_serial_cfg extends uvm_object;
 
   bit [2:0]  ctrl;
   bit [31:0] baud;
+  bit [2:0] requested_ctrl;
+  bit [31:0] requested_baud;
+  bit ready;
+  int unsigned reset_epoch;
   int unsigned apb_updates;
 
   function new(string name = "uart_serial_cfg");
@@ -13,6 +17,9 @@ class uart_serial_cfg extends uvm_object;
   function void reset_to_defaults();
     ctrl = UART_CTRL_RESET[2:0];
     baud = UART_BAUD_RESET;
+    requested_ctrl = ctrl;
+    requested_baud = baud;
+    ready = 1'b0;
   endfunction
 
   function int unsigned divisor();

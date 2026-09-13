@@ -1,0 +1,459 @@
+{
+  "result": "PASS",
+  "declared": 60,
+  "parsed": 60,
+  "rejected": 0,
+  "paths": [
+    {
+      "code": "CDC-9",
+      "severity": "Info",
+      "source": "uart_rst_n",
+      "destination": "u_fifo_pclk_reset_sync/sync_pipe_reg[0]/CLR",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-9",
+      "severity": "Info",
+      "source": "presetn",
+      "destination": "u_pclk_reset_sync/sync_pipe_reg[0]/CLR",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_serial_core/u_uart_rx/frame_err_o_reg/C",
+      "destination": "rx_frame_err_pclk_q1_reg/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_rx_fifo/wr_full_q_reg/C",
+      "destination": "rx_full_pclk_q1_reg/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_tx_fifo/rd_empty_reg/C",
+      "destination": "tx_empty_pclk_q1_reg/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_cfg_cdc/cfg_req_seen_reg/C",
+      "destination": "u_cfg_cdc/cfg_ack_meta_reg/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-6",
+      "severity": "Warning",
+      "source": "u_rx_fifo/wgray_reg[3:0]/C",
+      "destination": "u_rx_fifo/wgray_rclk_q1_reg[3:0]/D",
+      "disposition": "CDC-W001"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_rx_fifo/wbin_reg[4]/C",
+      "destination": "u_rx_fifo/wgray_rclk_q1_reg[4]/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-6",
+      "severity": "Warning",
+      "source": "u_tx_completion/retired_gray_reg[5:0]/C",
+      "destination": "u_tx_completion/retired_q1_reg[5:0]/D",
+      "disposition": "CDC-W004"
+    },
+    {
+      "code": "CDC-6",
+      "severity": "Warning",
+      "source": "u_tx_fifo/rgray_reg[3:0]/C",
+      "destination": "u_tx_fifo/rgray_wclk_q1_reg[3:0]/D",
+      "disposition": "CDC-W001"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_tx_fifo/rbin_reg[4]/C",
+      "destination": "u_tx_fifo/rgray_wclk_q1_reg[4]/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-9",
+      "severity": "Info",
+      "source": "uart_rst_n",
+      "destination": "u_fifo_uart_reset_sync/sync_pipe_reg[0]/CLR",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-9",
+      "severity": "Info",
+      "source": "uart_rst_n",
+      "destination": "u_uart_reset_sync/sync_pipe_reg[0]/CLR",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[0]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[0]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[1]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[1]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[2]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[2]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[3]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[3]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[4]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[4]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[5]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[5]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[6]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[6]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[7]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[7]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[8]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[8]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[9]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[9]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[10]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[10]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[11]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[11]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[12]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[12]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[13]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[13]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[14]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[14]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[15]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[15]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[16]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[16]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[17]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[17]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[18]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[18]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[19]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[19]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[20]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[20]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[21]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[21]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[22]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[22]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[23]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[23]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[24]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[24]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[25]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[25]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[26]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[26]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[27]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[27]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[28]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[28]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[29]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[29]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[30]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[30]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_baud_hold_reg[31]/C",
+      "destination": "u_cfg_cdc/baud_uart_cfg_reg[31]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_cfg_cdc/cfg_req_tgl_reg/C",
+      "destination": "u_cfg_cdc/cfg_req_meta_reg/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_ctrl_hold_reg[0]/C",
+      "destination": "u_cfg_cdc/ctrl_uart_cfg_reg[0]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_cfg_cdc/cfg_ctrl_hold_reg[1]/C",
+      "destination": "u_cfg_cdc/ctrl_uart_cfg_reg[1]/D",
+      "disposition": "CDC-W002"
+    },
+    {
+      "code": "CDC-6",
+      "severity": "Warning",
+      "source": "u_rx_fifo/rgray_reg[3:0]/C",
+      "destination": "u_rx_fifo/rgray_wclk_q1_reg[3:0]/D",
+      "disposition": "CDC-W001"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_rx_fifo/rbin_reg[4]/C",
+      "destination": "u_rx_fifo/rgray_wclk_q1_reg[4]/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMA/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[0]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMA_D1/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[1]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMB/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[2]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMB_D1/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[3]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMC/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[4]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_0_5/RAMC_D1/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[5]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_6_7/DP/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[6]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-15",
+      "severity": "Warning",
+      "source": "u_tx_fifo/mem_reg_0_15_6_7__0/DP/CLK",
+      "destination": "u_serial_core/u_uart_tx/shifter_reg[7]/D",
+      "disposition": "CDC-W003"
+    },
+    {
+      "code": "CDC-6",
+      "severity": "Warning",
+      "source": "u_tx_fifo/wgray_reg[3:0]/C",
+      "destination": "u_tx_fifo/wgray_rclk_q1_reg[3:0]/D",
+      "disposition": "CDC-W001"
+    },
+    {
+      "code": "CDC-3",
+      "severity": "Info",
+      "source": "u_tx_fifo/wbin_reg[4]/C",
+      "destination": "u_tx_fifo/wgray_rclk_q1_reg[4]/D",
+      "disposition": "SYNCHRONIZER_INFO"
+    }
+  ],
+  "rules": [
+    {
+      "Reason": "完整停止位或显式中止后递增完成计数，源域寄存 Gray 后两级同步；明确 max_delay/bus_skew；公开状态边界和多次回绕测试。",
+      "Destination": "^u_tx_completion/retired_q1_reg\\[[\\d:]+\\]/D$",
+      "Id": "CDC-W004",
+      "Source": "^u_tx_completion/retired_gray_reg\\[[\\d:]+\\]/C$",
+      "Code": "CDC-6"
+    },
+    {
+      "Reason": "Gray 指针源域寄存、两级同步；bus_skew 约束；FIFO 回绕及错相回归。MSB 被综合合并到 bin 寄存器，单独列为同步路径。",
+      "Destination": "^u_(tx|rx)_fifo/[rw]gray_[rw]clk_q1_reg\\[[\\d:]+\\]/D$",
+      "Id": "CDC-W001",
+      "Source": "^u_(tx|rx)_fifo/[rw]gray_reg\\[[\\d:]+\\]/C$",
+      "Code": "CDC-6"
+    },
+    {
+      "Reason": "数据束在请求应答期间保持稳定；接收端只在两级同步请求变化后装载；复位后也走同一握手。",
+      "Destination": "^u_cfg_cdc/(ctrl|baud)_uart_cfg_reg\\[\\d+\\]/D$",
+      "Id": "CDC-W002",
+      "Source": "^u_cfg_cdc/cfg_(ctrl|baud)_hold_reg\\[\\d+\\]/C$",
+      "Code": "CDC-15"
+    },
+    {
+      "Reason": "FIFO 存储由读侧同步写指针及 empty 保护，非空时才装载 shifter；满空及多次回绕用例检查数据。",
+      "Destination": "^u_serial_core/u_uart_tx/shifter_reg\\[\\d+\\]/D$",
+      "Id": "CDC-W003",
+      "Source": "^u_tx_fifo/mem_reg_[^ ]+/(RAMA|RAMA_D1|RAMB|RAMB_D1|RAMC|RAMC_D1|DP)/CLK$",
+      "Code": "CDC-15"
+    }
+  ],
+  "boundary": "Vivado synthesized internal CDC path classification for this teaching interface, not commercial CDC/RDC signoff. RXDATA ends at combinational APB output and is manually reviewed under the FIFO read contract; rx_i has a synchronous teaching timing assumption, not asynchronous board qualification."
+}

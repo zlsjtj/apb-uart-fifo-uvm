@@ -3,123 +3,139 @@ COVERGROUP COVERAGE:
 Covergroup                                             Metric      Goal/ Status                    
                                                                 At Least                           
 ----------------------------------------------------------------------------------------------------
+ TYPE /uart_pkg/uart_coverage/tx_completion_cg         100.0%        100 Covered                   
+    Coverpoint tx_completion_cg::cp_busy               100.0%        100 Covered                   
+    Coverpoint tx_completion_cg::cp_transition         100.0%        100 Covered                   
+ CLASS uart_coverage
+ Covergroup instance \/uart_pkg::uart_coverage::tx_completion_cg  
+                                                       100.0%        100 Covered                   
+    Coverpoint cp_busy                                 100.0%        100 Covered                   
+        covered/total bins:                                 2          2                           
+        missing/total bins:                                 0          2                           
+        bin idle                                         1716          1 Covered                   
+        bin busy                                         4926          1 Covered                   
+    Coverpoint cp_transition                           100.0%        100 Covered                   
+        covered/total bins:                                 2          2                           
+        missing/total bins:                                 0          2                           
+        bin accepted                                      225          1 Covered                   
+        bin drained                                       222          1 Covered                   
  TYPE /uart_pkg/uart_coverage/apb_cg                   100.0%        100 Covered                   
     Coverpoint apb_cg::cp_addr                         100.0%        100 Covered                   
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
-        bin ctrl                                          126          1 Covered                   
-        bin status                                         95          1 Covered                   
-        bin baud                                          117          1 Covered                   
-        bin txdata                                        169          1 Covered                   
-        bin rxdata                                        166          1 Covered                   
+        bin ctrl                                          153          1 Covered                   
+        bin status                                       6645          1 Covered                   
+        bin baud                                          150          1 Covered                   
+        bin txdata                                        447          1 Covered                   
+        bin rxdata                                        393          1 Covered                   
         default bin bad                                     6            Occurred                  
     Coverpoint apb_cg::cp_kind                         100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
-        bin read                                          318          1 Covered                   
-        bin write                                         361          1 Covered                   
+        bin read                                         7098          1 Covered                   
+        bin write                                         696          1 Covered                   
     Coverpoint apb_cg::cp_err                          100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
-        bin ok                                            634          1 Covered                   
-        bin err                                            45          1 Covered                   
+        bin ok                                           7698          1 Covered                   
+        bin err                                            96          1 Covered                   
     Coverpoint apb_cg::cp_data                         100.0%        100 Covered                   
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
-        bin zero                                           48          1 Covered                   
-        bin ff                                              6          1 Covered                   
-        bin low                                           435          1 Covered                   
-        bin mid                                           168          1 Covered                   
-        bin high                                           22          1 Covered                   
+        bin zero                                           51          1 Covered                   
+        bin ff                                             10          1 Covered                   
+        bin low                                          1258          1 Covered                   
+        bin mid                                          6363          1 Covered                   
+        bin high                                          112          1 Covered                   
     Cross apb_cg::#cross__0#                           100.0%        100 Covered                   
         covered/total bins:                                10         10                           
         missing/total bins:                                 0         10                           
         bin <ctrl,read>                                    30          1 Covered                   
-        bin <baud,read>                                    27          1 Covered                   
-        bin <ctrl,write>                                   96          1 Covered                   
+        bin <status,read>                                6642          1 Covered                   
+        bin <baud,read>                                    30          1 Covered                   
+        bin <ctrl,write>                                  123          1 Covered                   
         bin <status,write>                                  3          1 Covered                   
-        bin <baud,write>                                   90          1 Covered                   
-        bin <status,read>                                  92          1 Covered                   
-        bin <rxdata,read>                                 163          1 Covered                   
-        bin <txdata,write>                                166          1 Covered                   
+        bin <baud,write>                                  120          1 Covered                   
+        bin <rxdata,read>                                 390          1 Covered                   
+        bin <txdata,write>                                444          1 Covered                   
         bin <txdata,read>                                   3          1 Covered                   
         bin <rxdata,write>                                  3          1 Covered                   
     Cross apb_cg::cross_addr_err                       100.0%        100 Covered                   
         covered/total bins:                                 8          8                           
         missing/total bins:                                 0          8                           
-        bin <ctrl,ok>                                     126          1 Covered                   
-        bin <baud,ok>                                     117          1 Covered                   
+        bin <ctrl,ok>                                     153          1 Covered                   
+        bin <baud,ok>                                     150          1 Covered                   
+        bin <status,ok>                                  6642          1 Covered                   
         bin <status,err>                                    3          1 Covered                   
         ignore_bin legal_register_errors                    0            ZERO                      
-        bin <status,ok>                                    92          1 Covered                   
-        bin <txdata,ok>                                   142          1 Covered                   
-        bin <rxdata,ok>                                   157          1 Covered                   
-        bin <rxdata,err>                                    9          1 Covered                   
-        bin <txdata,err>                                   27          1 Covered                   
+        bin <txdata,ok>                                   372          1 Covered                   
+        bin <rxdata,ok>                                   381          1 Covered                   
+        bin <rxdata,err>                                   12          1 Covered                   
+        bin <txdata,err>                                   75          1 Covered                   
  CLASS uart_coverage
  Covergroup instance \/uart_pkg::uart_coverage::apb_cg  
                                                        100.0%        100 Covered                   
     Coverpoint cp_addr                                 100.0%        100 Covered                   
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
-        bin ctrl                                          126          1 Covered                   
-        bin status                                         95          1 Covered                   
-        bin baud                                          117          1 Covered                   
-        bin txdata                                        169          1 Covered                   
-        bin rxdata                                        166          1 Covered                   
+        bin ctrl                                          153          1 Covered                   
+        bin status                                       6645          1 Covered                   
+        bin baud                                          150          1 Covered                   
+        bin txdata                                        447          1 Covered                   
+        bin rxdata                                        393          1 Covered                   
         default bin bad                                     6            Occurred                  
     Coverpoint cp_kind                                 100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
-        bin read                                          318          1 Covered                   
-        bin write                                         361          1 Covered                   
+        bin read                                         7098          1 Covered                   
+        bin write                                         696          1 Covered                   
     Coverpoint cp_err                                  100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
-        bin ok                                            634          1 Covered                   
-        bin err                                            45          1 Covered                   
+        bin ok                                           7698          1 Covered                   
+        bin err                                            96          1 Covered                   
     Coverpoint cp_data                                 100.0%        100 Covered                   
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
-        bin zero                                           48          1 Covered                   
-        bin ff                                              6          1 Covered                   
-        bin low                                           435          1 Covered                   
-        bin mid                                           168          1 Covered                   
-        bin high                                           22          1 Covered                   
+        bin zero                                           51          1 Covered                   
+        bin ff                                             10          1 Covered                   
+        bin low                                          1258          1 Covered                   
+        bin mid                                          6363          1 Covered                   
+        bin high                                          112          1 Covered                   
     Cross #cross__0#                                   100.0%        100 Covered                   
         covered/total bins:                                10         10                           
         missing/total bins:                                 0         10                           
         bin <ctrl,read>                                    30          1 Covered                   
-        bin <baud,read>                                    27          1 Covered                   
-        bin <ctrl,write>                                   96          1 Covered                   
+        bin <status,read>                                6642          1 Covered                   
+        bin <baud,read>                                    30          1 Covered                   
+        bin <ctrl,write>                                  123          1 Covered                   
         bin <status,write>                                  3          1 Covered                   
-        bin <baud,write>                                   90          1 Covered                   
-        bin <status,read>                                  92          1 Covered                   
-        bin <rxdata,read>                                 163          1 Covered                   
-        bin <txdata,write>                                166          1 Covered                   
+        bin <baud,write>                                  120          1 Covered                   
+        bin <rxdata,read>                                 390          1 Covered                   
+        bin <txdata,write>                                444          1 Covered                   
         bin <txdata,read>                                   3          1 Covered                   
         bin <rxdata,write>                                  3          1 Covered                   
     Cross cross_addr_err                               100.0%        100 Covered                   
         covered/total bins:                                 8          8                           
         missing/total bins:                                 0          8                           
-        bin <ctrl,ok>                                     126          1 Covered                   
-        bin <baud,ok>                                     117          1 Covered                   
+        bin <ctrl,ok>                                     153          1 Covered                   
+        bin <baud,ok>                                     150          1 Covered                   
+        bin <status,ok>                                  6642          1 Covered                   
         bin <status,err>                                    3          1 Covered                   
         ignore_bin legal_register_errors                    0            ZERO                      
-        bin <status,ok>                                    92          1 Covered                   
-        bin <txdata,ok>                                   142          1 Covered                   
-        bin <rxdata,ok>                                   157          1 Covered                   
-        bin <rxdata,err>                                    9          1 Covered                   
-        bin <txdata,err>                                   27          1 Covered                   
+        bin <txdata,ok>                                   372          1 Covered                   
+        bin <rxdata,ok>                                   381          1 Covered                   
+        bin <rxdata,err>                                   12          1 Covered                   
+        bin <txdata,err>                                   75          1 Covered                   
  TYPE /uart_pkg/uart_coverage/uart_cg                  100.0%        100 Covered                   
     Coverpoint uart_cg::cp_uart_data                   100.0%        100 Covered                   
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
         bin zero                                            6          1 Covered                   
-        bin ff                                              3          1 Covered                   
-        bin low                                            74          1 Covered                   
-        bin mid                                            48          1 Covered                   
-        bin high                                            8          1 Covered                   
+        bin ff                                              5          1 Covered                   
+        bin low                                           125          1 Covered                   
+        bin mid                                           177          1 Covered                   
+        bin high                                           53          1 Covered                   
  CLASS uart_coverage
  Covergroup instance \/uart_pkg::uart_coverage::uart_cg  
                                                        100.0%        100 Covered                   
@@ -127,10 +143,10 @@ Covergroup                                             Metric      Goal/ Status
         covered/total bins:                                 5          5                           
         missing/total bins:                                 0          5                           
         bin zero                                            6          1 Covered                   
-        bin ff                                              3          1 Covered                   
-        bin low                                            74          1 Covered                   
-        bin mid                                            48          1 Covered                   
-        bin high                                            8          1 Covered                   
+        bin ff                                              5          1 Covered                   
+        bin low                                           125          1 Covered                   
+        bin mid                                           177          1 Covered                   
+        bin high                                           53          1 Covered                   
  TYPE /uart_pkg/uart_coverage/status_irq_cg            100.0%        100 Covered                   
     Coverpoint status_irq_cg::cp_irq_state             100.0%        100 Covered                   
     Coverpoint status_irq_cg::cp_irq_transition        100.0%        100 Covered                   
@@ -140,10 +156,10 @@ Covergroup                                             Metric      Goal/ Status
     Coverpoint cp_irq_state                            100.0%        100 Covered                   
         covered/total bins:                                 4          4                           
         missing/total bins:                                 0          4                           
-        bin disabled_empty                                 23          1 Covered                   
-        bin disabled_pending                                6          1 Covered                   
-        bin enabled_empty                                  45          1 Covered                   
-        bin enabled_pending                                18          1 Covered                   
+        bin disabled_empty                               6015          1 Covered                   
+        bin disabled_pending                              168          1 Covered                   
+        bin enabled_empty                                 411          1 Covered                   
+        bin enabled_pending                                48          1 Covered                   
     Coverpoint cp_irq_transition                       100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
@@ -159,9 +175,9 @@ Covergroup                                             Metric      Goal/ Status
     Coverpoint cp_error_state                          100.0%        100 Covered                   
         covered/total bins:                                 3          3                           
         missing/total bins:                                 0          3                           
-        bin clean_empty                                    65          1 Covered                   
+        bin clean_empty                                  6423          1 Covered                   
         bin bad_frame_rejected                              3          1 Covered                   
-        bin recovered_pending                              18          1 Covered                   
+        bin recovered_pending                              48          1 Covered                   
     Coverpoint cp_error_transition                     100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
         missing/total bins:                                 0          2                           
@@ -177,8 +193,8 @@ Covergroup                                             Metric      Goal/ Status
     Coverpoint cp_rx_fifo_state                        100.0%        100 Covered                   
         covered/total bins:                                 3          3                           
         missing/total bins:                                 0          3                           
-        bin empty                                          68          1 Covered                   
-        bin partial_pending                                15          1 Covered                   
+        bin empty                                        6426          1 Covered                   
+        bin partial_pending                                45          1 Covered                   
         bin full_pending                                    3          1 Covered                   
     Coverpoint cp_rx_full_transition                   100.0%        100 Covered                   
         covered/total bins:                                 2          2                           
@@ -189,8 +205,8 @@ Covergroup                                             Metric      Goal/ Status
     Coverpoint reset_cg::cp_reset_kind                 100.0%        100 Covered                   
         covered/total bins:                                 3          3                           
         missing/total bins:                                 0          3                           
-        bin apb_only                                        9          1 Covered                   
-        bin uart_only                                       6          1 Covered                   
+        bin apb_only                                       12          1 Covered                   
+        bin uart_only                                      12          1 Covered                   
         bin both                                            3          1 Covered                   
  CLASS uart_coverage
  Covergroup instance \/uart_pkg::uart_coverage::reset_cg  
@@ -198,8 +214,8 @@ Covergroup                                             Metric      Goal/ Status
     Coverpoint cp_reset_kind                           100.0%        100 Covered                   
         covered/total bins:                                 3          3                           
         missing/total bins:                                 0          3                           
-        bin apb_only                                        9          1 Covered                   
-        bin uart_only                                       6          1 Covered                   
+        bin apb_only                                       12          1 Covered                   
+        bin uart_only                                      12          1 Covered                   
         bin both                                            3          1 Covered                   
  TYPE /uart_pkg/uart_baud_timing_test/baud_timing_cg 
                                                        100.0%        100 Covered                   
@@ -245,4 +261,4 @@ Covergroup                                             Metric      Goal/ Status
         bin <four,pass>                                     3          1 Covered                   
         bin <eight,pass>                                    3          1 Covered                   
 
-TOTAL COVERGROUP COVERAGE: 100.0%  COVERGROUP TYPES: 7
+TOTAL COVERGROUP COVERAGE: 100.0%  COVERGROUP TYPES: 8

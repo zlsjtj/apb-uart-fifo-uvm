@@ -1,5 +1,7 @@
 @{
   Cases = @(
+    @{ Id = 'tx_early_complete'; Name = '停止位未结束就报告发送完成'; Define = 'UART_MUTATE_TX_EARLY_COMPLETE'; Test = 'uart_tx_completion_test'; Seed = 1318; Detector = 'TX_COMPLETION' }
+    @{ Id = 'apb_late'; Name = 'APB 响应晚一拍'; Define = 'UART_MUTATE_APB_LATE_RESPONSE'; Test = 'uart_reg_test'; Seed = 1071; Detector = 'REG_DEFAULT|REG_RW|SEQ_EXP_ERR|invalid_addr_reports_error|status_write_reports_error' }
     @{ Id = 'tx_lsb'; Name = 'TX 数据位翻转'; Define = 'UART_MUTATE_TX_LSB'; Test = 'uart_loopback_test'; Seed = 71; Detector = 'SB_TX_MISMATCH|LOOPBACK' }
     @{ Id = 'irq_low'; Name = 'IRQ 恒低'; Define = 'UART_MUTATE_IRQ_STUCK_LOW'; Test = 'uart_irq_test'; Seed = 81; Detector = 'IRQ_STATUS|irq_matches_rx_state' }
     @{ Id = 'fifo_full_low'; Name = 'RX FIFO full 恒低'; Define = 'UART_MUTATE_FIFO_FULL_STUCK_LOW'; Test = 'uart_rx_fifo_full_test'; Seed = 91; Detector = 'RX_FIFO_FULL|SB_RX_MISMATCH|rx_full_blocks_write' }

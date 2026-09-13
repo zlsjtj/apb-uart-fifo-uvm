@@ -1,0 +1,102 @@
+{
+  "total": 24,
+  "cases": [
+    {
+      "name": "fixed mode preserves baseline",
+      "result": "PASS"
+    },
+    {
+      "name": "expanded mode derives reproducible seed",
+      "result": "PASS"
+    },
+    {
+      "name": "second campaign uses another seed",
+      "result": "PASS"
+    },
+    {
+      "name": "expanded mode rejects zero seed",
+      "result": "PASS"
+    },
+    {
+      "name": "seed overflow rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "actual Vivado output parsed",
+      "result": "PASS"
+    },
+    {
+      "name": "echoed Tcl is not successful preflight output",
+      "result": "PASS"
+    },
+    {
+      "name": "different installed part does not satisfy request",
+      "result": "PASS"
+    },
+    {
+      "name": "parent traversal rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "absolute path rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "alternate data stream rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "invalid part rejected before invoking tools",
+      "result": "PASS"
+    },
+    {
+      "name": "missing tool directory rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "valid package manifest accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "relocated package verified",
+      "result": "PASS"
+    },
+    {
+      "name": "modified file rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "extra unlisted file rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing file rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "duplicate entry rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "malicious manifest path rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "source identity disagreement rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "PASS without required steps rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "unfinished acceptance rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "failed acceptance rejected",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

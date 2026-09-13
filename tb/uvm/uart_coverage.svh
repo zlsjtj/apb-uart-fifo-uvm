@@ -15,6 +15,13 @@ class uart_coverage extends uvm_component;
   bit        cov_status_irq;
   bit        cov_status_frame_err;
   bit [1:0]  cov_reset_kind;
+  bit cov_tx_busy;
+
+  covergroup tx_completion_cg;
+    option.per_instance = 1;
+    cp_busy: coverpoint cov_tx_busy { bins idle={0}; bins busy={1}; }
+    cp_transition: coverpoint cov_tx_busy { bins accepted=(0=>1); bins drained=(1=>0); }
+  endgroup
 
   covergroup apb_cg;
     option.per_instance = 1;
@@ -135,6 +142,7 @@ class uart_coverage extends uvm_component;
     status_error_cg = new();
     status_fifo_cg = new();
     reset_cg = new();
+    tx_completion_cg = new();
   endfunction
 
   function void write_reset_cov(uart_reset_item tr);
@@ -160,6 +168,8 @@ class uart_coverage extends uvm_component;
       cov_status_rx_empty = tr.rdata[UART_STATUS_RX_EMPTY_BIT];
       cov_status_irq      = tr.rdata[UART_STATUS_IRQ_BIT];
       cov_status_frame_err = tr.rdata[UART_STATUS_FRAME_ERR_BIT];
+      cov_tx_busy = tr.rdata[UART_STATUS_TX_BUSY_BIT];
+      tx_completion_cg.sample();
       status_irq_cg.sample();
       status_error_cg.sample();
       status_fifo_cg.sample();

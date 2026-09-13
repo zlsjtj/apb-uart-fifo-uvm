@@ -1,17 +1,22 @@
 # Acceptance Summary
 
-- Time: `2026-09-04 23:54:39`
-- Result: **PASS**
-- Elapsed seconds: `547`
-- Final-regression seeds: `101, 201, 301`
-- Stress profiles: `skew_7_11, skew_9_13`
+- Run: 20260913_134519_8d9500ab
+- Result: PASS
+- Baseline commit (not the modified source identity): 5214f530f1a4d0caa5a6b1d682403e642dfbede3
+- Evidence: E:\UVM\apb-uart-fifo-uvm\reports\acceptance_runs\20260913_134519_8d9500ab
+- Elapsed seconds: 919.4
 
 | Step | Result |
 | --- | --- |
-| RTL lint and CDC/RDC structural audit | PASS |
-| Generic FPGA out-of-context synthesis | PASS |
-| Architecture structural audit | PASS |
-| Three-seed final regression and coverage merge | PASS |
-| Skewed non-integer clock regression | PASS |
-| Second skewed clock regression | PASS |
-| Declared representative mutation campaign | PASS |
+| Toolchain and license preflight | PASS |
+| Workflow integrity self-tests | PASS |
+| Gate negative self-tests | PASS |
+| RTL lint and structural CDC/RDC | PASS |
+| APB completion-edge and FIFO parameter contract | PASS |
+| Independent randomized FIFO unit checks | PASS |
+| OOC synthesis, timing and CDC path classification | PASS |
+| Three-seed regression and coverage gates | PASS |
+| Parameterized UVM and no-probe checks | PASS |
+| Stress skew_7_11 | PASS |
+| Stress skew_9_13 | PASS |
+| Same-seed baseline controlled mutation campaign | PASS |

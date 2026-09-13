@@ -9,6 +9,10 @@ class uart_env extends uvm_env;
   uart_env_cfg    cfg;
   uart_serial_cfg serial_cfg;
   uart_reset_monitor reset_mon;
+`ifndef UART_NO_WHITEBOX
+  uart_config_monitor cfg_mon;
+  uart_config_checker cfg_checker;
+`endif
   uart_reg_reset_sync reg_reset_sync;
   uart_virtual_sequencer vseqr;
   uart_reg_block  regmodel;
@@ -25,6 +29,14 @@ class uart_env extends uvm_env;
       `uvm_fatal("NOCFG", "uart_env_cfg is not set")
     end
     cfg.validate();
+`ifndef UART_NO_WHITEBOX
+    if (cfg.enable_whitebox) begin
+      cfg_mon = uart_config_monitor::type_id::create("cfg_mon", this);
+      cfg_checker = uart_config_checker::type_id::create("cfg_checker", this);
+    end
+`else
+    if (cfg.enable_whitebox) `uvm_fatal("WHITEBOX_CONFIG", "No-probe build cannot enable white-box components")
+`endif
     serial_cfg = uart_serial_cfg::type_id::create("serial_cfg");
     uvm_config_db#(uart_serial_cfg)::set(this, "uart.*", "serial_cfg", serial_cfg);
     uvm_config_db#(uart_serial_cfg)::set(this, "pred", "serial_cfg", serial_cfg);
@@ -48,6 +60,9 @@ class uart_env extends uvm_env;
 
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
+`ifndef UART_NO_WHITEBOX
+    if (cfg.enable_whitebox) cfg_mon.ap.connect(cfg_checker.analysis_export);
+`endif
     apb.mon.ap.connect(sb.apb_export);
     uart.mon.ap.connect(sb.tx_export);
     apb.mon.ap.connect(pred.apb_export);

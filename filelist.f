@@ -10,6 +10,7 @@ rtl/uart_baud_gen.sv
 rtl/apb_uart_serial_core.sv
 rtl/apb_uart_regs.sv
 rtl/apb_uart_cfg_cdc.sv
+rtl/tx_completion_cdc.sv
 rtl/apb_uart.sv
 rtl/apb_uart_sva.sv
 tb/interfaces/apb_if.sv

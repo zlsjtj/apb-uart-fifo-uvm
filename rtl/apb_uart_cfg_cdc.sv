@@ -29,7 +29,9 @@ module apb_uart_cfg_cdc (
   (* ASYNC_REG = "TRUE" *) logic cfg_ack_meta, cfg_ack_sync;
   (* ASYNC_REG = "TRUE" *) logic cfg_req_meta, cfg_req_sync;
 
-  assign cfg_busy = (cfg_req_tgl != cfg_ack_pclk_q2);
+  logic cfg_inflight;
+  assign cfg_inflight = (cfg_req_tgl != cfg_ack_pclk_q2);
+  assign cfg_busy = cfg_inflight || cfg_pending;
   assign cfg_ack_pclk_q1 = cfg_ack_meta;
   assign cfg_ack_pclk_q2 = cfg_ack_sync;
   assign cfg_req_uart_q1 = cfg_req_meta;
@@ -42,12 +44,14 @@ module apb_uart_cfg_cdc (
       cfg_req_tgl <= 1'b0;
       cfg_ack_meta <= 1'b0;
       cfg_ack_sync <= 1'b0;
-      cfg_pending <= 1'b0;
+      // Replay surviving APB registers after either domain resets. Startup
+      // uses exactly the same stable-payload handshake as a normal write.
+      cfg_pending <= 1'b1;
     end else begin
       cfg_ack_meta <= cfg_ack_tgl;
       cfg_ack_sync <= cfg_ack_meta;
       if (cfg_write) begin
-        if (!cfg_busy) begin
+        if (!cfg_inflight) begin
           cfg_ctrl_hold <= cfg_ctrl_value;
           cfg_baud_hold <= cfg_baud_value;
           cfg_req_tgl <= ~cfg_req_tgl;
@@ -55,7 +59,7 @@ module apb_uart_cfg_cdc (
         end else begin
           cfg_pending <= 1'b1;
         end
-      end else if (!cfg_busy && cfg_pending) begin
+      end else if (!cfg_inflight && cfg_pending) begin
         cfg_ctrl_hold <= apb_ctrl_current;
         cfg_baud_hold <= apb_baud_current;
         cfg_req_tgl <= ~cfg_req_tgl;
@@ -78,20 +82,8 @@ module apb_uart_cfg_cdc (
       cfg_req_meta <= cfg_req_tgl;
       cfg_req_sync <= cfg_req_meta;
       cfg_apply_uart <= 1'b0;
-      if (!cfg_uart_initialized) begin
-        ctrl_uart_cfg <= cfg_ctrl_hold;
-        baud_uart_cfg <= cfg_baud_hold;
-        cfg_req_seen <= cfg_req_sync;
-`ifdef UART_MUTATE_CFG_ACK_STUCK
-        cfg_ack_tgl <= 1'b0;
-`else
-        cfg_ack_tgl <= cfg_req_sync;
-`endif
+      if (cfg_req_sync != cfg_req_seen) begin
         cfg_uart_initialized <= 1'b1;
-`ifndef UART_MUTATE_CFG_APPLY_DROP
-        cfg_apply_uart <= 1'b1;
-`endif
-      end else if (cfg_req_sync != cfg_req_seen) begin
         ctrl_uart_cfg <= cfg_ctrl_hold;
         baud_uart_cfg <= cfg_baud_hold;
         cfg_req_seen <= cfg_req_sync;

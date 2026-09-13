@@ -1,5 +1,7 @@
 # 覆盖率闭环说明
 
+> 本文保留的是截至 2026-09-04 的阶段记录，其中用例数量、覆盖率和“当前”结论不再代表最新版。2026-09-05 发现并修正 APB 晚响应及验收判定缺口；当前架构见 p0_p2_contract_closure.md，结果以 acceptance_summary.json 指向的独立运行目录为准。
+
 ## 1. 数据来源
 
 功能闭环的首轮结果来自 2026-07-13 的 13/13 PASS 回归。最新一轮在 2026-09-04 使用 `scripts/run_final_regression.ps1` 完成 3 组 seed、51/51 PASS 的正式回归，并合并 51 个 UCDB；正式证据见 `docs/final_regression_evidence.md` 和 `reports/final_regression/`。`scripts/merge_coverage.ps1` 只选择摘要表中对应测试和 seed 的 UCDB，不合并目录中其他调试运行或旧 seed。

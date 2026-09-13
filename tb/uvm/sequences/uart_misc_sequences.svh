@@ -56,7 +56,7 @@ class uart_fifo_full_seq extends uart_base_apb_seq;
     apb_write(ADDR_BAUD, 32'd1, 1);
     apb_write(ADDR_CTRL, 32'h1, 4);
 
-    for (int i = 0; i < 24; i++) begin
+    for (int i = 0; i < 2*fifo_depth()+8; i++) begin
       apb_write_status(ADDR_TXDATA, i[7:0], 0, slverr);
       if (slverr) begin
         saw_full_err = 1'b1;
@@ -68,7 +68,7 @@ class uart_fifo_full_seq extends uart_base_apb_seq;
     end
 
     apb_read(ADDR_STATUS, data, 2);
-    apb_read(ADDR_STATUS, data, 850);
+    wait_tx_idle();
   endtask
 endclass
 
@@ -134,6 +134,7 @@ class uart_rx_read_seq extends uart_base_apb_seq;
 
   bit [7:0] pattern[$];
   bit [31:0] baud_value = 32'd1;
+  bit configure_first = 1'b1;
   int unsigned first_read_idle = 180;
   int unsigned next_read_idle = 70;
 
@@ -145,8 +146,10 @@ class uart_rx_read_seq extends uart_base_apb_seq;
   task body();
     bit [31:0] data;
 
-    apb_write(ADDR_BAUD, baud_value, 1);
-    apb_write(ADDR_CTRL, 32'h1, 4);
+    if (configure_first) begin
+      apb_write(ADDR_BAUD, baud_value, 1);
+      apb_write(ADDR_CTRL, 32'h1, 4);
+    end
 
     foreach (pattern[i]) begin
       apb_read(ADDR_RXDATA, data, (i == 0) ? first_read_idle : next_read_idle);

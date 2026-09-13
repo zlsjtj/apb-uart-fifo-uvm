@@ -1,5 +1,6 @@
 class uart_env_cfg extends uvm_object;
   int unsigned fifo_addr_width = 4;
+  bit enable_whitebox = 1;
   int unsigned pclk_half_ns    = 5;
   int unsigned uart_half_ns    = 20;
   int unsigned pclk_phase_ns   = 0;
@@ -7,6 +8,7 @@ class uart_env_cfg extends uvm_object;
 
   `uvm_object_utils_begin(uart_env_cfg)
     `uvm_field_int(fifo_addr_width, UVM_DEFAULT)
+    `uvm_field_int(enable_whitebox, UVM_DEFAULT)
     `uvm_field_int(pclk_half_ns,    UVM_DEFAULT)
     `uvm_field_int(uart_half_ns,    UVM_DEFAULT)
     `uvm_field_int(pclk_phase_ns,   UVM_DEFAULT)

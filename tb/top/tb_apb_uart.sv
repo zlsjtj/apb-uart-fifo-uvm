@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 
-module tb_apb_uart;
+module tb_apb_uart #(
+  parameter int FIFO_ADDR_WIDTH = 4,
+  parameter bit ENABLE_WHITEBOX = 1
+);
   import uvm_pkg::*;
   import uart_pkg::*;
   `include "uvm_macros.svh"
@@ -14,7 +17,6 @@ module tb_apb_uart;
   integer uart_half_ns;
   integer pclk_phase_ns;
   integer uart_phase_ns;
-  localparam int FIFO_ADDR_WIDTH = 4;
 
   initial begin
     pclk_half_ns = 5;
@@ -42,7 +44,6 @@ module tb_apb_uart;
 
   apb_if  apb_vif  (.pclk(pclk), .presetn(presetn));
   uart_if uart_vif (.uart_clk(uart_clk), .uart_rst_n(uart_rst_n));
-  uart_probe_if probe_vif (.pclk(pclk), .uart_clk(uart_clk));
 
   apb_uart #(
     .FIFO_ADDR_WIDTH(FIFO_ADDR_WIDTH)
@@ -64,6 +65,9 @@ module tb_apb_uart;
     .irq_o      (irq_o)
   );
 
+`ifndef UART_NO_WHITEBOX
+  generate if (ENABLE_WHITEBOX) begin : g_whitebox
+  uart_probe_if probe_vif (.pclk(pclk), .uart_clk(uart_clk));
   apb_uart_sva u_apb_uart_sva (
     .pclk    (pclk),
     .presetn (presetn),
@@ -79,12 +83,15 @@ module tb_apb_uart;
     .pwrite  (apb_vif.pwrite),
     .paddr   (apb_vif.paddr),
     .pwdata  (apb_vif.pwdata),
+    .prdata  (apb_vif.prdata),
     .pready  (apb_vif.pready),
     .pslverr (apb_vif.pslverr),
     .cfg_busy(probe_vif.cfg_busy),
     .cfg_write(probe_vif.cfg_write),
     .cfg_pending(probe_vif.cfg_pending),
     .cfg_req_tgl(probe_vif.cfg_req_tgl),
+    .cfg_req_uart_q2(probe_vif.cfg_req_uart_q2),
+    .cfg_req_seen(probe_vif.cfg_req_seen),
     .cfg_ack_tgl(probe_vif.cfg_ack_tgl),
     .cfg_ack_pclk_q2(probe_vif.cfg_ack_pclk_q2),
     .cfg_ctrl_hold(probe_vif.cfg_ctrl_hold),
@@ -118,6 +125,8 @@ module tb_apb_uart;
   assign probe_vif.cfg_write = u_dut.cfg_write;
   assign probe_vif.cfg_pending = u_dut.cfg_pending;
   assign probe_vif.cfg_req_tgl = u_dut.cfg_req_tgl;
+  assign probe_vif.cfg_req_uart_q2 = u_dut.cfg_req_uart_q2;
+  assign probe_vif.cfg_req_seen = u_dut.cfg_req_seen;
   assign probe_vif.cfg_ack_tgl = u_dut.cfg_ack_tgl;
   assign probe_vif.cfg_ack_pclk_q2 = u_dut.cfg_ack_pclk_q2;
   assign probe_vif.cfg_ctrl_hold = u_dut.cfg_ctrl_hold;
@@ -137,6 +146,12 @@ module tb_apb_uart;
   assign probe_vif.rx_frame_err = u_dut.rx_frame_err_uart;
   assign probe_vif.rx_frame_err_pclk = u_dut.rx_frame_err_pclk_q2;
   assign probe_vif.rx_wr_en = u_dut.rx_wr_en;
+  initial begin
+    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top.env.cfg_mon", "probe_vif", probe_vif);
+    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top", "probe_vif", probe_vif);
+  end
+  end endgenerate
+`endif
 
   initial begin
     apb_vif.idle_bus();
@@ -154,6 +169,7 @@ module tb_apb_uart;
     #0;
     env_cfg = uart_env_cfg::type_id::create("env_cfg");
     env_cfg.fifo_addr_width = FIFO_ADDR_WIDTH;
+    env_cfg.enable_whitebox = ENABLE_WHITEBOX;
     env_cfg.pclk_half_ns = pclk_half_ns;
     env_cfg.uart_half_ns = uart_half_ns;
     env_cfg.pclk_phase_ns = pclk_phase_ns;
@@ -161,9 +177,7 @@ module tb_apb_uart;
     uvm_config_db#(uart_env_cfg)::set(null, "uvm_test_top.env*", "env_cfg", env_cfg);
     uvm_config_db#(virtual apb_if)::set(null, "uvm_test_top.env.apb.*", "vif", apb_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top.env.uart.*", "vif", uart_vif);
-    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top.env.uart.*", "probe_vif", probe_vif);
     uvm_config_db#(virtual uart_if)::set(null, "uvm_test_top", "timing_vif", uart_vif);
-    uvm_config_db#(virtual uart_probe_if)::set(null, "uvm_test_top", "probe_vif", probe_vif);
     uvm_config_db#(virtual reset_if)::set(null, "uvm_test_top*", "reset_vif", reset_vif);
     run_test();
   end

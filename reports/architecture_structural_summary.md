@@ -1,11 +1,16 @@
 # Architecture Structural Summary
 
-- Time: `2026-09-04 23:46:20`
+- Time: `2026-09-13 13:27:34`
 - Result: `PASS`
-- Checks: `45/45`
+- Checks: `50/50`
 
 | Check | Result |
 | --- | --- |
+| UART agent has no white-box dependencies | PASS |
+| Optional config events have an explicit consumer | PASS |
+| UVM top FIFO width is an elaboration parameter | PASS |
+| Full acceptance includes parameter and no-probe tests | PASS |
+| TX completion modulo includes FIFO and retirement pipeline margin | PASS |
 | TX monitor does not use DUT bit_tick | PASS |
 | RX monitor does not use DUT bit_tick | PASS |
 | UART driver does not use DUT bit_tick | PASS |

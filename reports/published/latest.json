@@ -1,0 +1,10 @@
+{
+  "summary": "20260913_134519_8d9500ab/acceptance_summary.json",
+  "result": "PASS",
+  "manifestSha256": "0DA077AB81B2AEB8E857DD9B8E3BA16F2A0503AD3B94DDF3F1746E2342FA575F",
+  "bundle": "deliveries/20260913_134519_8d9500ab",
+  "sourceSha256": "801771a6c2ea8619f01c11ef8486d560b72c1799655f4894328f3d0c6915ff85",
+  "runId": "20260913_134519_8d9500ab",
+  "paperResults": "20260913_134519_8d9500ab/paper_results.md",
+  "manifest": "20260913_134519_8d9500ab/delivery_manifest.json"
+}

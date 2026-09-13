@@ -1,0 +1,28 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
+| Date         : Sun Sep 13 11:59:51 2026
+| Host         : zlsjtj running 64-bit major release  (build 9200)
+| Command      : report_exceptions -file reports/synthesis/exceptions.rpt
+| Design       : apb_uart
+| Device       : 7a35t-cpg236
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Exceptions Report
+
+Position  From                                                                             Through         To                                                                                Setup           Hold            Status            
+--------  -------------------------------------------------------------------------------  --------------  --------------------------------------------------------------------------------  --------------  --------------  ------------------
+11        [get_ports {presetn uart_rst_n}]                                                 *               *                                                                                 false           false           
+12        *                                                                                *               [get_pins -hier -quiet -regexp .*(cfg_req_meta_reg|cfg_ack_meta_reg|rx_full_pclk  false           false           
+                                                                                                           _q1_reg|rx_frame_err_pclk_q1_reg|tx_empty_pclk_q1_reg)/D]                                                         
+13        [get_cells -hier -quiet -filter {NAME =~ u_cfg_cdc/cfg_*_hold_reg*}]             *               [get_cells -hier -quiet -filter {NAME =~ u_cfg_cdc/*_uart_cfg_reg*}]              max_dpo=40      -               
+14        [get_cells -hier -quiet -filter {NAME =~ u_tx_fifo/mem_reg*}]                    *               [get_cells -hier -quiet -filter {NAME =~ u_serial_core/u_uart_tx/shifter_reg*}]   max_dpo=40      -               Invalid startpoint
+15        [get_cells -hier -quiet -filter {NAME =~ u_rx_fifo/mem_reg*}]                    *               [get_ports {prdata[*]}]                                                           max_dpo=10      -               Invalid startpoint
+17        [get_cells -hier -quiet -regexp {.*u_tx_fifo/(rgray|rbin)_reg\[.*}]              *               [get_cells -hier -quiet -regexp {.*u_tx_fifo/rgray_wclk_q1_reg\[.*}]              max_dpo=10      -               
+19        [get_cells -hier -quiet -regexp {.*u_tx_fifo/(wgray|wbin)_reg\[.*}]              *               [get_cells -hier -quiet -regexp {.*u_tx_fifo/wgray_rclk_q1_reg\[.*}]              max_dpo=10      -               
+21        [get_cells -hier -quiet -regexp {.*u_rx_fifo/(rgray|rbin)_reg\[.*}]              *               [get_cells -hier -quiet -regexp {.*u_rx_fifo/rgray_wclk_q1_reg\[.*}]              max_dpo=10      -               
+23        [get_cells -hier -quiet -regexp {.*u_rx_fifo/(wgray|wbin)_reg\[.*}]              *               [get_cells -hier -quiet -regexp {.*u_rx_fifo/wgray_rclk_q1_reg\[.*}]              max_dpo=10      -               
+25        [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_(gray|bin)_reg\[.*}]  *               [get_cells -hier -quiet -regexp {.*u_tx_completion/retired_q1_reg\[.*}]           max_dpo=10      -               
+

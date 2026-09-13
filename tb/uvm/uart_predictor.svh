@@ -45,15 +45,27 @@ class uart_predictor extends uvm_component;
 
     if (tr.kind == apb_item::APB_WRITE) begin
       if (tr.addr == UART_ADDR_CTRL) begin
-        serial_cfg.ctrl = tr.data[2:0] & UART_CTRL_MASK[2:0];
-        loopback_effective = serial_cfg.ctrl[UART_CTRL_LOOPBACK_BIT];
+        serial_cfg.requested_ctrl = tr.data[2:0] & UART_CTRL_MASK[2:0];
+        serial_cfg.ready = 1'b0;
         serial_cfg.apb_updates++;
         cfg_updates++;
       end else if (tr.addr == UART_ADDR_BAUD) begin
-        serial_cfg.baud = (tr.data == 0) ? UART_BAUD_MIN : tr.data;
+        serial_cfg.requested_baud = (tr.data == 0) ? UART_BAUD_MIN : tr.data;
+        serial_cfg.ready = 1'b0;
         serial_cfg.apb_updates++;
         cfg_updates++;
       end
+    end
+
+    // Public STATUS is the software contract: successful writes describe the
+    // requested values; a subsequent not-busy read confirms their completion.
+    // No DUT effective configuration or internal tick is used as an oracle.
+    if ((tr.kind == apb_item::APB_READ) && (tr.addr == UART_ADDR_STATUS) &&
+        !tr.rdata[UART_STATUS_CFG_BUSY_BIT]) begin
+      serial_cfg.ctrl = serial_cfg.requested_ctrl;
+      serial_cfg.baud = serial_cfg.requested_baud;
+      serial_cfg.ready = 1'b1;
+      loopback_effective = serial_cfg.ctrl[UART_CTRL_LOOPBACK_BIT];
     end
 
     if ((tr.kind == apb_item::APB_WRITE) && (tr.addr == UART_ADDR_TXDATA)) begin
@@ -91,6 +103,8 @@ class uart_predictor extends uvm_component;
       return;
     end
     predicted_rx_occupancy = 0;
+    serial_cfg.reset_epoch++;
+    serial_cfg.ready = 1'b0;
     if (tr.kind[1]) begin
       serial_cfg.reset_to_defaults();
       loopback_effective = 1'b0;

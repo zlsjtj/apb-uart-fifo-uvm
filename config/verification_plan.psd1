@@ -1,6 +1,8 @@
 @{
   RegressionTests = @(
     'uart_reg_test'
+    'uart_tx_completion_test'
+    'uart_fifo_wrap_test'
     'uart_config_latency_test'
     'uart_config_stress_test'
     'uart_ral_test'
@@ -13,11 +15,16 @@
     'uart_external_rx_baud_test'
     'uart_rx_fifo_full_test'
     'uart_reset_cdc_test'
+    'uart_frame_reset_test'
     'uart_fifo_full_test'
     'uart_bad_access_test'
     'uart_random_test'
     'uart_recover_test'
   )
+
+  ParameterWidths = @(1,2,4,6)
+  ParameterTests = @('uart_tx_completion_test','uart_fifo_wrap_test','uart_fifo_full_test','uart_rx_fifo_full_test','uart_reset_cdc_test','uart_frame_reset_test')
+  NoProbeTests = @('uart_no_probe_test','uart_fifo_wrap_test','uart_rx_fifo_full_test','uart_frame_reset_test')
 
   StressProfiles = @(
     @{
@@ -28,12 +35,14 @@
       PclkPhaseNs = 2
       UartPhaseNs = 5
       Tests = @(
+        'uart_tx_completion_test'
         'uart_config_latency_test'
         'uart_config_stress_test'
         'uart_loopback_test'
         'uart_external_rx_test'
         'uart_external_rx_baud_test'
         'uart_reset_cdc_test'
+        'uart_frame_reset_test'
       )
     }
     @{
@@ -44,12 +53,14 @@
       PclkPhaseNs = 4
       UartPhaseNs = 1
       Tests = @(
+        'uart_tx_completion_test'
         'uart_config_latency_test'
         'uart_config_stress_test'
         'uart_frame_error_test'
         'uart_external_rx_baud_test'
         'uart_rx_fifo_full_test'
         'uart_reset_cdc_test'
+        'uart_frame_reset_test'
       )
     }
   )

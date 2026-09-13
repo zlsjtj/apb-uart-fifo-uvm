@@ -5,10 +5,11 @@ the testbench.
 
 ## APB Sampling
 
-The APB driver drives setup/access phases around the clock edge and samples
-`prdata` and `pslverr` after a small delay. The monitor uses the same idea when
-publishing transactions. This avoids reading stale values from the same edge
-where the DUT updates APB outputs with nonblocking assignments.
+APB 的读数据和错误响应必须在完成沿之前有效。旧版本把响应放在完成沿的
+NBA 更新，并让 driver/monitor 延后 2 ns 读取，掩盖了晚响应问题。当前寄存器
+层采用组合响应，driver/monitor 均使用 clocking block 的 input #1step 采样；
+寄存器写和 FIFO push/pop 在完成沿执行。tb/unit/apb_contract_tb.sv 使用独立
+边沿采样检查连续访问，APB late-response mutation 检查旧问题不会重新漏检。
 
 Relevant files:
 
@@ -116,10 +117,10 @@ to divisor 1. BAUD updates are supported between frames, not during a frame.
 
 ## 配置写入与目标域生效
 
-APB 写 CTRL 或 BAUD 只表示软件侧寄存器更新完成，并不等于 UART 域已经使用新值。RTL 在 UART 域接收完整配置快照时产生单周期 `cfg_apply_uart`；配置监视器以该事件发布实际生效值，predictor 也只在此时更新有效 loopback 配置。
+APB 写 CTRL 或 BAUD 只更新请求值。数据检查的 predictor 在看到公开 STATUS[6] CFG_BUSY 清零后，才把最后的请求配置作为已确认配置。内部 cfg_apply_uart 仅用于白盒配置时延和握手断言，不再驱动 predictor。串行 monitor 冻结每帧配置，并在 reset epoch 改变时丢弃未完成帧。
 
 `uart_config_latency_test` 分别记录 APB 写完成和 UART 域生效时刻。默认时钟下，定向运行测得 BAUD 延迟 50 ns、CTRL 延迟 130 ns；采用 14 ns APB 周期、22 ns UART 周期并错相时，分别测得 58 ns 和 56 ns。延迟会受两个异步时钟相位和邮箱状态影响，因此测试检查的是“目标值在 APB 完成之后才生效”，不把延迟写死成固定周期数。
 
 # 受控故障注入
 
-为确认验证环境不是“只会跑通”，目前保留了十一类编译期故障，覆盖 TX/RX 数据、FIFO 状态、IRQ、baud tick、配置握手、frame error 和同步复位释放。每个故障版本使用独立仿真库，必须同时出现指定检出器和真实 error/fatal 才算 KILLED。默认编译不定义这些开关，三组正式回归为 51/51 PASS。完整记录见 `docs/bug_closure_case.md` 和 `reports/mutation_campaign.md`。
+当前 mutation 清单还加入了 APB 晚响应故障。每项都运行同测试、同 seed 的无故障基线；只有基线通过、故障版运行有效、指定检出器出现在实际错误记录中，才算 KILLED。单独出现 INFO 标签加无关 error 不算检出，工具失败和超时也不算。具体结果见本轮独立目录的 reports/mutation_campaign.json。

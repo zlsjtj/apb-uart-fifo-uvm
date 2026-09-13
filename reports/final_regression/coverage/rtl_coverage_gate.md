@@ -1,11 +1,13 @@
 # RTL-only Coverage Gate
 
-- Time: `2026-09-04 23:52:00`
+- Time: `2026-09-13 12:07:16`
 - Result: **PASS**
 - Source: `reports\final_regression\coverage\dut_bydu_coverage.txt`
 
 | RTL module | Metric | Minimum | Actual | Waiver | Result |
 | --- | --- | ---: | ---: | --- | --- |
+| `tx_completion_cdc` | Statements | 95% | 100% | - | PASS |
+| `tx_completion_cdc` | Branches | 90% | 100% | - | PASS |
 | `apb_uart` | Statements | 95% | 100% | - | PASS |
 | `apb_uart_regs` | Statements | 95% | 100% | - | PASS |
 | `apb_uart_regs` | Branches | 90% | 100% | - | PASS |
@@ -19,9 +21,9 @@
 | `reset_sync` | Statements | 100% | 100% | - | PASS |
 | `uart_rx` | Statements | 95% | 95.6% | - | PASS |
 | `uart_rx` | Branches | 90% | 94.1% | - | PASS |
-| `uart_rx` | FSM | 85% | 90% | - | PASS |
-| `uart_tx` | Statements | 95% | 95% | - | PASS |
-| `uart_tx` | Branches | 90% | 91.6% | - | PASS |
+| `uart_rx` | FSM | 85% | 100% | - | PASS |
+| `uart_tx` | Statements | 95% | 96.4% | - | PASS |
+| `uart_tx` | Branches | 90% | 92.8% | - | PASS |
 | `uart_tx` | FSM | 95% | 100% | - | PASS |
 
 ## Waivers

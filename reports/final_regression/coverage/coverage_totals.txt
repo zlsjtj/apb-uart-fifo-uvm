@@ -1,43 +1,43 @@
-Coverage Report Totals BY FILES: Number of Files 47
+Coverage Report Totals BY FILES: Number of Files 51
 
     Enabled Coverage            Active      Hits    Misses    Weight % Covered
     ----------------            ------      ----    ------    ------ ---------
-    Stmts                         2111      1194       917         1      56.5
-    Branches                      1404       292      1112         1      20.7
-    Conditions                                                     1      75.2
+    Stmts                         2457      1411      1046         1      57.4
+    Branches                      1649       359      1290         1      21.7
+    Conditions                                                     1      73.9
         UDP Condition Rows           0         0         0         1     100.0
-        FEC Condition Terms        105        53        52         1      50.4
-    Expressions                                                    1      98.2
+        FEC Condition Terms        138        66        72         1      47.8
+    Expressions                                                    1      94.4
         UDP Expression Rows          0         0         0         1     100.0
-        FEC Expression Terms        28        27         1         1      96.4
-    FSMs                                                           1      93.7
+        FEC Expression Terms        45        40         5         1      88.8
+    FSMs                                                           1     100.0
         States                       5         5         0         1     100.0
-        Transitions                  8         7         1         1      87.5
-    Toggle Bins                   3225      1183      2042         1      36.6
+        Transitions                  8         8         0         1     100.0
+    Toggle Bins                   3483      1371      2112         1      39.3
 
-Total coverage (Code Coverage Only, filtered view): 59.1%
+Total coverage (Code Coverage Only, filtered view): 59.2%
 
-Coverage Report Totals BY INSTANCES: Number of Instances 25
+Coverage Report Totals BY INSTANCES: Number of Instances 26
 
     Enabled Coverage            Active      Hits    Misses    Weight % Covered
     ----------------            ------      ----    ------    ------ ---------
-    Stmts                         2150      1233       917         1      57.3
-    Branches                      1420       308      1112         1      21.6
-    Conditions                                                     1      75.2
+    Stmts                         2498      1452      1046         1      58.1
+    Branches                      1665       375      1290         1      22.5
+    Conditions                                                     1      74.1
         UDP Condition Rows           0         0         0         1     100.0
-        FEC Condition Terms        107        54        53         1      50.4
-    Expressions                                                    1      98.2
+        FEC Condition Terms        141        68        73         1      48.2
+    Expressions                                                    1      94.4
         UDP Expression Rows          0         0         0         1     100.0
-        FEC Expression Terms        28        27         1         1      96.4
-    FSMs                                                           1      93.7
+        FEC Expression Terms        45        40         5         1      88.8
+    FSMs                                                           1     100.0
         States                       5         5         0         1     100.0
-        Transitions                  8         7         1         1      87.5
-    Toggle Bins                   3249      1391      1858         1      42.8
-    Cover Group Types                7        na        na         1     100.0
-    Coverpoints/Crosses             17        na        na         1        na
-        Covergroup Bins             65        65         0         1     100.0
-    Cover Directives                15        15         0         1     100.0
-    Assertions                      51        51         0         1     100.0
+        Transitions                  8         8         0         1     100.0
+    Toggle Bins                   3505      1601      1904         1      45.6
+    Cover Group Types                8        na        na         1     100.0
+    Coverpoints/Crosses             19        na        na         1        na
+        Covergroup Bins             69        69         0         1     100.0
+    Cover Directives                16        16         0         1     100.0
+    Assertions                      66        66         0         1     100.0
 
-Total coverage (filtered view): 73.6%
+Total coverage (filtered view): 73.7%
 

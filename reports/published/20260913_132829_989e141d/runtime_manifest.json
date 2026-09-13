@@ -1,0 +1,48 @@
+{
+  "result": "PASS",
+  "generatedAt": "2026-09-13T13:28:30.7542498+08:00",
+  "configuration": {
+    "questaBin": "C:\\modeltech64_10.4\\win64",
+    "vivadoBat": "E:\\Xilinx\\Vivado\\2023.2\\bin\\vivado.bat",
+    "part": "xc7a35tcpg236-1"
+  },
+  "tools": [
+    {
+      "version": null,
+      "versionSource": "executable metadata; no CLI version option",
+      "name": "vlib",
+      "path": "C:\\modeltech64_10.4\\win64\\vlib.exe"
+    },
+    {
+      "version": "Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014",
+      "name": "vlog",
+      "path": "C:\\modeltech64_10.4\\win64\\vlog.exe"
+    },
+    {
+      "version": "Model Technology ModelSim SE-64 vsim 10.4 Simulator 2014.12 Dec  3 2014",
+      "name": "vsim",
+      "path": "C:\\modeltech64_10.4\\win64\\vsim.exe"
+    },
+    {
+      "version": "Model Technology ModelSim SE-64 vcover 10.4 Coverage Utility 2014.12 Dec  3 2014",
+      "name": "vcover",
+      "path": "C:\\modeltech64_10.4\\win64\\vcover.exe"
+    },
+    {
+      "version": "git version 2.53.0.windows.1",
+      "name": "git",
+      "path": "C:\\Program Files\\Git\\cmd\\git.exe"
+    },
+    {
+      "version": "7.6.5",
+      "name": "PowerShell",
+      "path": "C:\\Users\\15014\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe"
+    },
+    {
+      "version": "2023.2",
+      "name": "Vivado",
+      "path": "E:\\Xilinx\\Vivado\\2023.2\\bin\\vivado.bat"
+    }
+  ],
+  "error": null
+}

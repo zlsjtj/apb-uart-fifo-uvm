@@ -9,6 +9,10 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'evidence_common.ps1')
+. "$PSScriptRoot/toolchain_common.ps1"
+$null=Initialize-Toolchain
+$sourceIdentity=Get-SourceIdentity
 
 function Require-Tool($Name) {
   if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
@@ -106,6 +110,7 @@ foreach ($row in $allRows) {
 $summary += ""
 $summary += "Passed $(@($allRows | Where-Object { $_.Status -eq 'PASS' }).Count)/$($allRows.Count) runs."
 Write-Utf8File $summaryPath $summary
+Write-EvidenceJson (Join-Path $OutputDir 'final_regression_summary.json') @{result='PASS';source=$sourceIdentity;seeds=$Seeds;tests=$allRows}
 
 $coverageDir = Join-Path $OutputDir "coverage"
 & (Join-Path $PSScriptRoot "merge_coverage.ps1") -SummaryPath $summaryPath -OutputDir $coverageDir
@@ -138,8 +143,7 @@ $sourcePaths = @(
   "scripts/run_vivado_synth.ps1",
   "scripts/vivado_synth.tcl"
 )
-$sourcePaths += Get-ChildItem -Path "rtl", "tb" -Recurse -File |
-  Where-Object { $_.Extension -in @(".sv", ".svh") } |
+$sourcePaths += Get-ChildItem -Path "rtl", "tb", "scripts", "config", "constraints" -Recurse -File |
   ForEach-Object { $_.FullName }
 $sourcePaths = @($sourcePaths | Sort-Object -Unique)
 
@@ -160,6 +164,8 @@ foreach ($sourcePath in $sourcePaths) {
   $sourceManifest += "| ``$relativePath`` | ``$hash`` |"
 }
 Write-Utf8File $sourceManifestPath $sourceManifest
+Assert-SourceIdentity $sourceIdentity
+Write-EvidenceJson (Join-Path $OutputDir 'source_manifest.json') $sourceIdentity
 
 $savedGitConfigGlobal = $env:GIT_CONFIG_GLOBAL
 try {
@@ -181,8 +187,8 @@ $manifest = @(
   "",
   "- Time: ``$now``",
   "- Baseline git commit: ``$gitHead``",
-  "- Source tree clean relative to baseline: ``$($sourceGitState.Count -eq 0)``",
-  "- Full working tree clean: ``$($gitState.Count -eq 0)``",
+  "- Exact executed source identity: ``$($sourceIdentity.sha256)``",
+  "- Source remained unchanged during this run: ``true``",
   "- Simulator: ``$vlogVersion``",
   "- UVM: ``UVM-1.1d built-in; Questa UVM-1.2.2 reported by simulation log``",
   "- Command: ``& .\scripts\run_final_regression.ps1 -Seeds $seedLiteral``",
@@ -198,7 +204,7 @@ $manifest = @(
 )
 if ($sourceGitState.Count -eq 0) {
   $manifest += ""
-  $manifest += "The RTL, testbench, filelist and verification scripts match the baseline commit."
+  $manifest += "Git reports no tracked changes at this execution path. An isolated ignored snapshot is not proven to match HEAD by this result; source_manifest.json is the authoritative executed-source identity."
 } else {
   $manifest += ""
   $manifest += "The source tree differs from the baseline commit. Use source_manifest.md to identify the exact simulated files. Generated reports are not used to decide source cleanliness."

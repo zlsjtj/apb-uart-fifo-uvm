@@ -1,4 +1,6 @@
 $ErrorActionPreference = "Stop"
+. "$PSScriptRoot/toolchain_common.ps1"
+$null=Initialize-Toolchain
 
 function Write-Utf8File([string]$Path, [string[]]$Lines) {
   $utf8NoBom = New-Object System.Text.UTF8Encoding $false

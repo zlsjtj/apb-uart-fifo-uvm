@@ -21,10 +21,15 @@ class uart_external_rx_vseq extends uart_base_vseq;
   task body();
     uart_rx_read_seq     apb_seq;
     uart_external_rx_seq rx_seq;
+    uart_rx_config_seq config_seq;
 
     apb_seq = uart_rx_read_seq::type_id::create("apb_seq");
     rx_seq  = uart_external_rx_seq::type_id::create("rx_seq");
     apb_seq.baud_value = baud_value;
+    apb_seq.configure_first = 1'b0;
+    config_seq = uart_rx_config_seq::type_id::create("config_seq");
+    config_seq.baud_value = baud_value;
+    config_seq.start(p_sequencer.apb_seqr);
     rx_seq.bit_cycles = bit_cycles;
     rx_seq.edge_offset_ps = edge_offset_ps;
     if (bit_cycles > 1) begin

@@ -10,6 +10,7 @@ module apb_uart_serial_core (
   input  logic        rx_full,
   output logic        tx_o,
   output logic        tx_rd_en,
+  output logic        tx_retired,
   output logic [7:0]  rx_data,
   output logic        rx_valid,
   output logic        rx_frame_err,
@@ -49,7 +50,8 @@ module apb_uart_serial_core (
     .data_i     (tx_fifo_rdata),
     .valid_i    (tx_rd_en),
     .ready_o    (tx_ready),
-    .tx_o       (tx_o)
+    .tx_o       (tx_o),
+    .retired_o  (tx_retired)
   );
 
   uart_rx u_uart_rx (

@@ -13,11 +13,42 @@ class uart_base_apb_seq extends uvm_sequence #(apb_item);
     super.new(name);
   endfunction
 
+  function int unsigned fifo_depth();
+    uart_env_cfg cfg;
+    if (!uvm_config_db#(uart_env_cfg)::get(m_sequencer, "", "env_cfg", cfg))
+      `uvm_fatal("NOCFG", "Sequence cannot obtain FIFO depth")
+    return cfg.fifo_depth();
+  endfunction
+
+  task automatic wait_tx_idle();
+    bit [31:0] status;
+    bit err;
+    for (int n = 0; n < 100000; n++) begin
+      apb_read_status(ADDR_STATUS, status, 1, err);
+      if (!err && !status[UART_STATUS_CFG_BUSY_BIT] &&
+          !status[UART_STATUS_TX_BUSY_BIT]) return;
+    end
+    `uvm_fatal("TX_IDLE_TIMEOUT", "TX_BUSY or CFG_BUSY did not clear within bounded polling")
+  endtask
+
   task automatic apb_write(input bit [7:0] addr,
                            input bit [31:0] data,
                            input int unsigned idle_cycles = 0);
     bit slverr;
+    if ((addr == ADDR_CTRL) || (addr == ADDR_BAUD)) wait_tx_idle();
     apb_write_status(addr, data, idle_cycles, slverr);
+    if (!slverr && ((addr == ADDR_CTRL) || (addr == ADDR_BAUD)))
+      wait_config_ready();
+  endtask
+
+  task automatic wait_config_ready();
+    bit [31:0] status;
+    bit err;
+    for (int n = 0; n < 256; n++) begin
+      apb_read_status(ADDR_STATUS, status, 0, err);
+      if (!err && !status[UART_STATUS_CFG_BUSY_BIT]) return;
+    end
+    `uvm_fatal("CFG_READY_TIMEOUT", "STATUS.CFG_BUSY did not clear within 256 APB polls")
   endtask
 
   task automatic apb_write_status(input  bit [7:0] addr,
@@ -65,6 +96,22 @@ class uart_base_apb_seq extends uvm_sequence #(apb_item);
   endtask
 endclass
 
+class uart_wait_config_seq extends uart_base_apb_seq;
+  `uvm_object_utils(uart_wait_config_seq)
+  function new(string name = "uart_wait_config_seq"); super.new(name); endfunction
+  task body(); wait_config_ready(); endtask
+endclass
+
+class uart_rx_config_seq extends uart_base_apb_seq;
+  `uvm_object_utils(uart_rx_config_seq)
+  bit [31:0] baud_value = 1;
+  function new(string name = "uart_rx_config_seq"); super.new(name); endfunction
+  task body();
+    apb_write(ADDR_BAUD, baud_value);
+    apb_write(ADDR_CTRL, 1);
+  endtask
+endclass
+
 class uart_ral_predict_seq extends uart_base_apb_seq;
   `uvm_object_utils(uart_ral_predict_seq)
 
@@ -89,7 +136,9 @@ class uart_config_write_seq extends uart_base_apb_seq;
   endfunction
 
   task body();
-    apb_write(cfg_addr, cfg_data, 0);
+    bit err;
+    // Raw write for the latency test: do not hide the CDC interval by polling.
+    apb_write_status(cfg_addr, cfg_data, 0, err);
   endtask
 endclass
 
@@ -104,14 +153,15 @@ class uart_config_burst_seq extends uart_base_apb_seq;
   endfunction
 
   task body();
+    bit err;
     // Keep the APB writes back-to-back. The first transfer starts the CDC
     // mailbox; later transfers exercise the single-entry pending/coalescing
     // path while the UART clock domain is still acknowledging it.
-    apb_write(ADDR_BAUD, 32'd4, 0);
-    apb_write(ADDR_CTRL, 32'h5, 0);
-    apb_write(ADDR_BAUD, 32'd7, 0);
-    apb_write(ADDR_CTRL, final_ctrl, 0);
-    apb_write(ADDR_BAUD, final_baud, 0);
+    apb_write_status(ADDR_BAUD, 32'd4, 0, err);
+    apb_write_status(ADDR_CTRL, 32'h5, 0, err);
+    apb_write_status(ADDR_BAUD, 32'd7, 0, err);
+    apb_write_status(ADDR_CTRL, final_ctrl, 0, err);
+    apb_write_status(ADDR_BAUD, final_baud, 0, err);
   endtask
 endclass
 

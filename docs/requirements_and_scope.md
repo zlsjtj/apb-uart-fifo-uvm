@@ -16,12 +16,12 @@
 - UART TX/RX、回环路径和 TX/RX 异步 FIFO；
 - APB agent、UART agent、scoreboard、functional coverage、SVA 和基础回归脚本；
 - 寄存器访问、loopback、IRQ、外部 RX、TX FIFO 满、非法访问、随机数据和 disable/enable 恢复等基础用例；
-- 17 个用例、三组基准 seed 的 Questa 正式回归记录；
+- 用例清单统一放在 config/verification_plan.psd1，正式验收运行三组基准 seed；
 - 一套轻量 UVM RAL，包含 APB adapter、被动 predictor 和复位镜像检查。
 - 独立 RX 引脚监视器、参考预测器，以及 UART 域配置生效事件监测。
 - 统一环境配置、virtual sequencer、按功能拆分的 sequence/test 文件和一键验收入口。
 
-这些内容说明项目不是从零开始，也不能把“51/51 PASS”单独当成验证结束。目前已形成覆盖率合并报告，通过十一类代表性故障注入验证了检查器的有效性，完成 51 次多 seed 正式回归，并完成 RTL lint、CDC/RDC 结构审计、通用器件综合、复位同步释放、配置邮箱竞争测试、寄存器模型统一、黑白盒接口分离以及 predictor/scoreboard 职责拆分；剩余工作主要是商业 CDC signoff、具体器件实现/上板和论文答辩材料整理。
+历史 51 次回归并未发现 APB 完成沿后的晚响应问题，因此不能仅按用例通过数判断验证结束。本轮增加严格 APB 完成沿检查、配置恢复和公开忙状态契约、帧中复位中止、参数测试、mutation 基线对照和门禁反向测试。最终数据以 reports/acceptance_summary.json 指向的本轮独立证据目录为准。商业 CDC signoff、布局布线、上板和论文答辩分别属于后续不同层次的工作，不相互替代。
 
 ## 3. 本阶段要解决的问题
 
@@ -44,6 +44,7 @@
 - TX FIFO（`pclk` 到 `uart_clk`）和 RX FIFO（`uart_clk` 到 `pclk`）；
 - loopback、RX 数据可用中断、FIFO 空满状态和帧错误状态；
 - 波特率 tick 生成，以及 APB 配置到 UART 时钟域的控制路径。
+- STATUS.TX_BUSY 表示排队和在途发送；正常情况下完整停止位结束后才清零。显式 disable 中止在途帧，reset 丢弃在途和排队数据，二者不承诺原数据送达。
 
 ### 4.2 验证平台范围
 
@@ -83,6 +84,8 @@
 | RQ-08 | UVM 环境能够将数据遗漏、顺序错误和错误响应判为失败 | 强化后的 scoreboard、负向故障注入结果 |
 | RQ-09 | 验证范围有量化结论 | 合并后的 functional/code/assertion coverage 报告及 waiver 说明 |
 | RQ-10 | 最终结果可复现 | 带 commit SHA、工具版本、命令、seed 列表和结果的最终回归报告 |
+| RQ-11 | 发送完成状态没有写入后的假空闲，也不会提前结束停止位 | 公开引脚与 APB 状态定向测试、提前完成 mutation、不同 FIFO 深度和时钟比 |
+| RQ-12 | UART agent 可不依赖内部探针运行，参数深度与激励一致 | 无探针独立编译测试、深度 2/4/16/64 系统级测试、独立 FIFO 随机队列检查 |
 
 ## 7. 最终验收口径
 

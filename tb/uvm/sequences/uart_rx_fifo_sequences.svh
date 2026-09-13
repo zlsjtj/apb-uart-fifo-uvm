@@ -28,9 +28,11 @@ class uart_rx_fifo_burst_seq extends uvm_sequence #(uart_item);
 
   task body();
     uart_item tr;
-
-    // FIFO depth is 16. The seventeenth frame checks the full/drop behavior.
-    for (int i = 0; i < 17; i++) begin
+    uart_env_cfg cfg;
+    if (!uvm_config_db#(uart_env_cfg)::get(m_sequencer, "", "env_cfg", cfg))
+      `uvm_fatal("NOCFG", "RX burst cannot obtain FIFO depth")
+    // One extra frame checks the full/drop behavior at every selected depth.
+    for (int i = 0; i < cfg.fifo_depth()+1; i++) begin
       tr = uart_item::type_id::create($sformatf("rx_frame_%0d", i));
       start_item(tr);
       tr.data       = 8'h40 + i[7:0];
@@ -59,7 +61,7 @@ class uart_rx_fifo_drain_seq extends uart_base_apb_seq;
                            status))
     end
 
-    for (int i = 0; i < 16; i++) begin
+    for (int i = 0; i < fifo_depth(); i++) begin
       apb_read(ADDR_RXDATA, data, 4);
       if (data[7:0] != (8'h40 + i[7:0])) begin
         `uvm_error("RX_FIFO_ORDER",

@@ -3,6 +3,7 @@ class uart_driver extends uvm_driver #(uart_item);
 
   virtual uart_if vif;
   uart_env_cfg cfg;
+  virtual reset_if reset_vif;
 
   function new(string name = "uart_driver", uvm_component parent = null);
     super.new(name, parent);
@@ -16,6 +17,8 @@ class uart_driver extends uvm_driver #(uart_item);
     if (!uvm_config_db#(uart_env_cfg)::get(this, "", "env_cfg", cfg)) begin
       `uvm_fatal("NOCFG", "uart_env_cfg is not set")
     end
+    if (!uvm_config_db#(virtual reset_if)::get(this, "", "reset_vif", reset_vif))
+      `uvm_fatal("NORESETVIF", "public reset interface is not set")
   endfunction
 
   task run_phase(uvm_phase phase);
@@ -34,6 +37,17 @@ class uart_driver extends uvm_driver #(uart_item);
   endtask
 
   task drive_frame(uart_item tr);
+    fork : frame_or_reset
+      drive_uninterrupted_frame(tr);
+      begin
+        @(negedge reset_vif.presetn or negedge reset_vif.uart_rst_n);
+      end
+    join_any
+    disable frame_or_reset;
+    vif.rx_i <= 1'b1;
+  endtask
+
+  task drive_uninterrupted_frame(uart_item tr);
     time bit_period;
 
     if (tr.bit_cycles == 0) begin

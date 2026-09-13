@@ -5,6 +5,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'evidence_common.ps1')
+. "$PSScriptRoot/toolchain_common.ps1"
+$null=Initialize-Toolchain
 
 function Require-Tool($Name) {
   if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
@@ -64,6 +67,10 @@ $manifestPath = Join-Path $OutputDir "coverage_manifest.md"
 
 Run-Vcover (@("merge", "-quiet", $mergedUcdb) + $ucdbFiles)
 Run-Vcover @("report", "-totals", "-code", "bcesft", "-file", $totalsReport, $mergedUcdb)
+$coverageGates = @(Assert-CoverageTotals (Get-Content -Raw $totalsReport))
+Write-EvidenceJson (Join-Path $OutputDir 'functional_assertion_gate.json') @{
+  result='PASS'; gates=$coverageGates; source=$mergedUcdb
+}
 Run-Vcover @("report", "-details", "-cvg", "-file", $functionalReport, $mergedUcdb)
 Run-Vcover @("report", "-details", "-code", "bcesft", "-file", $codeReport, $mergedUcdb)
 Run-Vcover @("report", "-details", "-assert", "-file", $assertionReport, $mergedUcdb)
@@ -77,6 +84,7 @@ if ($LASTEXITCODE -ne 0) {
 if (-not $SkipHtml) {
   New-Item -ItemType Directory -Force $htmlDir | Out-Null
   Run-Vcover @("report", "-html", "-htmldir", $htmlDir, "-code", "bcesft", "-assert", "-cvg", "-details", $mergedUcdb)
+  if (!(Test-Path (Join-Path $htmlDir 'index.html'))) { throw 'Coverage HTML index missing' }
 }
 
 $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

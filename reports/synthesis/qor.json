@@ -1,29 +1,37 @@
 {
-  "generatedAt": "2026-09-04 23:46:19",
+  "generatedAt": "2026-09-13 11:59:52",
   "tool": "Vivado 2023.2",
   "flow": "out-of-context RTL synthesis",
   "part": "xc7a35tcpg236-1",
   "top": "apb_uart",
+  "overallSetupWnsNs": 1.968,
   "constraints": {
     "pclkPeriodNs": 10.0,
     "uartClockPeriodNs": 40.0,
-    "clockGroupsAsynchronous": true
+    "clockGroupsAsynchronous": false,
+    "cdcExceptions": "endpoint-specific control false paths and bounded datapath max delays"
   },
   "utilization": {
-    "lutCells": 312,
-    "sequentialCells": 326,
+    "lutCells": 342,
+    "sequentialCells": 329,
     "distributedRamCells": 30
   },
   "timing": {
     "pclk": {
-      "wnsNs": 6.025,
-      "estimatedFmaxMHz": 251.572
+      "wnsNs": 1.968,
+      "estimatedFmaxMHz": 124.502
     },
     "uartClock": {
-      "wnsNs": 31.993,
-      "estimatedFmaxMHz": 124.891
+      "wnsNs": 32.089,
+      "estimatedFmaxMHz": 126.406
     }
   },
   "evidenceBoundary": "Generic Artix-7 post-synthesis evidence only; no implementation, bitstream, board measurement, or commercial CDC signoff claim.",
-  "synthesisWarningCount": 5
+  "synthesisWarningCount": 2,
+  "fpgaResources": {
+    "sliceLuts": 280,
+    "sliceRegisters": 305,
+    "lutAsMemory": 16
+  },
+  "sourceSha256": "3ab242e7d2064eced3654ecc9eaa54a89a547f3d9066f062285421da44e06488"
 }

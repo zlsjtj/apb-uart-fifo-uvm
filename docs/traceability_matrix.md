@@ -1,75 +1,30 @@
 # 需求—验证追溯矩阵
 
-本文档把 `requirements_and_scope.md` 中的 RQ-01 到 RQ-10 落到具体测试、检查机制和覆盖率上。它不是一次写完后就不动的表：每新增一个用例、断言或覆盖点，都应在这里更新状态和证据路径。
+本表描述当前修改后的验证机制。每个“通过”结论都必须能在 reports/acceptance_summary.json 指向的独立运行目录中找到；历史 PASS 不自动延续到修改后的源码。
 
-状态说明：
-
-- **已完成**：已有测试和检查机制，正式回归通过，并能在覆盖率或报告中找到证据；
-- **部分完成**：已有基础用例，但边界、检查独立性或覆盖率仍不足；
-- **未完成**：尚无对应测试，或没有足以支撑结论的证据。
-
-当前的 51/51 多 seed 回归结果可以作为证据，但不单独作为“已完成”的判据。
-
-## 1. 总表
-
-| RQ | 需求 | 现有测试或序列 | 现有检查 | 现有覆盖/证据 | 当前状态 | 主要缺口与下一步 |
-| --- | --- | --- | --- | --- | --- | --- |
-| RQ-01 | CTRL、BAUD 的复位值、读写和非法访问正确 | `uart_reg_test`、`uart_ral_test` | 普通 sequence 检查错误访问；RAL 前门读写和 mirror 检查 CTRL/STATUS/BAUD；SVA 检查 APB 时序与非法地址 | 寄存器模型结构检查 16/16；三组 RAL 用例通过；地址、读写和错误 coverpoint 全覆盖 | 已完成 | RAL 明确建模 RW/RO/WO 和 BAUD=0 归一化；统一 reset monitor 被动驱动 mirror reset，测试不再手工修正 |
-| RQ-02 | APB 写 TXDATA 后按顺序从 TX 串行输出 | `uart_loopback_test`、`uart_random_test`、`uart_baud_timing_test` | TX monitor 根据引脚、UART 时钟和生效 BAUD 独立解码，不读取 DUT `bit_tick`；scoreboard 比较 APB 写入和 TX 帧 | UART 数据 coverpoint；BAUD=0/1/4/8 位宽检查；默认与错相时钟 loopback 均通过 | 已完成 | 若扩展为生产级 UART，再增加半位起始确认、过采样和容差检查 |
-| RQ-03 | 外部 RX 与 loopback 数据能按顺序从 RXDATA 读回 | `uart_external_rx_test`、`uart_external_rx_baud_test`、`uart_loopback_test`、`uart_frame_error_test`、`uart_rx_fifo_full_test` | 独立 RX 引脚 monitor 解码输入帧；driver 按公开时钟参数独立生成时序；predictor 处理错误帧、FIFO 容量和目标域 loopback 配置；scoreboard 只比较 APB RXDATA | UART 数据 coverpoint；BAUD=1/4 外部 RX、相位偏移、坏帧恢复和 RX 满边界均通过 | 已完成 | 当前 monitor 按简化 DUT 的单倍 bit tick 解码；若扩展到 16 倍过采样，需要同步升级参考采样算法 |
-| RQ-04 | TX/RX FIFO 的满、空、溢出、下溢和恢复行为明确 | `uart_fifo_full_test`、`uart_rx_fifo_full_test`、`uart_bad_access_test` | scoreboard 检查 RX 顺序与满时丢弃；SVA 区分 APB 请求与 `tx_push`/`rx_pop`，检查满写、空读和只读写拒绝时无 FIFO 副作用 | RX 空/部分/满状态、满/清除转换及四类拒绝访问 cover property 均已覆盖 | 已完成 | 保留满、空和恢复用例；若修改 FIFO 接口语义，需要同步更新请求与接受操作断言 |
-| RQ-05 | IRQ、frame error、STATUS 位可验证 | `uart_irq_test`、`uart_frame_error_test` | sequence 检查 STATUS、IRQ、坏帧拒收和正常帧恢复；SVA 检查 IRQ 关系及坏帧不写 RX FIFO | IRQ 四种状态和转换、frame error 检测和恢复均已覆盖 | 已完成 | 保留回归和覆盖率证据；后续若修改 RX/STATUS 语义，需要同步重跑这两个用例 |
-| RQ-06 | BAUD 边界、常用分频和配置更新行为可解释 | `uart_baud_loopback_test`、`uart_baud_timing_test`、`uart_external_rx_baud_test`、`uart_config_latency_test`、`uart_config_stress_test` | 从 `tx_o` 边沿独立测量位宽；monitor 在帧开始冻结配置；检查 APB 完成、UART apply、busy/pending 和最终值 | BAUD=0/1/4/8 交叉覆盖 100%；baud mutation 被检出；默认与错相异比时钟下配置顺序正确 | 已完成 | 当前约定只在帧间更新 BAUD；异步邮箱延迟不固定，测试只检查事件顺序和目标值 |
-| RQ-07 | CDC、时钟比例和独立复位下稳定 | `uart_reset_cdc_test`、`uart_config_latency_test`、`uart_config_stress_test`、静态检查、三组正式回归 | 双复位/APB-only/UART-only 恢复；Gray 指针；配置邮箱 request/ack/apply SVA；复位同步释放 SVA | CDC/RDC 结构规则 30/30；两组压力测试 12/12；51/51 PASS；RTL lint 零告警 | 部分完成 | 本科范围内的结构审计和动态压力验证已完成；仍缺商业 CDC/RDC signoff，不能据此作流片级结论 |
-| RQ-08 | UVM 环境能将遗漏、顺序错误、时序错误和错误响应判为失败 | predictor、scoreboard、SVA 与 mutation campaign | 期望生成与比较分离；残留数据报错；数据、状态、配置握手、帧错误和复位等代表性故障注入 | 十一类 mutation 全部 KILLED；正常回归保持通过 | 已完成 | 每个故障版本使用独立仿真库；mutation score 只针对声明的故障模型 |
-| RQ-09 | 验证范围有量化结论 | `run_questa.ps1` 保存单例 UCDB，`merge_coverage.ps1` 按最新回归表合并 | 功能、代码、断言及 HTML/text 报告均已生成 | 功能覆盖率 100%，断言 51/51、cover directive 15/15 且无失败；RTL 门禁 17/17 | 已完成 | 保留 scope 和 waiver；RTL 或 coverage model 修改后必须重跑完整闭环 |
-| RQ-10 | 最终结果可复现 | `run_acceptance.ps1`、51 次回归摘要、源码哈希、综合和 JSON 报告 | 记录 seed、时钟、工具版本、SHA-256、lint、QoR、stress 和 mutation | 2026-09-04 的 51/51 PASS；一键验收 7/7；功能 65/65、断言 51/51、cover 15/15 | 已完成 | 本轮提交作为源码锚点；证据精确输入以 `source_manifest.md` 为准，源码改变后应重跑 |
-
-## 2. 现有文件与 RQ 的对应关系
-
-| 文件 | 当前作用 | 主要对应 RQ | 后续改动方向 |
+| 需求 | 当前实现与检查 | 对应测试/门禁 | 证据 |
 | --- | --- | --- | --- |
-| `rtl/apb_uart_reg_pkg.sv`、`rtl/apb_uart*.sv`、`rtl/uart_baud_gen.sv`、`rtl/reset_sync.sv` | 统一寄存器定义、APB寄存器、配置CDC、串行核、FIFO连接与复位路径 | RQ-01、04、05、06、07 | 地址和复位值由 package 维护；寄存器、CDC、baud、serial 分层，顶层只负责集成 |
-| `rtl/async_fifo.sv` | 双时钟异步 FIFO | RQ-04、07 | Gray 指针同步器已标注 `ASYNC_REG`；仍需商业工具完成库和约束层面的检查 |
-| `rtl/async_fifo_sva.sv` | FIFO 基础断言 | RQ-04、08 | 区分请求与接受操作，补拒绝操作无副作用的断言和 cover property |
-| `rtl/apb_uart_sva.sv` | APB 及 IRQ 基础断言 | RQ-01、05、08 | 补 IRQ、STATUS、错误响应和 BAUD 行为的断言 |
-| `tb/uvm/uart_rx_monitor.svh`、`tb/uvm/uart_config_monitor.svh` | 独立观察 RX 引脚和 UART 域配置生效事件 | RQ-03、06、07、08 | 保持 monitor 被动，不读取 driver 内部状态 |
-| `tb/uvm/uart_predictor.svh` | 根据可观察事件生成 TX/RX 期望流 | RQ-02、03、04、08 | 维护有效配置和 RX FIFO 抽象状态，不承担结果比较 |
-| `tb/uvm/uart_scoreboard.svh` | TX/RX 期望与实际结果比较 | RQ-02、03、04、08 | 保持纯比较职责，残留期望或非预期实际数据均报错 |
-| `tb/uvm/uart_coverage.svh` | APB/UART 功能覆盖 | RQ-01、02、03、04、09 | 加入 IRQ、frame error、FIFO 状态、复位、BAUD 和关键交叉覆盖 |
-| `tb/uvm/uart_sequences.svh` | 现有定向与随机序列 | RQ-01 至 RQ-06 | 增加 IRQ、错误帧、RX 满、reset、BAUD timing 和压力序列 |
-| `tb/uvm/uart_reg_model.svh`、`tb/uvm/uart_env.svh` | 轻量 RAL、APB adapter 和被动 predictor | RQ-01、10 | 保持寄存器访问策略、特殊写入语义和 reset mirror 测试 |
-| `tb/top/tb_apb_uart.sv` | 时钟、复位和 DUT 顶层 | RQ-07 | 支持时钟周期、相位与 reset 策略的参数化 |
-| `scripts/run_questa.ps1`、`scripts/merge_coverage.ps1`、`scripts/run_final_regression.ps1`、`scripts/run_cdc_structural_check.ps1`、`scripts/run_reg_model_check.ps1` | 编译、单测、UCDB 保存、精确合并、多 seed 回归、CDC/寄存器模型结构审计和证据清单生成 | RQ-01、07、09、10 | 提交最终版本后重新冻结一次干净工作区的 manifest |
+| RQ-01 寄存器与 APB 协议 | 完成沿前组合响应，clocking block 严格采样，同拍错误 SVA；RAL 前门和被动镜像 | uart_reg_test、uart_ral_test、独立 apb_contract_tb、apb_late mutation | contract_tests.json、正式回归、mutation_campaign.json |
+| RQ-02 APB 到 TX 数据顺序 | 成功 TXDATA 写形成期望，独立 TX 引脚 monitor 解码 | loopback、random、baud_timing，TX/baud mutation | scoreboard、功能覆盖及匹配错误记录 |
+| RQ-03 外部 RX 和 loopback | 配置确认后才启动 RX；独立引脚 monitor；predictor 与纯比较 scoreboard 分离 | external_rx、external_rx_baud、frame_error、rx_fifo_full | 正式回归和错相子集 |
+| RQ-04 FIFO 边界与参数 | 源域满空标志寄存、Gray 同步、受限访问无副作用；ADDR_WIDTH=1 的比较不使用负下标 | FIFO 满空测试；宽度 1..16 elaboration，1/2/4/6 另作多次回绕 | contract_tests.json 明确区分测试深度 |
+| RQ-05 IRQ 和状态 | IRQ 本域产生，RX full/frame error/TX empty 同步返回；CFG_BUSY 为动态位 | irq、frame_error、RAL；IRQ/FIFO/frame error mutation | 正式回归、SVA、campaign |
+| RQ-06 配置与位宽 | 请求配置与确认配置分离；STATUS.CFG_BUSY 包含 pending；帧开始冻结参数 | config_latency、config_stress、baud_timing | 配置时延、位宽、握手 SVA |
+| RQ-07 CDC/RDC 与复位 | 邮箱首次恢复使用正常握手；任一 reset 中止串行/FIFO/邮箱状态；monitor 使用 reset epoch | reset_cdc、frame_reset、config_stress；结构和综合网表路径分类 | cdc_review.json、35 项结构规则、两组错相子集 |
+| RQ-08 检查器有效性 | 每个 mutation 的同测试同 seed 基线必须通过；错误记录需匹配具体 detector | campaign 和门禁反向测试 | matchedFailureLines、baselinePass |
+| RQ-09 覆盖率判定 | UCDB 必须存在；功能 bin、cover directive、assertion 及 RTL 阈值分别检查 | merge_coverage、functional_assertion_gate、rtl_coverage_gate | 原始 UCDB、text/HTML、JSON 门禁和 waiver |
+| RQ-10 可复现性 | 每轮隔离源码与结果；起止源码哈希一致；RUNNING/FAIL/PASS 全部落盘 | run_acceptance、源码漂移和旧 PASS 反向测试 | runId、source.sha256、逐步日志及独立目录 |
+| RQ-11 发送完成 | 接收计数与完整停止位后的 Gray 完成计数比较；普通配置先等待排空 | tx_completion、tx_early_complete mutation、APB unit 的数据位/停止位中止 | 正式回归、mutation、contract_tests |
+| RQ-12 可复用与参数 | agent 无探针依赖；独立无探针编译；四种深度和独立 FIFO 队列检查 | no_probe、fifo_wrap、满空和复位子集、async_fifo_random_tb | parameter_regression/summary.json、fifo_unit_tests.json |
 
-## 3. 下一轮实施清单
+## 尚不能据此证明的内容
 
-下面的编号可直接用于提交信息、调试记录和后续论文表格。
+- RX 仍是教学同步采样模型，不代表真实异步串口的抗亚稳、采样相位和波特率容差。
+- Vivado CDC 路径分类不等于商业 CDC/RDC signoff。RXDATA 的组合输出还必须结合 FIFO 读契约解释，不能只看工具告警是否消失。
+- OOC 综合的资源和 setup WNS 不等于布局布线、bitstream 或上板实测。
+- 功能覆盖和 mutation 只覆盖计划中的场景与故障；不能推导为无缺陷证明。
+- 本轮按用户要求不 commit、不 push。基线提交和本轮源码哈希应分开记录。
 
-| 任务 | 对应 RQ | 完成条件 |
-| --- | --- | --- |
-| T-01（已完成）：补 IRQ 测试 | RQ-05 | 已覆盖 `irq_en=0/1`、RX 数据到达后的拉高、读空后的撤销，并检查 STATUS |
-| T-02（已完成）：补 frame error 测试 | RQ-05 | UART driver 已支持错误停止位；测试覆盖错误状态、坏帧拒收、IRQ 保持低和正常帧恢复 |
-| T-03（已完成）：补 RX FIFO 满与恢复测试 | RQ-04 | 已验证 16 字节写满、第 17 帧拒收、顺序读空、状态/IRQ 清除和恢复后重新接收 |
-| T-04（已完成）：补 reset/CDC 压力测试 | RQ-07 | 已覆盖传输中双复位、独立 reset、两组非整数时钟比和不同初相位，并验证复位后恢复 |
-| T-05（已完成）：补 BAUD 时序检查 | RQ-06 | 已独立验证 BAUD=0/1/4/8 下 TX 帧位宽，并在两种 UART 时钟周期下通过 |
-| T-06（已完成）：加强 scoreboard 和 SVA | RQ-04、08 | 已检查 TX 满写/禁用写、RX 空读/只读写、非法地址无 FIFO 副作用；寄存器可见状态保持不变；TX 位翻转 mutation 被 scoreboard 检出 |
-| T-07（已完成）：补覆盖率闭环脚本 | RQ-09 | 已按最新回归表合并 48 个 UCDB，输出文本/HTML 报告，并完成未覆盖项和 waiver 说明 |
-| T-08（已完成）：冻结正式回归证据 | RQ-10 | 3 组 seed、48/48 PASS；报告包含版本、工具、命令、seed、48-UCDB 合并覆盖率、工作区状态和源码 SHA-256 |
-| T-09（已完成）：CDC 结构审计与修正 | RQ-07 | CTRL/BAUD 原子配置邮箱、RX full/frame error 同步、FIFO/邮箱同步器标注；22/22 结构规则通过，48/48 回归通过 |
-| T-10（本轮完成）：P0 复位释放收口 | RQ-07、09、10 | APB、UART 与 FIFO 两侧均采用异步断言、两级同步释放；三组错相/异比定向测试通过，新增复位断言与 cover 全部命中 |
-| T-11（已完成）：P1 统一寄存器模型 | RQ-01、10 | 单一寄存器定义 package；轻量 RAL、adapter、predictor 接入 APB agent；访问策略和复位镜像检查通过；当前结构检查 16/16 |
-| T-12（已完成）：P2 提高检查独立性 | RQ-03、06、08、10 | 独立 RX monitor；参考 predictor 与纯比较 scoreboard；UART 域配置生效事件和时延测试；IRQ 控制 mutation；当前 P2 结构检查 15/15 |
-| T-13（已完成）：架构解耦与统一验收 | RQ-02、03、07、08、10 | TX/RX monitor 不依赖 DUT bit_tick；统一 env config；FIFO 深度参数共享；sequence/test 分片；virtual sequence 和一键 acceptance |
-| T-14（已完成）：独立时序与探针边界收口 | RQ-03、06、07、08、10 | UART driver 不读取 DUT bit_tick；BAUD=4 相位偏移外部 RX；公共接口与白盒 probe 分离；复杂场景迁入 virtual sequence；baud-tick mutation 被检出；该轮 21/21 架构规则、48/48 正常回归、10/10 压力子集和 4/4 mutation 通过 |
-| T-15（本轮完成）：P0—P4 架构闭环 | RQ-01、03、06、07、08、09、10 | 黑盒串行 monitor 不读取 probe；统一 reset 事件驱动四类消费者；RTL 按寄存器/CDC/baud/serial 拆分；单一声明式测试计划；17/17 RTL 门禁及机器可读 waiver；37/37 架构规则、16/16 RAL、22/22 CDC、15/15 P2、48/48 主回归、10/10 压力和 4/4 mutation 通过 |
-| T-16（本轮完成）：静态、综合、配置竞争和 mutation 收口 | RQ-04、06、07、08、09、10 | RTL lint 0/0；通用 Artix-7 综合与 QoR；FIFO 推断 distributed RAM；配置 busy/reset 竞争；邮箱与复位 SVA；45/45 架构、30/30 CDC、21/21 P2、51/51 主回归、12/12 压力和 11/11 mutation 通过 |
+## 本轮相对历史版本的变化
 
-## 4. 更新规则
-
-1. 新增测试时，先在本表找到对应 RQ；若没有对应 RQ，应先判断它是否属于范围扩展。
-2. 用例通过并不自动把状态改为“已完成”；需要同时确认检查机制和覆盖率证据存在。
-3. 对不可达代码或不支持的 UART 特性，写明原因并建立 waiver，不用伪造覆盖率。
-4. 最终回归完成后，将总表中的“现有覆盖/证据”替换为具体报告路径和数值。
-
-这张表的作用是控制范围：每次准备新增功能前，先问它对应哪条 RQ、能补哪一类证据。如果两者都回答不上来，就不应优先做它。
+历史工作完成了寄存器 package、RAL、独立 monitor、复位同步和声明式回归，但仍存在 APB 晚响应与 BFM 延迟采样共同盲区。本轮用独立协议测试定位，并同步修正 RTL、BFM、SVA 和 mutation；同时收紧了配置恢复、参数范围、门禁判定和证据归属。详细机制见 p0_p2_contract_closure.md 与 bug_closure_case.md。

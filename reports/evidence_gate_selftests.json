@@ -1,0 +1,82 @@
+{
+  "total": 19,
+  "cases": [
+    {
+      "name": "valid completed UVM baseline accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "empty simulator log rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "simulator warning rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing completion marker rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "matching UVM failure killed",
+      "result": "PASS"
+    },
+    {
+      "name": "INFO detector plus unrelated error is not killed",
+      "result": "PASS"
+    },
+    {
+      "name": "assertion continuation belongs to failure record",
+      "result": "PASS"
+    },
+    {
+      "name": "failed baseline invalidates mutation",
+      "result": "PASS"
+    },
+    {
+      "name": "simulator exit failure is not a killed mutant",
+      "result": "PASS"
+    },
+    {
+      "name": "timeout is not a killed mutant",
+      "result": "PASS"
+    },
+    {
+      "name": "complete functional and assertion coverage accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "coverage misses rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing coverage metric rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing UCDB refused by actual merge script",
+      "result": "PASS"
+    },
+    {
+      "name": "unreviewed Critical refused by actual CDC checker",
+      "result": "PASS"
+    },
+    {
+      "name": "unknown Warning endpoint refused",
+      "result": "PASS"
+    },
+    {
+      "name": "changed source hash refused",
+      "result": "PASS"
+    },
+    {
+      "name": "acceptance injected failure throws",
+      "result": "PASS"
+    },
+    {
+      "name": "old PASS replaced by fresh FAIL",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

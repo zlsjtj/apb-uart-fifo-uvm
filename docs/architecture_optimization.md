@@ -1,5 +1,7 @@
 # 验证平台架构优化说明
 
+> 本文保留的是截至 2026-09-04 的阶段记录，其中用例数量、覆盖率和“当前”结论不再代表最新版。2026-09-05 发现并修正 APB 晚响应及验收判定缺口；当前架构见 p0_p2_contract_closure.md，结果以 acceptance_summary.json 指向的独立运行目录为准。
+
 ## 1. 优化目的
 
 P2 已经把 predictor 和 scoreboard 分开，也增加了独立 RX 引脚 monitor。这一轮继续处理几个容易在后续扩展中出问题的地方：driver/monitor 复用 DUT 内部节拍、白盒信号散落在公共接口中、验证参数重复定义，以及复杂测试仍由 test 直接调度底层 sequencer。
