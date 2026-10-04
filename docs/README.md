@@ -20,7 +20,8 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 | Why an empty TX FIFO is not a completed frame | [TX completion case](tx_completion_case.md#english) |
 | Default tests and stress profiles | [Executable test plan](../config/verification_plan.psd1) |
 | Injected faults and their detectors | [Mutation plan](../config/mutation_plan.psd1) |
-| Saved results and source identity | [2026-09-13 manifest](../reports/published/20260913_134519_8d9500ab/acceptance_summary.json) |
+| Release results, original logs, and coverage databases | [v0.1.0 evidence downloads](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0) |
+| Earlier acceptance results and source identity | [2026-09-13 manifest](../reports/published/20260913_134519_8d9500ab/acceptance_summary.json) |
 
 The model is fixed 8N1, not a production UART IP. The CI badge covers the free
 FIFO test only. Saved UVM results belong to their dated source snapshots, not
@@ -34,6 +35,8 @@ output paths for the introductory run.
 
 第一次阅读从 [跑通一个测试](quickstart.md) 开始。想了解测试怎样发现问题，
 先看 [APB 完成沿采样](bug_closure_case.md#chinese) 和 [TX 发送完成](tx_completion_case.md#chinese)。
+想把检查方法用到自己的项目，可以接着看 [三个检查模式](checking_patterns.md)：
+从接口观测生成期望、独立核对完成沿、用同测试同种子的基线验证故障检出。
 
 ## 设计与测试
 
@@ -51,8 +54,15 @@ output paths for the introductory run.
 ## 运行与证据
 
 [复现与交付](reproduction_and_delivery.md) 说明工具配置、完整验收与结果导出。
-[最新已保存结果入口](../reports/published/latest.json) 指向某一轮固定快照的摘要。
-GitHub 上能查看轻量 JSON 和结果表；完整日志、UCDB、HTML 和交付包保存在本地。
+[v0.1.0 Release](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0)
+提供该版本在 2026-10-04 复验的结果、源码包和
+[验收证据包](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/apb-uart-fifo-uvm-0.1.0-verification.zip)，
+后者包含原始日志、覆盖率数据库和源码校验信息，从包内 `README.md` 开始阅读。
+这些结果属于该 Release，不代表之后每个提交都重新通过完整验收。
+
+[仓库内的归档入口](../reports/published/latest.json) 指向早期保存的验收快照，
+不是 GitHub Release 的最新版本指针。自行运行产生的日志、UCDB、HTML 和交付包
+仍保存在本地，不会自动上传。
 另有小型 [回环样本](../examples/loopback/README.md)，包含波形预览、原始 VCD、
 日志摘录、校验值和 PNG 生成脚本。
 新增的 [APB 时序对照](../examples/apb-timing/README.md) 提供固定版本与故障注入版本的
