@@ -1,5 +1,7 @@
 # APB UART FIFO UVM
 
+[![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
+
 A SystemVerilog/UVM verification example for an APB UART with two clock domains
 and asynchronous TX/RX FIFOs. Follow a byte from an APB write to the serial pin
 and back, then test what happens when a FIFO fills, a frame is malformed, or
@@ -52,8 +54,9 @@ FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.
 
 This is a FIFO test, not the UVM regression. Icarus skips the four inline FIFO
 SVA it cannot parse; those remain enabled in ModelSim/Questa. The
-[GitHub Actions workflow](.github/workflows/fifo-smoke.yml) is configured to run
-the same script and retain its logs; a cloud run has not yet been verified.
+[GitHub Actions workflow](.github/workflows/fifo-smoke.yml) runs the same script
+and retains its logs. The [2026-10-04 cloud run for `d4d72f3`](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/runs/37186769748)
+passed. The badge above reports this FIFO workflow only, not the UVM regression.
 
 ### UVM Loopback
 
@@ -112,16 +115,15 @@ assumption. An independent test read BAUD as **0 at the edge, 16 later**.
 The fix made responses valid before the edge and changed BFM sampling to
 `input #1step`. An independent [APB test](tb/unit/apb_contract_tb.sv) checks the
 contract; the `apb_late` mutation puts the defect back to test the detector.
-[Reproduce the baseline/fault comparison](docs/bug_closure_case.md).
+[Read the case and reproduce the comparison](docs/bug_closure_case.md#english).
 Another case covers [why FIFO empty is not TX complete](docs/tx_completion_case.md).
 
 ## Recorded Results
 
 These are the saved results of run `20260913_134519_8d9500ab` on **2026-09-13**,
-not a live CI badge. Each link opens evidence tracked in this repository.
-That run's source SHA-256 is
-`801771a6c2ea8619f01c11ef8486d560b72c1799655f4894328f3d0c6915ff85`;
-the newer loopback sample has its own [source manifest](examples/loopback/manifest.json).
+not the current CI result. The [run manifest](reports/published/20260913_134519_8d9500ab/acceptance_summary.json)
+records the source SHA-256; the newer loopback sample has a separate
+[source manifest](examples/loopback/manifest.json).
 
 | Check | Recorded result | Evidence |
 | --- | --- | --- |

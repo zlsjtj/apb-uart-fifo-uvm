@@ -43,7 +43,9 @@ bash scripts/run_fifo_smoke.sh
 
 成功时输出 `FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.`。
 每轮日志单独写入 `work_fifo_smoke/run.*`，包含工具版本、编译日志、仿真日志和摘要。
-[Actions 配置](../.github/workflows/fifo-smoke.yml) 使用相同命令；尚未核验云端实际运行。
+[Actions 配置](../.github/workflows/fifo-smoke.yml) 使用相同命令。
+提交 `d4d72f3` 的 [2026-10-04 云端运行](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/runs/37186769748)
+已通过；首页徽章只表示 FIFO 检查状态，不代表完整 UVM 回归。
 
 这项检查只覆盖 FIFO，不运行 UVM，也不运行 SVA。Icarus 编译时跳过不支持的
 四条 FIFO 内联 SVA，原来的 ModelSim/Questa 流程继续保留这些断言。
@@ -58,7 +60,7 @@ bash scripts/run_fifo_smoke.sh
 
 仓库没有附带商业仿真器或许可证，完整 UVM 环境尚未在 Icarus/Verilator 上验证。
 没有这些工具时，也可以看 [回环日志与波形样本](../examples/loopback/README.md)、
-[APB 采样错误案例](bug_closure_case.md) 和
+[APB 采样错误案例](bug_closure_case.md#chinese) 和
 [保存的结果](../reports/published/20260913_134519_8d9500ab/paper_results.md)。
 
 ### 运行
@@ -113,7 +115,7 @@ regression summary；单个测试通过不能替代完整回归结果。
 以前 DUT 的 APB 读响应晚于完成沿，driver 和 monitor 又都延后 2 ns 采样，
 结果两者一起“通过”。独立小测试在完成沿读 BAUD 得到 0，延后才得到正确的 16。
 修复后保留了独立测试，并用 `apb_late` 故障注入确认检查器能抓住旧问题。
-[案例、源码和对照命令](bug_closure_case.md) 可以连起来看。
+[案例、源码和对照命令](bug_closure_case.md#chinese) 可以连起来看。
 
 ## 接着试什么
 
