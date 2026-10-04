@@ -1,33 +1,25 @@
 # APB UART FIFO UVM
 
-[![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
-
-Follow one byte through an APB-UART UVM environment, then investigate a
-[real bug that a passing regression missed](docs/bug_closure_case.md#english).
-The SystemVerilog design has two clock domains and asynchronous TX/RX FIFOs;
-tests cover full FIFOs, malformed frames, and clock-domain resets.
-
-[Run an example](#choose-a-run) · [Follow one byte](#follow-one-byte-through-uvm) ·
-[Debugging case](docs/bug_closure_case.md#english) · [中文入门](docs/quickstart.md)
-
-The DUT is a simplified, fixed-8N1 teaching model. It has no 16x oversampling,
-parity, or configurable stop bits. The project focuses on verification;
-board-level serial operation has not been demonstrated.
-
-<a id="a-real-loopback-run"></a>
-
-## Loopback Example
+SystemVerilog verification across two clock domains.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="examples/loopback/byte-preview-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="examples/loopback/byte-preview.png">
-  <img src="examples/loopback/byte-preview.png" width="540" alt="The second recorded byte, 0x55: APB write and read values match the serial TX frame from 1.26 to 1.66 microseconds. Serial data bits 0 through 7 are sent least significant bit first.">
+  <source media="(max-width: 1023px)" srcset="docs/assets/architecture-mobile.png">
+  <img src="docs/assets/architecture.png" width="1200" alt="APB registers send TX bytes through an asynchronous FIFO to UART TX; UART RX sends received bytes through a second FIFO back to APB. Interface monitors feed a predictor and provide actual APB read and TX frame observations to the scoreboard, which compares them with predictions.">
 </picture>
 
-`uart_loopback_test`, seed 2, recorded **2026-10-04**: six bytes
-(`00 55 aa ff 13 37`) sent and read back. The preview follows the second byte,
-`0x55`; its time axis shows serial TX only, not APB transfer timing.
-[Full waveform, VCD, log, and plot scripts](examples/loopback/README.md).
+[Run an example](#choose-a-run) · [Architecture](docs/architecture_figures.md) ·
+[Debugging case](docs/bug_closure_case.md#english) · [中文入门](docs/quickstart.md)
+
+[![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
+
+[Follow one byte](#follow-one-byte-through-uvm) from an APB write to a serial
+frame and back, then investigate a [real bug that a passing regression
+missed](docs/bug_closure_case.md#english). Tests cover full FIFOs, malformed
+frames, and clock-domain resets.
+
+Fixed-8N1 teaching model, not production UART IP. No 16x oversampling,
+parity, or configurable stop bits; no board-level serial validation.
+The diagram shows the main data and checking paths; [source and scope](docs/assets/README.md).
 
 ## Choose a Run
 
@@ -98,6 +90,21 @@ required. Generated logs, waveforms, and UCDB files stay local. For setup errors
 test selection, and coverage commands, see the
 [Chinese setup guide](docs/quickstart.md).
 Without the simulator, inspect the [recorded log and VCD](examples/loopback/README.md).
+
+<a id="a-real-loopback-run"></a>
+
+## Loopback Example
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="examples/loopback/byte-preview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="examples/loopback/byte-preview.png">
+  <img src="examples/loopback/byte-preview.png" width="540" alt="The second recorded byte, 0x55: APB write and read values match the serial TX frame from 1.26 to 1.66 microseconds. Serial data bits 0 through 7 are sent least significant bit first.">
+</picture>
+
+`uart_loopback_test`, seed 2, recorded **2026-10-04**: six bytes
+(`00 55 aa ff 13 37`) sent and read back. The preview follows the second byte,
+`0x55`; its time axis shows serial TX only, not APB transfer timing.
+[Full waveform, VCD, log, and plot scripts](examples/loopback/README.md).
 
 ## Follow One Byte Through UVM
 

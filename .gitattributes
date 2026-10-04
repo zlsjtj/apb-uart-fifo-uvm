@@ -1,4 +1,6 @@
 scripts/*.sh text eol=lf
+# Keep generated SVGs reproducible across Windows and Linux checkouts.
+docs/assets/*.svg text eol=lf
 # Preserve the recorded sample bytes covered by manifest.json.
 examples/loopback/loopback.vcd -text
 examples/loopback/log_excerpt.txt -text

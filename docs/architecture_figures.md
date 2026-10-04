@@ -6,6 +6,8 @@ and [uart_env.svh](../tb/uvm/uart_env.svh) for verification connections.
 
 图示对应固定 8N1 验证模型，不代表完整工业 UART 或板级实现。
 
+[Homepage overview and editable figure source](assets/README.md) / [首页概览图及图源](assets/README.md)
+
 ## Data Path / 数据通路
 
 ```mermaid
