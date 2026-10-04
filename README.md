@@ -2,15 +2,13 @@
 
 [![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
 
-A SystemVerilog/UVM verification example for an APB UART with two clock domains
-and asynchronous TX/RX FIFOs. Follow a byte from an APB write to the serial pin
-and back, then test what happens when a FIFO fills, a frame is malformed, or
-one clock domain resets.
+Follow one byte through an APB-UART UVM environment, then investigate a
+[real bug that a passing regression missed](docs/bug_closure_case.md#english).
+The SystemVerilog design has two clock domains and asynchronous TX/RX FIFOs;
+tests cover full FIFOs, malformed frames, and clock-domain resets.
 
 [Run an example](#choose-a-run) · [Follow one byte](#follow-one-byte-through-uvm) ·
 [Debugging case](docs/bug_closure_case.md#english) · [中文入门](docs/quickstart.md)
-
-One case worth reading: [an APB regression passed because the DUT and its testbench shared the same sampling mistake](docs/bug_closure_case.md#english).
 
 The DUT is a simplified, fixed-8N1 teaching model. It has no 16x oversampling,
 parity, or configurable stop bits. The project focuses on verification;
@@ -83,7 +81,8 @@ Change the simulator path to your installation. A successful run writes
 
 The script compiles the design and testbench; no prebuilt `work` library is
 required. Generated logs, waveforms, and UCDB files stay local. For setup errors,
-test selection, and coverage commands, see the [quick start](docs/quickstart.md).
+test selection, and coverage commands, see the
+[Chinese setup guide](docs/quickstart.md).
 Without the simulator, inspect the [recorded log and VCD](examples/loopback/README.md).
 
 ## Follow One Byte Through UVM
