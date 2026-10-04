@@ -1,0 +1,33 @@
+# UVM_INFO @ 0: reporter [RNTST] Running test uart_reg_test...
+# [TB_CLOCKS] pclk_half=5ns pclk_phase=0ns uart_half=20ns uart_phase=0ns
+# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(186) @ 200000: uvm_test_top.env.apb.seqr@@seq [REG_DEFAULT] BAUD reset value is 0
+# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(192) @ 330000: uvm_test_top.env.apb.seqr@@seq [REG_RW] CTRL readback mismatch 0x0
+# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(198) @ 450000: uvm_test_top.env.apb.seqr@@seq [REG_RW] BAUD readback mismatch 0x0
+# ** Error: Assertion error.
+#    Time: 475 ns Started: 475 ns  Scope: tb_apb_uart.g_whitebox.u_apb_uart_sva.invalid_addr_reports_error File: rtl/apb_uart_sva.sv Line: 70 Expr: pslverr
+# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(94) @ 480000: uvm_test_top.env.apb.seqr@@seq [SEQ_EXP_ERR] invalid address did not report pslverr
+# ** Error: Assertion error.
+#    Time: 505 ns Started: 505 ns  Scope: tb_apb_uart.g_whitebox.u_apb_uart_sva.status_write_reports_error File: rtl/apb_uart_sva.sv Line: 74 Expr: pslverr
+# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(94) @ 510000: uvm_test_top.env.apb.seqr@@seq [SEQ_EXP_ERR] STATUS write did not report pslverr
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1268) @ 1510000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO tb/uvm/uart_config_checker.svh(19) @ 1510000: uvm_test_top.env.cfg_checker [CFG_EVENT_SUMMARY] observed 3 apply events
+# UVM_INFO tb/uvm/uart_predictor.svh(134) @ 1510000: uvm_test_top.env.pred [PRED_SUMMARY] cfg_updates=2 rejected_bad_RX=0 dropped_full_RX=0 occupancy=0
+# UVM_INFO tb/uvm/uart_scoreboard.svh(96) @ 1510000: uvm_test_top.env.sb [SB_SUMMARY] checked TX=0 RX=0 reset_flushes=0
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :    7
+# UVM_WARNING :    0
+# UVM_ERROR :    5
+# UVM_FATAL :    0
+# ** Report counts by id
+# [CFG_EVENT_SUMMARY]     1
+# [PRED_SUMMARY]     1
+# [Questa UVM]     2
+# [REG_DEFAULT]     1
+# [REG_RW]     2
+# [RNTST]     1
+# [SB_SUMMARY]     1
+# [SEQ_EXP_ERR]     2
+# [TEST_DONE]     1

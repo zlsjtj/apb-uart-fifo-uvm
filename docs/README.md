@@ -15,6 +15,7 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 | Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
 | Interface contract, tested tools and result interpretation | [Verification scope](interface_and_scope.md) |
 | A passing regression that sampled APB too late | [APB debugging case](bug_closure_case.md#english) |
+| Fixed response versus an injected timing fault | [VCD comparison and short replay](../examples/apb-timing/README.md) |
 | Why an empty TX FIFO is not a completed frame | [TX completion case](tx_completion_case.md#english) |
 | Default tests and stress profiles | [Executable test plan](../config/verification_plan.psd1) |
 | Injected faults and their detectors | [Mutation plan](../config/mutation_plan.psd1) |
@@ -53,6 +54,8 @@ output paths for the introductory run.
 GitHub 上能查看轻量 JSON 和结果表；完整日志、UCDB、HTML 和交付包保存在本地。
 另有小型 [回环样本](../examples/loopback/README.md)，包含波形预览、原始 VCD、
 日志摘录、校验值和 PNG 生成脚本。
+新增的 [APB 时序对照](../examples/apb-timing/README.md) 提供固定版本与故障注入版本的
+真实 VCD、报告摘录和短回放，可以直接在浏览器中查看。
 
 | 任务 | 在仓库根目录执行 |
 | --- | --- |

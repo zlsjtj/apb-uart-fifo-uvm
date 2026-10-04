@@ -1,4 +1,26 @@
-# Homepage Diagram
+# Homepage Visuals
+
+## Cover
+
+[1280 x 640 JPEG](social-preview.jpg)
+
+The cover is generated concept artwork: two layered FIFO queues and data paths
+in graphite, cyan, coral, and amber. It is not a chip photograph, a physical
+layout, or a literal representation of FIFO depth or wiring. The diagrams below
+and the recorded VCDs carry the technical meaning.
+
+Created on 2026-10-05 with ImageGen, then exported using Sharp 0.35.4 to a
+1280 x 640 JPEG (quality 92, 4:4:4 chroma). The art direction was an isometric
+hardware sculpture, restrained material lighting, large APB/UART typography,
+and no benchmark numbers or fabricated hardware markings. There is no vector
+source or deterministic renderer for this bitmap artwork.
+
+Upload `social-preview.jpg` through **Settings > General > Social preview >
+Edit > Upload an image** to use it for shared links. Merely committing the
+image does not activate it. See GitHub's
+[official instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview).
+
+## Architecture Diagram
 
 [Desktop SVG](architecture.svg) · [Mobile SVG](architecture-mobile.svg) ·
 [Rendering script](render_architecture.py)
@@ -32,7 +54,7 @@ including narrow tablet layouts where GitHub's sidebar reduces article width.
 These files do not replace or modify the saved VCD and waveform plots in
 [`examples/loopback`](../../examples/loopback/README.md).
 
-## Social Preview
+## Earlier Diagram-Based Preview
 
 [PNG for upload](social-preview.png) · [Editable SVG](social-preview.svg) ·
 [Rendering script](render_social_preview.py)
@@ -47,12 +69,11 @@ passing matching baseline. The drawing is structural, not a waveform.
 python docs/assets/render_social_preview.py --output-dir work_social_preview
 ```
 
+This older alternative is retained with its source; the current cover is the
+JPEG above. Its renderer only writes PNG/SVG and cannot overwrite that JPEG.
 The renderer uses `render_architecture.py`, Matplotlib, and its bundled
 DejaVu Sans font. It refuses to overwrite existing output. The SVG keeps
-editable text; use the PNG for GitHub's share image.
+editable text.
 
-To activate it, upload `social-preview.png` in the repository's
-**Settings > General > Social preview > Edit > Upload an image**.
-Committing this file alone does not change the share preview. GitHub recommends
-1280 x 640 pixels and a file smaller than 1 MB; see the
-[official setup instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview).
+Use this script only to rebuild the earlier diagram-based option, not the
+new bitmap cover.

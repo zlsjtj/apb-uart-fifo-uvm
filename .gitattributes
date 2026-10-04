@@ -4,3 +4,8 @@ docs/assets/*.svg text eol=lf
 # Preserve the recorded sample bytes covered by manifest.json.
 examples/loopback/loopback.vcd -text
 examples/loopback/log_excerpt.txt -text
+# Simulator output is byte-preserved, including CRLF and report padding.
+examples/apb-timing/*.vcd -text -whitespace
+examples/apb-timing/*_excerpt.txt -text -whitespace
+# Matplotlib emits spaces between SVG path coordinates and line breaks.
+examples/apb-timing/*.svg text eol=lf -whitespace

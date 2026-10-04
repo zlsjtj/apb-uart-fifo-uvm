@@ -12,6 +12,8 @@ vc_hdrs.h
 !reports/sample_logs/*.log
 *.vcd
 !examples/loopback/loopback.vcd
+!examples/apb-timing/baseline.vcd
+!examples/apb-timing/mutant.vcd
 *.fsdb
 *.wlf
 *.ucdb

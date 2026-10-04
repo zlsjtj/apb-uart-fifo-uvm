@@ -2,6 +2,10 @@
 
 [English](#english) · [中文](#chinese) · [Run the checks / 运行对照](#reproduce)
 
+[Waveform comparison and replay / 波形对照与回放](../examples/apb-timing/README.md):
+captured 2026-10-05 from the fixed baseline and an injected `apb_late` fault.
+This is a new reproduction, not the original pre-fix waveform.
+
 <a id="english"></a>
 
 ## Why a Passing Test Missed the Bug

@@ -1,0 +1,455 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-05T00:23:57.6380083+08:00",
+  "sourceCommit": "a78a5c53d360070bba71bcbdf30d887ac069a872",
+  "sourceIdentity": {
+    "sha256": "c05c9526119a1f271f4bf892612f6b27d9d6eb71c292265e3a58b781ba42f14e",
+    "files": [
+      {
+        "path": "config/cdc_path_policy.psd1",
+        "sha256": "90D4814CB60EC4E03B46D5D6BD39342363DF865E5B5EB43A52B28EC33F084248"
+      },
+      {
+        "path": "config/mutation_plan.psd1",
+        "sha256": "973E673AB55503656AEA109BE9F2DB20EECDD5ECF65A34426EBDF1FBB0FF4211"
+      },
+      {
+        "path": "config/rtl_coverage_policy.psd1",
+        "sha256": "C0DD261287EC9CF695105FE299667F5D17179AFAC7420F4F35B32DAEC9FA219E"
+      },
+      {
+        "path": "config/toolchain.psd1",
+        "sha256": "A63CB70CE46E7A5F708E83C6A14CA9D19B3CE082F5CADA941A6D320D17CB9E77"
+      },
+      {
+        "path": "config/verification_plan.psd1",
+        "sha256": "FEA413490DE96E1623BF86F34390C1A16DE5607F53515303F3A0675B601C1979"
+      },
+      {
+        "path": "constraints/synth_ooc.xdc",
+        "sha256": "B239ACCC5DF837856088BE493FE233DC45C36D363E25E89F26207694F43F9FD1"
+      },
+      {
+        "path": "filelist.f",
+        "sha256": "B8C3127B6F8E4E2AD0D86BFF46B21E8447701F939118D175DEFA7563D71F212E"
+      },
+      {
+        "path": "rtl_filelist.f",
+        "sha256": "02F04718E9E85A0263D3BDCF21B7FA15038E25EF126E77E866CEADAFBF1CC41B"
+      },
+      {
+        "path": "rtl/apb_uart_cfg_cdc.sv",
+        "sha256": "52166C8F25E8FE60A7AB9F61C4EC76C60EDA2670C44CBE7C6EF0BEC5A3F3C6B9"
+      },
+      {
+        "path": "rtl/apb_uart_reg_pkg.sv",
+        "sha256": "EC9F69A42B4B9DDDB2C197B8F1C6E242DB62DE03964B3F2DB74396F8D9925205"
+      },
+      {
+        "path": "rtl/apb_uart_regs.sv",
+        "sha256": "80C851DD4CCAACEEE2CCA74A2C36DBC50D1EFAE6D6805EA12D31DC3C106FED53"
+      },
+      {
+        "path": "rtl/apb_uart_serial_core.sv",
+        "sha256": "C06EC969F0C5A4105D38BB5B2566C490AF010BE93103EAD70F9734106943DEB5"
+      },
+      {
+        "path": "rtl/apb_uart_sva.sv",
+        "sha256": "A619636A74103955E4B4A5D2DF80AB3A1DA0892FC6564786DE6C960CF6F30DEE"
+      },
+      {
+        "path": "rtl/apb_uart.sv",
+        "sha256": "99EBC0B4AA5ADE0F9BA1FFFFDB8C330FA99C6AC2AAEA37EB1C8C96CD74E6C42D"
+      },
+      {
+        "path": "rtl/async_fifo_sva.sv",
+        "sha256": "0D9634D8AF8F126DDF034D90951EBF2BCB10FC99A52F934F86F74954B7851AF5"
+      },
+      {
+        "path": "rtl/async_fifo.sv",
+        "sha256": "9BE4FF488AFCB6B4852FD4E2660E6941A2EF46FA2687579EDDF6FDD463746AF7"
+      },
+      {
+        "path": "rtl/reset_sync.sv",
+        "sha256": "29D3E916B201D72B99A2FFEC7F062F4975426EFC5D9020EF4A845C291A6E919F"
+      },
+      {
+        "path": "rtl/tx_completion_cdc.sv",
+        "sha256": "FE552790719C31D8151864D25A9E098F079BCD783A591746D1C12834DB2FDD81"
+      },
+      {
+        "path": "rtl/uart_baud_gen.sv",
+        "sha256": "06F18694C1CEA29650D720F96B7469F194E7FB855254C902C3EDD9B9D9F9A015"
+      },
+      {
+        "path": "rtl/uart_rx.sv",
+        "sha256": "6B5EAA52DDF0B79BBA550518D5E5C718FD4C8654BB7EF012EAA1A2F3FAF68A7B"
+      },
+      {
+        "path": "rtl/uart_tx.sv",
+        "sha256": "5DDCF81DEF9D49905E2C53D6F72D5848E395CEFB4C51CA122474E591C6080AEE"
+      },
+      {
+        "path": "scripts/check_cdc_paths.ps1",
+        "sha256": "10B8D836A8552649461C2019F2BAA7B01D3CA6EAFDA571E73CC7491700719007"
+      },
+      {
+        "path": "scripts/delivery_common.ps1",
+        "sha256": "FAC4BB877FF8249842D5C49000C47E8B81AEFD7BA1E25CA8424E17990E026238"
+      },
+      {
+        "path": "scripts/evidence_common.ps1",
+        "sha256": "0F20B3FE5CB39844090939092D0B97E976B0CACA2674284F019419D83F0401A0"
+      },
+      {
+        "path": "scripts/export_acceptance.ps1",
+        "sha256": "F90C4FCBF11243DFBFA3E4BB134E07B1A2C8AE44F19950B33C16FC2B3BD23C93"
+      },
+      {
+        "path": "scripts/generate_rtl_coverage_gate.ps1",
+        "sha256": "162982B8A2F4705BCB7851610F4690DDA0A000E9913301B2005678F15BFFAEEE"
+      },
+      {
+        "path": "scripts/merge_coverage.ps1",
+        "sha256": "97C0A90B808624CE0534F5BD0AA0DC3C412C8C76D6BB12A4DC3EDBCAD121F6E4"
+      },
+      {
+        "path": "scripts/run_acceptance.ps1",
+        "sha256": "DE4EA86A10616A62431810529D14462A4FB42621F99838DF7929AD1253E41BEA"
+      },
+      {
+        "path": "scripts/run_architecture_check.ps1",
+        "sha256": "2AF8D655050B898E9018C659276C4621D08791DF646F3AD446566D19AB7FCF99"
+      },
+      {
+        "path": "scripts/run_baud_mutation_check.ps1",
+        "sha256": "1CA724BFED05C514048F40B193E72905C9ED687EC1B103CB997E609766068566"
+      },
+      {
+        "path": "scripts/run_cdc_structural_check.ps1",
+        "sha256": "51B7F167CBC106DAE49A7B982BE8D519F6B183C70B67FBEE140781448862AE23"
+      },
+      {
+        "path": "scripts/run_contract_tests.ps1",
+        "sha256": "5E77A21DEF385F77E9F5228C3EF58A35368856F5DCE1AAA698BB6FDF84CF7048"
+      },
+      {
+        "path": "scripts/run_control_mutation_check.ps1",
+        "sha256": "C93253681B6C0BCFBD8CF359F51BEB8371A1353D532D05C48B07A7220133482C"
+      },
+      {
+        "path": "scripts/run_fifo_mutation_check.ps1",
+        "sha256": "B3DD929227CD843014F15FD3E219908000A98E853DF621F3C30245691354D294"
+      },
+      {
+        "path": "scripts/run_fifo_smoke.sh",
+        "sha256": "B8F9A95713F4B2A9F34CC2CE66571731C3D20719BA98DB80635FED66FAEA4A38"
+      },
+      {
+        "path": "scripts/run_fifo_unit_tests.ps1",
+        "sha256": "12A1E34A0E81E7FE90D38F2D21EB309877988C74BF30018FC88229218263C864"
+      },
+      {
+        "path": "scripts/run_final_regression.ps1",
+        "sha256": "8EC3EA25DF466FA327475F083453F52A6603DF8B913F5071CC499D76F660C1B4"
+      },
+      {
+        "path": "scripts/run_mutation_campaign.ps1",
+        "sha256": "0AA09645D01B5692DDAC3BDCE7F64C5CF79A34BB186FE32F5CBFE4189C966B08"
+      },
+      {
+        "path": "scripts/run_mutation_check.ps1",
+        "sha256": "7284B50D26C81D22311E838D4F4805FCDE19BC4BC757AB71034810B12E040FF4"
+      },
+      {
+        "path": "scripts/run_mutation_suite.ps1",
+        "sha256": "D130ADEB4934CB2C81EE4F5DCC904F06E30E7467A23F023EA1B4ED9BB64C0A5E"
+      },
+      {
+        "path": "scripts/run_p2_structural_check.ps1",
+        "sha256": "11649C1D2482A62CA2743A9485569CCBA9DB88EA0FF2391F88994E4CB5C045FE"
+      },
+      {
+        "path": "scripts/run_parameter_regression.ps1",
+        "sha256": "2D889327B53B55D1025468CE2E7FD18CC0C8A7100A1351EC9F14682E08CC16C2"
+      },
+      {
+        "path": "scripts/run_questa.ps1",
+        "sha256": "94BEFCF713CD9664E4944B4F6D3BB8C7AC3F912DD3592877DB02AE9FABB2D240"
+      },
+      {
+        "path": "scripts/run_reg_model_check.ps1",
+        "sha256": "863D18FE3C41E43E109322CA59E62F4C3B007125395F8D1C20BF56A89B7ABCDC"
+      },
+      {
+        "path": "scripts/run_static_checks.ps1",
+        "sha256": "3936BE7E703B57A1CF62F5D15542F49E2125C1AE0CB2FF28574CFC6C64BA3063"
+      },
+      {
+        "path": "scripts/run_toolchain_preflight.ps1",
+        "sha256": "95C36EE9BF38BB3EA471C00967BE82ABA5970C76C43FAC23ABEA459EC026A15E"
+      },
+      {
+        "path": "scripts/run_vivado_synth.ps1",
+        "sha256": "EF86583DC09D08DC9E34FFD65F91DA21D342F083231CCF0BD0B0E1F8826E1841"
+      },
+      {
+        "path": "scripts/test_evidence_gates.ps1",
+        "sha256": "1C0EEE10FC46DF43C7E39B806E7EC39DC475EB0ABAAFAF00887598CE4CAA1BEC"
+      },
+      {
+        "path": "scripts/test_workflow.ps1",
+        "sha256": "2750873BA0CB0C3F5833F1D4D51947D319927622AFF462EBAE8EDFCDFE55C282"
+      },
+      {
+        "path": "scripts/toolchain_common.ps1",
+        "sha256": "A9488A154A0BED5A3E40E094A47E00A7728D4C4386910B7F537175489007AB24"
+      },
+      {
+        "path": "scripts/toolchain_preflight.tcl",
+        "sha256": "EC133307A472411BF96B38E8A194C66F65C88C58DC8D7825DB05F5176EFD0753"
+      },
+      {
+        "path": "scripts/verify_delivery.ps1",
+        "sha256": "6FA4DE35E0F3E53961D03D2E749E34CA7F930851758E32C27678DC8FAD5014F8"
+      },
+      {
+        "path": "scripts/vivado_synth.tcl",
+        "sha256": "0341AB9A1B2EFAAED5D1440C2BA903000C183AB8940620EB1A144B4CA8C5436C"
+      },
+      {
+        "path": "tb/interfaces/apb_if.sv",
+        "sha256": "CE5D353B335FCE618B118D6E61E44576F0865D5FE4F82BC511BBCFDB722597D1"
+      },
+      {
+        "path": "tb/interfaces/reset_if.sv",
+        "sha256": "F5D4F642DC97A64BDBCC7FDFBD16D8A10EA7EA5FC346CEBBAA309F4BCEFE77E1"
+      },
+      {
+        "path": "tb/interfaces/uart_if.sv",
+        "sha256": "94223175BCA2304AE501204997384673C571301537BAAD57127F92B39710D2D2"
+      },
+      {
+        "path": "tb/interfaces/uart_probe_if.sv",
+        "sha256": "42CF1D2C30A4496A7FAD4F91232C1B3F85960236D40C45033B8D7FBA8DDB0CCF"
+      },
+      {
+        "path": "tb/top/tb_apb_uart.sv",
+        "sha256": "BCF1FA23779869776533D2FC760E21331020469EE93F9B1646B51B82BA940367"
+      },
+      {
+        "path": "tb/unit/apb_contract_tb.sv",
+        "sha256": "A56608563BE3158704064E3826BED9E19332B980C381FCEFC0DA314727F1AB3D"
+      },
+      {
+        "path": "tb/unit/async_fifo_random_tb.sv",
+        "sha256": "A83EBC3FED287C0BFCE7C643ADAF6E02239D857B8C14D8C8F6475F726003F863"
+      },
+      {
+        "path": "tb/unit/toolchain_smoke_tb.sv",
+        "sha256": "B5995BF61628185766B09CDD202046CE286BF673A33FFB548C8430B37E359F2C"
+      },
+      {
+        "path": "tb/uvm/apb_agent.svh",
+        "sha256": "0B25FF4E5584D3BC9C6C70F5FF8DFDD8659A143392A47421E0BB190281638AD0"
+      },
+      {
+        "path": "tb/uvm/apb_driver.svh",
+        "sha256": "6725249DD334725012D7BCCF986EA6EDDBE24CFE2896C923E95DC94A16C784AF"
+      },
+      {
+        "path": "tb/uvm/apb_item.svh",
+        "sha256": "8B376EF01228B66B04B966351561D600C7B62BE89D5E1C29462B2DD9156F9890"
+      },
+      {
+        "path": "tb/uvm/apb_monitor.svh",
+        "sha256": "519A1C993A5F3BFB2BB91EE3995FB635825C6F9EC6419C4EF11FF0C52E02DA52"
+      },
+      {
+        "path": "tb/uvm/apb_sequencer.svh",
+        "sha256": "1E937790DF5AA37C207C80B22C6D1559CD185F26C70219F89BAFF68F67A74D99"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_base_reg_sequences.svh",
+        "sha256": "7E1723C9133AE431937EFC80847C013EC29AE8898AE239C76385D0D2AB8E925C"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_completion_sequences.svh",
+        "sha256": "077777F49E955CE3DBE3B537E2BB884E93BC272EB74D3424D7B34DE7367E765B"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_functional_sequences.svh",
+        "sha256": "B0F61659097C9D297AB722D7963763A770EB02F189160157EC8F4AA8C254B8D3"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_misc_sequences.svh",
+        "sha256": "B8DB911C8E6A7CECD6C8B722200E080BB803B2AAB48C910DCB172833A649215A"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_reset_timing_sequences.svh",
+        "sha256": "C0EE64040E119C915ED202758EB89471392636DC8F35F3A4441A4B102D4B7EBD"
+      },
+      {
+        "path": "tb/uvm/sequences/uart_rx_fifo_sequences.svh",
+        "sha256": "BD2DC2C6311B027A2F20084C0DB5F87F408B8F0BBCE1A6E6D0DEDAC5EEA3FFEB"
+      },
+      {
+        "path": "tb/uvm/tests/uart_base_reg_tests.svh",
+        "sha256": "F8CC0AAEE3ABC30CD55063EAA86953C95520FADCCDA890619DC85272A114C89E"
+      },
+      {
+        "path": "tb/uvm/tests/uart_cdc_timing_tests.svh",
+        "sha256": "6DA076C40B03B1218C3AF809C829210F788270BBBA28CC14F7642580B9720765"
+      },
+      {
+        "path": "tb/uvm/tests/uart_completion_tests.svh",
+        "sha256": "B48C159766110912513745EAC3C8CDCC6923748F05C4A35D944702F4455D3B74"
+      },
+      {
+        "path": "tb/uvm/tests/uart_functional_tests.svh",
+        "sha256": "EBDFF5DA2324E3BC549110ED5ADBD3694A8408F4220E6BB4F288CF71F232CA7E"
+      },
+      {
+        "path": "tb/uvm/tests/uart_misc_tests.svh",
+        "sha256": "D00A5E2646038E3895AA048D67D681782FADE4EA574E796C3A44A9F55D1489DD"
+      },
+      {
+        "path": "tb/uvm/uart_agent.svh",
+        "sha256": "8792D854B7A4EE811F2D7C1D13B5248BD2372FB78903AFF1F0F0564C4377E9CE"
+      },
+      {
+        "path": "tb/uvm/uart_config_checker.svh",
+        "sha256": "C51FFB678F565955DE56EB23E78BFBFB37A3D31459E71860E3451B4200660A0D"
+      },
+      {
+        "path": "tb/uvm/uart_config_monitor.svh",
+        "sha256": "355629B514ACCA2913A10C0CBE73E8281B8470F25282EC1A1F912AC3A9538222"
+      },
+      {
+        "path": "tb/uvm/uart_coverage.svh",
+        "sha256": "1CBAF2CD2CD0EA5B1BB998172743DE3CC4C7F1E81BD401C74103579F040069F1"
+      },
+      {
+        "path": "tb/uvm/uart_driver.svh",
+        "sha256": "F1914AB3FFD7B2C3DE44D039881CD0D6C1D197CF449BB79FBC40FD4779970F02"
+      },
+      {
+        "path": "tb/uvm/uart_env_cfg.svh",
+        "sha256": "E621E9E14B823B909C88B86E67DE756F40276B950D7BB224AADFED817E8AEC06"
+      },
+      {
+        "path": "tb/uvm/uart_env.svh",
+        "sha256": "09CB8C30BD194782D90BFDFC6C84AC606DC0EE277A4DC0FC5758ED77D2559A5C"
+      },
+      {
+        "path": "tb/uvm/uart_item.svh",
+        "sha256": "57B19F6254669B237E6F7A580ACC18E60FA7ED0345ACF8098E81F69B2787BCA1"
+      },
+      {
+        "path": "tb/uvm/uart_monitor.svh",
+        "sha256": "8259D080BAD072063619836EA88C1E475504A3013260490FC52585E5D805F412"
+      },
+      {
+        "path": "tb/uvm/uart_pkg.sv",
+        "sha256": "9E37628149A2189F00BCDFD573D74A297CBB0CD5126270E7CD7B1EEB81C4AD42"
+      },
+      {
+        "path": "tb/uvm/uart_predictor.svh",
+        "sha256": "65A89D4F513F839AA443EA2F4C10988DF6DB914B737A68DEE4969D11376A5AAF"
+      },
+      {
+        "path": "tb/uvm/uart_reg_model.svh",
+        "sha256": "4995D0DE4FB2DD23DB4C96805FAEB73BE5B218D4A568DB673BC483E65F1A2040"
+      },
+      {
+        "path": "tb/uvm/uart_reset_monitor.svh",
+        "sha256": "1AEEDA9EF0BF4E534021F6D02DC0B01DE0A303FC800281BE468FDC6F77650BC4"
+      },
+      {
+        "path": "tb/uvm/uart_rx_monitor.svh",
+        "sha256": "6B35D380288AAD085F14BCDD7A712FD3EEF99421BCBEA7876750105F5694175A"
+      },
+      {
+        "path": "tb/uvm/uart_scoreboard.svh",
+        "sha256": "AE0B05BD8F4A95A81EE18F25F931D7074D5BBE6C94FD97CC187EECAB4C945E5D"
+      },
+      {
+        "path": "tb/uvm/uart_sequencer.svh",
+        "sha256": "434B8E8A9EDE1D32E1A02DB569E9AFF1FF940FE2C1A19EE8972ADE6B490931AD"
+      },
+      {
+        "path": "tb/uvm/uart_sequences.svh",
+        "sha256": "0060F2DAEAE3AEC2DD3649A364D77E2D5DDB87BFEC9C3AF17EFECC96AC7485CC"
+      },
+      {
+        "path": "tb/uvm/uart_serial_cfg.svh",
+        "sha256": "FBB5672BF7BEBACD39DDE6C506C013ECE8A90F2C2F1EEC8E8B307CDB3442FA6D"
+      },
+      {
+        "path": "tb/uvm/uart_tests.svh",
+        "sha256": "1430AD410FCF30E8BC0C0F22806B3D2019E99278118B544061C901F99AF0D4CB"
+      },
+      {
+        "path": "tb/uvm/uart_virtual_sequencer.svh",
+        "sha256": "065962013F57B48D704388988EAAC976D936CB1F71009AE79BA031B225275B51"
+      },
+      {
+        "path": "tb/uvm/uart_virtual_sequences.svh",
+        "sha256": "1FF41108B8A29960D5A6746F369CF406BA35E5C177CA6F4065A9D9A2ADFB39B4"
+      }
+    ]
+  },
+  "test": "uart_reg_test",
+  "seed": 1071,
+  "simulator": "ModelSim SE-64 10.4",
+  "uvm": "1.1d",
+  "clocksNs": {
+    "pclkHalf": 5,
+    "pclkPhase": 0,
+    "uartPhase": 0,
+    "uartHalf": 20
+  },
+  "mutationDefine": "UART_MUTATE_APB_LATE_RESPONSE",
+  "outcome": {
+    "result": "KILLED",
+    "baselinePass": true,
+    "matchedFailureLines": [
+      "# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(186) @ 200000: uvm_test_top.env.apb.seqr@@seq [REG_DEFAULT] BAUD reset value is 0",
+      "# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(192) @ 330000: uvm_test_top.env.apb.seqr@@seq [REG_RW] CTRL readback mismatch 0x0",
+      "# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(198) @ 450000: uvm_test_top.env.apb.seqr@@seq [REG_RW] BAUD readback mismatch 0x0",
+      "# ** Error: Assertion error. #    Time: 475 ns Started: 475 ns  Scope: tb_apb_uart.g_whitebox.u_apb_uart_sva.invalid_addr_reports_error File: rtl/apb_uart_sva.sv Line: 70 Expr: pslverr",
+      "# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(94) @ 480000: uvm_test_top.env.apb.seqr@@seq [SEQ_EXP_ERR] invalid address did not report pslverr",
+      "# ** Error: Assertion error. #    Time: 505 ns Started: 505 ns  Scope: tb_apb_uart.g_whitebox.u_apb_uart_sva.status_write_reports_error File: rtl/apb_uart_sva.sv Line: 74 Expr: pslverr",
+      "# UVM_ERROR tb/uvm/sequences/uart_base_reg_sequences.svh(94) @ 510000: uvm_test_top.env.apb.seqr@@seq [SEQ_EXP_ERR] STATUS write did not report pslverr"
+    ]
+  },
+  "simulatorExit": {
+    "mutant": 0,
+    "baseline": 0
+  },
+  "artifacts": {
+    "baseline.vcd": {
+      "sha256": "bda3cdba772a7ac806b4ee1582ed997872622b65c0f0f7c520952d67d57e771b"
+    },
+    "baseline_excerpt.txt": {
+      "sha256": "fb15ddb95dd52667d67b01d41cdc2bacdd7fddff0a7fe5c2ecf8535cb3c2f6e7",
+      "originalLogSha256": "e9072f781338f3437c57da20c4ed95e8034a5c11b52c52b2be0a9d52bdb8f14c",
+      "originalLines": [
+        71,
+        91
+      ]
+    },
+    "mutant.vcd": {
+      "sha256": "a3fb329c5243c97cd3984d05f6e6ef002bb6bab4adf12c40b865d21976cbc88e"
+    },
+    "mutant_excerpt.txt": {
+      "sha256": "b328ef6312f485df296fd6522f1d4452b2605439802e58f859dc67c970c4b27e",
+      "originalLogSha256": "63d9bd47ef90078e7de0688022b1dbbbb268a696d1a6810bdb970044630d116a",
+      "originalLines": [
+        71,
+        103
+      ]
+    }
+  },
+  "scope": "Fresh fixed-baseline versus injected-fault comparison, not the historical pre-fix run."
+}

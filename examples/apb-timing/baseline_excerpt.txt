@@ -1,0 +1,21 @@
+# UVM_INFO @ 0: reporter [RNTST] Running test uart_reg_test...
+# [TB_CLOCKS] pclk_half=5ns pclk_phase=0ns uart_half=20ns uart_phase=0ns
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1268) @ 1750000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO tb/uvm/uart_config_checker.svh(19) @ 1750000: uvm_test_top.env.cfg_checker [CFG_EVENT_SUMMARY] observed 3 apply events
+# UVM_INFO tb/uvm/uart_predictor.svh(134) @ 1750000: uvm_test_top.env.pred [PRED_SUMMARY] cfg_updates=2 rejected_bad_RX=0 dropped_full_RX=0 occupancy=0
+# UVM_INFO tb/uvm/uart_scoreboard.svh(96) @ 1750000: uvm_test_top.env.sb [SB_SUMMARY] checked TX=0 RX=0 reset_flushes=0
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :    7
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [CFG_EVENT_SUMMARY]     1
+# [PRED_SUMMARY]     1
+# [Questa UVM]     2
+# [RNTST]     1
+# [SB_SUMMARY]     1
+# [TEST_DONE]     1
