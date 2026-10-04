@@ -159,8 +159,10 @@ queued and active data. Neither operation clearing busy proves delivery.
 CDC checks and out-of-context synthesis are documented, but are not commercial
 CDC signoff or board timing results.
 
-No project license has been selected yet; public source visibility is not a
-grant of an open-source license.
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+External tools and libraries retain their own licenses.
 
 ## Report a Problem
 
