@@ -1,0 +1,49 @@
+name: Bug or setup problem
+description: Report a failing command, unexpected result, or setup issue.
+body:
+  - type: markdown
+    attributes:
+      value: English or Chinese is welcome. Remove secrets and license-server details from logs.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Release or commit
+      placeholder: v0.1.0 or the output of git rev-parse HEAD
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Tools and environment
+      placeholder: |
+        OS:
+        Simulator and version:
+        PowerShell or Bash version:
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command and reproduction steps
+      description: Include any local source changes or non-default configuration.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: seed
+    attributes:
+      label: Seed
+      description: Leave blank if the issue does not involve a simulation run.
+  - type: textarea
+    id: log
+    attributes:
+      label: First failing log message
+      description: Include the first error and a few surrounding lines, or attach a small reproducer.
+      render: text

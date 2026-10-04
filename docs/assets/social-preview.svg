@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="230.4pt" viewBox="0 0 460.8 230.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 230.4
+L 460.8 230.4
+L 460.8 0
+L 0 0
+z
+" style="fill: #171d21"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 123.84 99.36
+Q 150.340671 99.36 174.605275 99.36
+" clip-path="url(#pd69d22bb7b)" style="fill: none; stroke: #55e0d3; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 167.805275 95.96
+L 174.605275 99.36
+L 167.805275 102.76
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #55e0d3; stroke: #55e0d3; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 288.72 99.36
+Q 314.860825 99.36 338.765582 99.36
+" clip-path="url(#pd69d22bb7b)" style="fill: none; stroke: #55e0d3; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 331.965582 95.96
+L 338.765582 99.36
+L 331.965582 102.76
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #55e0d3; stroke: #55e0d3; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 177.84 141.12
+Q 151.339329 141.12 127.074725 141.12
+" clip-path="url(#pd69d22bb7b)" style="fill: none; stroke: #ff99a7; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 133.874725 144.52
+L 127.074725 141.12
+L 133.874725 137.72
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #ff99a7; stroke: #ff99a7; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 342 141.12
+Q 315.859175 141.12 291.954418 141.12
+" clip-path="url(#pd69d22bb7b)" style="fill: none; stroke: #ff99a7; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 298.754418 144.52
+L 291.954418 141.12
+L 298.754418 137.72
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #ff99a7; stroke: #ff99a7; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 23.04 164.16
+L 437.76 164.16
+" clip-path="url(#pd69d22bb7b)" style="fill: none; stroke: #53636d; stroke-width: 1.6"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 27.36 84.96
+L 119.52 84.96
+Q 123.84 84.96 123.84 89.28
+L 123.84 151.2
+Q 123.84 155.52 119.52 155.52
+L 27.36 155.52
+Q 23.04 155.52 23.04 151.2
+L 23.04 89.28
+Q 23.04 84.96 27.36 84.96
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #202a30; stroke: #8bc7f0; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 182.16 84.96
+L 284.4 84.96
+Q 288.72 84.96 288.72 89.28
+L 288.72 109.44
+Q 288.72 113.76 284.4 113.76
+L 182.16 113.76
+Q 177.84 113.76 177.84 109.44
+L 177.84 89.28
+Q 177.84 84.96 182.16 84.96
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #202a30; stroke: #55e0d3; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 346.32 84.96
+L 433.44 84.96
+Q 437.76 84.96 437.76 89.28
+L 437.76 109.44
+Q 437.76 113.76 433.44 113.76
+L 346.32 113.76
+Q 342 113.76 342 109.44
+L 342 89.28
+Q 342 84.96 346.32 84.96
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #202a30; stroke: #55e0d3; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 182.16 126.72
+L 284.4 126.72
+Q 288.72 126.72 288.72 131.04
+L 288.72 151.2
+Q 288.72 155.52 284.4 155.52
+L 182.16 155.52
+Q 177.84 155.52 177.84 151.2
+L 177.84 131.04
+Q 177.84 126.72 182.16 126.72
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #202a30; stroke: #ff99a7; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 346.32 126.72
+L 433.44 126.72
+Q 437.76 126.72 437.76 131.04
+L 437.76 151.2
+Q 437.76 155.52 433.44 155.52
+L 346.32 155.52
+Q 342 155.52 342 151.2
+L 342 131.04
+Q 342 126.72 346.32 126.72
+z
+" clip-path="url(#pd69d22bb7b)" style="fill: #202a30; stroke: #ff99a7; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 27.36px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #f0f4f6" x="23.04" y="40.198612" transform="rotate(-0 23.04 40.198612)">APB UART FIFO UVM</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 13.68px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b8c5cd" x="23.04" y="65.694825" transform="rotate(-0 23.04 65.694825)">Verify the design. Test the checkers.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #8bc7f0" x="73.44" y="117.441563" transform="rotate(-0 73.44 117.441563)">APB</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12.96px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #b8c5cd" x="73.44" y="137.49615" transform="rotate(-0 73.44 137.49615)">registers</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12.24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #55e0d3" x="233.28" y="102.581606" transform="rotate(-0 233.28 102.581606)">TX async FIFO</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 13.68px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #55e0d3" x="389.88" y="104.249531" transform="rotate(-0 389.88 104.249531)">UART TX</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 12.24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ff99a7" x="233.28" y="144.341606" transform="rotate(-0 233.28 144.341606)">RX async FIFO</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 13.68px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ff99a7" x="389.88" y="146.009531" transform="rotate(-0 389.88 146.009531)">UART RX</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 25.2px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #c7e88b" x="23.04" y="195.382125" transform="rotate(-0 23.04 195.382125)">60/60</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b8c5cd" x="23.04" y="218.260125" transform="rotate(-0 23.04 218.260125)">UVM runs passed</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 25.2px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #c7e88b" x="180" y="195.382125" transform="rotate(-0 180 195.382125)">13/13</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10.8px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b8c5cd" x="180" y="219.306375" transform="rotate(-0 180 219.306375)">RTL faults detected</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 15.84px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #f0f4f6" x="348.48" y="196.565513" transform="rotate(-0 348.48 196.565513)">v0.1.0</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 11.52px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b8c5cd" x="348.48" y="215.8731" transform="rotate(-0 348.48 215.8731)">2026-10-04</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd69d22bb7b">
+   <rect x="0" y="0" width="460.8" height="230.4"/>
+  </clipPath>
+ </defs>
+</svg>

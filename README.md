@@ -5,7 +5,10 @@
 A SystemVerilog/UVM project for APB-UART verification: dual-clock FIFOs,
 monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
 
-[Quick start](#choose-a-run) · [Results](#recorded-results) ·
+[Release v0.1.0](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0) ·
+[Download](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/apb-uart-fifo-uvm-0.1.0-source.zip) ·
+[Validation](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/validation.json)<br>
+[Quick start](#choose-a-run) ·
 [Debugging case](#independent-checks-in-action) · [中文入门](docs/quickstart.md)
 
 <picture>
@@ -13,12 +16,29 @@ monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
   <img src="docs/assets/architecture.png" width="1200" alt="APB registers send TX bytes through an asynchronous FIFO to UART TX; UART RX sends received bytes through a second FIFO back to APB. Interface monitors feed a predictor and provide actual APB read and TX frame observations to the scoreboard, which compares them with predictions.">
 </picture>
 
-[Architecture](docs/architecture_figures.md) ·
+[Architecture](docs/architecture_figures.md) · [Results](#recorded-results) ·
 [Follow one byte](#follow-one-byte-through-uvm) · [Diagram source](docs/assets/README.md)
 
 [![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
 
 ## Recorded Results
+
+**v0.1.0, revalidated 2026-10-04.** These runs used an isolated checkout of
+[`fca5a7c`](https://github.com/zlsjtj/apb-uart-fifo-uvm/commit/fca5a7c52b7f3bf393c326ecf26f23d78c1f98d6).
+
+| Result | What was checked |
+| --- | --- |
+| **60/60 passed** | 20 UVM tests across base seeds 101, 201, 301 |
+| **13/13 detected** | Injected RTL faults, each paired with a passing same-test, same-seed baseline |
+| **8/8 passed** | Free FIFO baselines at four depths and two clock ratios; both negative controls detected |
+| **69/69 hit** | Declared functional bins in merged coverage; 19/19 RTL coverage gates passed |
+
+[Release notes](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0) ·
+[Logs and coverage databases](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/apb-uart-fifo-uvm-0.1.0-verification.zip) ·
+[SHA-256 checksums](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/SHA256SUMS.txt)
+
+<details>
+<summary>Earlier acceptance snapshot: 2026-09-13</summary>
 
 **Verification snapshot: 2026-09-13.** Each result links to its saved report.
 
@@ -32,6 +52,8 @@ monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
 [Full results](reports/published/20260913_134519_8d9500ab/paper_results.md) ·
 [Run manifest and source identity](reports/published/20260913_134519_8d9500ab/acceptance_summary.json) ·
 [Reproduce the campaign](docs/reproduction_and_delivery.md)
+
+</details>
 
 ## What Makes This Useful
 
@@ -196,8 +218,9 @@ External tools and libraries retain their own licenses.
 
 ## Report a Problem
 
-Open an [issue](https://github.com/zlsjtj/apb-uart-fifo-uvm/issues) with the command,
-commit, simulator version, seed, and first failing log message. Setup failures
+Use the [bug/setup form](https://github.com/zlsjtj/apb-uart-fifo-uvm/issues/new?template=bug_report.yml)
+or browse [existing issues](https://github.com/zlsjtj/apb-uart-fifo-uvm/issues).
+Include the command, commit, simulator version, seed, and first failing log message. Setup failures
 and small reproducing tests are useful contributions. Please include a failing
 case with behavioral fixes; see the [documentation index](docs/README.md) for
 the relevant tests and reports.
