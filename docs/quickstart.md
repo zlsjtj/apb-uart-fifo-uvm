@@ -11,7 +11,9 @@ UART 固定为 8N1，没有 16 倍过采样，也没有板级串口实测结论�
 [选一条运行路线](#选一条运行路线) · [沿着一个字节读代码](#沿着一个字节读代码) ·
 [APB 回归为什么漏检](bug_closure_case.md#chinese) · [文档索引](README.md#chinese)
 
-## 先看一轮真实回环
+<a id="先看一轮真实回环"></a>
+
+## 回环示例
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../examples/loopback/byte-preview-dark.png">
@@ -51,8 +53,15 @@ bash scripts/run_fifo_smoke.sh
 成功时输出 `FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.`。
 每轮日志单独写入 `work_fifo_smoke/run.*`，包含工具版本、编译日志、仿真日志和摘要。
 [Actions 配置](../.github/workflows/fifo-smoke.yml) 使用相同命令。
+首页徽章只表示 FIFO 检查状态，不代表完整 UVM 回归。
+
+<details>
+<summary>已保存的 CI 记录</summary>
+
 提交 `d4d72f3` 的 [2026-10-04 云端运行](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/runs/37186769748)
-已通过；首页徽章只表示 FIFO 检查状态，不代表完整 UVM 回归。
+已通过。
+
+</details>
 
 这项检查只覆盖 FIFO，不运行 UVM，也不运行 SVA。Icarus 编译时跳过不支持的
 四条 FIFO 内联 SVA，原来的 ModelSim/Questa 流程继续保留这些断言。
@@ -177,6 +186,6 @@ pwsh -NoProfile -File scripts/run_acceptance.ps1
 上图只对应一个回环测试。[2026-09-13 的完整结果表](../reports/published/20260913_134519_8d9500ab/paper_results.md)
 属于另一轮固定源码快照，不能当成当前改动重新跑过完整验收的证明。
 69/69 功能 bin 和 13/13 故障检出也只针对声明的覆盖模型和故障清单。
-仓库尚未选择许可证，公开可见不等于已经明确授予开源使用权限。
+本项目采用 [MIT 许可证](../LICENSE)。外部工具和依赖保留各自的许可证。
 
 完整导航见 [文档索引](README.md)。

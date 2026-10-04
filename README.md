@@ -14,7 +14,9 @@ The DUT is a simplified, fixed-8N1 teaching model. It has no 16x oversampling,
 parity, or configurable stop bits. The project focuses on verification;
 board-level serial operation has not been demonstrated.
 
-## A Real Loopback Run
+<a id="a-real-loopback-run"></a>
+
+## Loopback Example
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="examples/loopback/byte-preview-dark.png">
@@ -58,8 +60,16 @@ FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.
 This is a FIFO test, not the UVM regression. Icarus skips the four inline FIFO
 SVA it cannot parse; those remain enabled in ModelSim/Questa. The
 [GitHub Actions workflow](.github/workflows/fifo-smoke.yml) runs the same script
-and retains its logs. The [2026-10-04 cloud run for `d4d72f3`](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/runs/37186769748)
-passed. The badge above reports this FIFO workflow only, not the UVM regression.
+and retains its logs. The badge above reports this FIFO workflow only, not the
+UVM regression.
+
+<details>
+<summary>Recorded CI run</summary>
+
+The [2026-10-04 cloud run for `d4d72f3`](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/runs/37186769748)
+passed.
+
+</details>
 
 ### UVM Loopback
 
@@ -130,12 +140,12 @@ not the current CI result. The [run manifest](reports/published/20260913_134519_
 records the source SHA-256; the newer loopback sample has a separate
 [source manifest](examples/loopback/manifest.json).
 
-| Check | Recorded result | Evidence |
-| --- | --- | --- |
-| UVM regression | 60/60: 20 tests across three base seeds | [Regression summary](reports/published/20260913_134519_8d9500ab/reports/final_regression/final_regression_summary.json) |
-| FIFO depth subsets | 24/24 across depths 2, 4, 16, 64 | [Parameter runs](reports/published/20260913_134519_8d9500ab/reports/parameter_regression/summary.json) |
-| Deliberate RTL faults | 13/13 detected; matching baselines passed | [Mutation results](reports/published/20260913_134519_8d9500ab/reports/mutation_campaign.json) |
-| Declared functional bins | 69/69 hit | [Coverage checks](reports/published/20260913_134519_8d9500ab/reports/final_regression/coverage/functional_assertion_gate.json) |
+| Check and evidence | Recorded result |
+| --- | --- |
+| [UVM regression](reports/published/20260913_134519_8d9500ab/reports/final_regression/final_regression_summary.json) | 60/60: 20 tests across three base seeds |
+| [FIFO depth subsets](reports/published/20260913_134519_8d9500ab/reports/parameter_regression/summary.json) | 24/24 across depths 2, 4, 16, 64 |
+| [Deliberate RTL faults](reports/published/20260913_134519_8d9500ab/reports/mutation_campaign.json) | 13/13 detected; matching baselines passed |
+| [Declared functional bins](reports/published/20260913_134519_8d9500ab/reports/final_regression/coverage/functional_assertion_gate.json) | 69/69 hit |
 
 Bin counts describe the declared coverage model, not all possible UART behavior.
 Fault detection covers the 13 declared mutations. See the
