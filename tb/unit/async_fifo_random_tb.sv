@@ -2,19 +2,24 @@
 module async_fifo_random_tb;
   parameter int ADDR_WIDTH=4;
   parameter int WR_HALF=3, RD_HALF=5;
+  parameter bit INJECT_READ_ERROR=0;
   localparam int DEPTH=1<<ADDR_WIDTH;
   logic wr_clk=0, rd_clk=0, reset_n=0;
   logic wr_rst_n, rd_rst_n, wr_en=0, rd_en=0;
   logic [7:0] wr_data=0, rd_data;
+  logic [7:0] dut_rd_data;
   logic wr_full, rd_empty;
   bit [7:0] expected[$];
   int written=0, read_count=0, resets=0, full_seen=0, empty_seen=0;
   int mode=0;
+  int explicit_seed, rng_init;
   always #(WR_HALF) wr_clk=~wr_clk;
   initial begin #1ns; forever #(RD_HALF) rd_clk=~rd_clk; end
   reset_sync wr_reset(wr_clk,reset_n,wr_rst_n);
   reset_sync rd_reset(rd_clk,reset_n,rd_rst_n);
-  async_fifo #(.ADDR_WIDTH(ADDR_WIDTH)) dut(.*);
+  async_fifo #(.ADDR_WIDTH(ADDR_WIDTH)) dut(.rd_data(dut_rd_data), .*);
+  // Optional read-path corruption checks the reference queue's data comparison.
+  assign rd_data = dut_rd_data ^ (INJECT_READ_ERROR ? 8'h01 : 8'h00);
 
   // Random peers are independent of pointer/full implementations. A reference
   // queue records only accepted public writes and compares accepted reads.
@@ -56,6 +61,10 @@ module async_fifo_random_tb;
     if (expected.size()!=0 || !rd_empty) $fatal(1,"FIFO_REFERENCE_DRAIN");
   endtask
   initial begin
+    if ($value$plusargs("FIFO_SEED=%d", explicit_seed)) begin
+      $display("FIFO_RANDOM_SEED=%0d", explicit_seed);
+      rng_init=$urandom(explicit_seed);
+    end
     reset_epoch();
     for (int epoch=0; epoch<3; epoch++) begin
       mode=1;

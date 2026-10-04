@@ -1,0 +1,4 @@
+scripts/*.sh text eol=lf
+# Preserve the recorded sample bytes covered by manifest.json.
+examples/loopback/loopback.vcd -text
+examples/loopback/log_excerpt.txt -text

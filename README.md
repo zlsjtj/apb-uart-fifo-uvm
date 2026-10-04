@@ -1,274 +1,168 @@
-# APB UART FIFO UVM Lab
+# APB UART FIFO UVM
 
-This repository is a small SystemVerilog/UVM verification lab for an
-APB-controlled UART model with asynchronous FIFO buffers.
+A SystemVerilog/UVM verification example for an APB UART with two clock domains
+and asynchronous TX/RX FIFOs. Follow a byte from an APB write to the serial pin
+and back, then test what happens when a FIFO fills, a frame is malformed, or
+one clock domain resets.
 
-The goal is to show a complete but still understandable verification flow:
-RTL, interfaces, UVM agents, scoreboard, coverage, directed/random tests,
-regression scripts, and a short set of notes about what was checked.
+[中文入门](docs/quickstart.md) · [Architecture](docs/architecture_figures.md) ·
+[Loopback sample](examples/loopback/README.md) · [Documentation](docs/README.md)
 
-## Directory Layout
+The DUT is a simplified, fixed-8N1 teaching model. It has no 16x oversampling,
+parity, or configurable stop bits. The project focuses on verification;
+board-level serial operation has not been demonstrated.
+
+## A Real Loopback Run
+
+<img src="examples/loopback/preview.png" width="540" alt="Recorded loopback: six TX enqueue pulses, serial TX activity, and six RX dequeue pulses. Each row has its own time window in microseconds.">
+
+`uart_loopback_test`, seed 2, recorded **2026-10-04**: six bytes
+(`00 55 aa ff 13 37`) sent and read back. Each row uses a different time window;
+triangles mark pulse starts, not extra events. The external RX pin stays idle
+because the loopback connection is inside the DUT.
+[VCD, log, checksums, and plot script](examples/loopback/README.md).
+
+## Choose a Run
+
+| Route | Tools | Scope |
+| --- | --- | --- |
+| Free FIFO smoke | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils | Standalone reference-queue test, no UVM or SVA |
+| UVM loopback | Windows, PowerShell 7, licensed ModelSim/Questa | APB/UART agents, predictor, scoreboard, assertions |
+
+### Free FIFO Smoke
+
+On Ubuntu 24.04 or Ubuntu in WSL, the FIFO test needs no commercial simulator:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y iverilog
+git clone https://github.com/zlsjtj/apb-uart-fifo-uvm.git
+cd apb-uart-fifo-uvm
+bash scripts/run_fifo_smoke.sh
+```
+
+This runs the existing reference-queue test at four FIFO depths and two clock
+ratios, then checks that a stuck-low full flag and corrupted read data are
+detected. It was tested with Icarus 12.0. Logs go into a new directory under
+`work_fifo_smoke/run.*`; success ends with:
 
 ```text
-rtl/                DUT and SVA
-config/             Declarative regression plan and RTL coverage policy
-tb/interfaces/      APB and UART interfaces
-tb/uvm/             UVM items, agents, env, predictor, scoreboard, coverage
-tb/uvm/sequences/   Feature-oriented APB/UART sequences
-tb/uvm/tests/       Feature-oriented UVM tests
-tb/top/             Simulation top
-scripts/            Local regression entry points
-reports/            Regression summary and sample logs
-docs/               Verification and coverage notes
+FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.
 ```
 
-## Register Map
+This is a FIFO test, not the UVM regression. Icarus skips the four inline FIFO
+SVA it cannot parse; those remain enabled in ModelSim/Questa. The
+[GitHub Actions workflow](.github/workflows/fifo-smoke.yml) is configured to run
+the same script and retain its logs; a cloud run has not yet been verified.
 
-寄存器地址、复位值和位定义统一放在 `rtl/apb_uart_reg_pkg.sv`。RTL、SVA、
-UVM sequence 和寄存器模型都引用同一份定义，避免后续修改时出现地址不一致。
+### UVM Loopback
 
-| Address | Name | Description |
+Use Windows, PowerShell 7 (`pwsh`), and a licensed ModelSim/Questa installation
+with SystemVerilog, UVM, assertions, and coverage support. The recorded run used
+ModelSim SE-64 10.4 with its bundled UVM 1.1d. Other simulator versions have not
+been validated here. Vivado is only needed for the synthesis/full acceptance flow.
+
+```powershell
+git clone https://github.com/zlsjtj/apb-uart-fifo-uvm.git
+cd apb-uart-fifo-uvm
+# Skip this line if vlib, vlog, vsim and vcover are already on PATH.
+$env:APB_UART_QUESTA_BIN = 'C:\modeltech64_10.4\win64'
+pwsh -NoProfile -File scripts/run_questa.ps1 -Tests uart_loopback_test -Seed 2 -DumpLoopbackVcd
+```
+
+Change the simulator path to your installation. A successful run writes
+`Passed 1/1 tests.` to `reports/regression_summary.md` and produces:
+
+- `logs/uart_loopback_test_2.log`: transactions and scoreboard results.
+- `reports/uart_loopback_test_2.vcd`: APB and serial signals for a waveform viewer.
+- `reports/uart_loopback_test_2.ucdb`: this test's coverage database.
+
+The script compiles the design and testbench; no prebuilt `work` library is
+required. Generated logs, waveforms, and UCDB files stay local. For setup errors,
+test selection, and coverage commands, see the [quick start](docs/quickstart.md).
+Without the simulator, inspect the [recorded log and VCD](examples/loopback/README.md).
+
+## Follow One Byte Through UVM
+
+1. **Sequence:** [uart_loopback_seq](tb/uvm/sequences/uart_functional_sequences.svh)
+   configures loopback, writes six TXDATA bytes, then reads RXDATA.
+2. **Driver:** [apb_driver](tb/uvm/apb_driver.svh) turns each item into an APB
+   transfer and samples its response at the completion edge.
+3. **Monitors:** [apb_monitor](tb/uvm/apb_monitor.svh) reports completed transfers;
+   [uart_monitor](tb/uvm/uart_monitor.svh) observes the TX pin using configured
+   bit timing, not the DUT's internal baud tick.
+4. **Predictor:** [uart_predictor](tb/uvm/uart_predictor.svh) makes TX expectations
+   from successful APB TXDATA writes. In loopback, RX expectations come from
+   observed TX frames. In external-RX tests, they come from the
+   [RX pin monitor](tb/uvm/uart_rx_monitor.svh), not the stimulus driver.
+5. **Scoreboard:** [uart_scoreboard](tb/uvm/uart_scoreboard.svh) compares expected
+   TX bytes with observed frames, and expected RX bytes with successful APB
+   reads. Unconsumed expectations also fail the test.
+
+The connections are in [uart_env.svh](tb/uvm/uart_env.svh). For a next test,
+try `uart_frame_error_test` or `uart_fifo_wrap_test`; the default 20-test list
+is in [verification_plan.psd1](config/verification_plan.psd1).
+
+## A Passing Regression That Missed a Bug
+
+The DUT used to update PRDATA and PSLVERR **after** the APB completion edge.
+Both driver and monitor sampled 2 ns late, so they shared the same wrong
+assumption. An independent test read BAUD as **0 at the edge, 16 later**.
+
+The fix made responses valid before the edge and changed BFM sampling to
+`input #1step`. An independent [APB test](tb/unit/apb_contract_tb.sv) checks the
+contract; the `apb_late` mutation puts the defect back to test the detector.
+[Reproduce the baseline/fault comparison](docs/bug_closure_case.md).
+Another case covers [why FIFO empty is not TX complete](docs/tx_completion_case.md).
+
+## Recorded Results
+
+These are the saved results of run `20260913_134519_8d9500ab` on **2026-09-13**,
+not a live CI badge. Each link opens evidence tracked in this repository.
+That run's source SHA-256 is
+`801771a6c2ea8619f01c11ef8486d560b72c1799655f4894328f3d0c6915ff85`;
+the newer loopback sample has its own [source manifest](examples/loopback/manifest.json).
+
+| Check | Recorded result | Evidence |
 | --- | --- | --- |
-| `0x00` | CTRL | bit0 enable, bit1 loopback, bit2 irq_en |
-| `0x04` | STATUS | bits0..5 FIFO/error/IRQ; bit6 CFG_BUSY; bit7 TX_BUSY |
-| `0x08` | BAUD | Read/write configuration register |
-| `0x0c` | TXDATA | Write TX FIFO |
-| `0x10` | RXDATA | Read RX FIFO |
+| UVM regression | 60/60: 20 tests across three base seeds | [Regression summary](reports/published/20260913_134519_8d9500ab/reports/final_regression/final_regression_summary.json) |
+| FIFO depth subsets | 24/24 across depths 2, 4, 16, 64 | [Parameter runs](reports/published/20260913_134519_8d9500ab/reports/parameter_regression/summary.json) |
+| Deliberate RTL faults | 13/13 detected; matching baselines passed | [Mutation results](reports/published/20260913_134519_8d9500ab/reports/mutation_campaign.json) |
+| Declared functional bins | 69/69 hit | [Coverage checks](reports/published/20260913_134519_8d9500ab/reports/final_regression/coverage/functional_assertion_gate.json) |
 
-## Model Scope
+Bin counts describe the declared coverage model, not all possible UART behavior.
+Fault detection covers the 13 declared mutations. See the
+[full result table](reports/published/20260913_134519_8d9500ab/paper_results.md)
+for assertions, RTL coverage checks, and synthesis results. Full raw logs,
+UCDB/HTML, and delivery bundles are local artifacts, not downloadable release
+assets. [Reproduction instructions](docs/reproduction_and_delivery.md) explain
+how to generate and check a bundle.
 
-This is a verification practice DUT, not a production UART IP.
+## Interface and Limits
 
-- `BAUD` controls a simplified UART bit tick in the `uart_clk` domain.
-- UART TX/RX still use a simple tick-based serial model. There is no 16x
-  oversampling, parity, or configurable stop-bit support.
-- APB uses a zero-wait-state `pready=1` response.
-- Read data and PSLVERR are valid before the completion edge. Both APB BFMs
-  sample with clocking-block input #1step, not a post-edge delay.
-- Before normal CTRL/BAUD writes, stop adding TX bytes and poll both TX_BUSY
-  and CFG_BUSY to zero. After writing, poll CFG_BUSY again before new traffic.
-  The external peer must also keep RX idle across the configuration change.
-  TX_EMPTY means FIFO empty; TX_BUSY includes queued data and the entire final
-  stop bit. CFG_BUSY covers pending/coalesced configuration and reset recovery.
-- An explicit mid-frame disable aborts the active byte; reset discards queued
-  and active bytes. TX_BUSY clearing after either operation is not proof of
-  successful delivery. Queued bytes remain pending on disable until re-enabled
-  or reset. Raw recovery accesses are distinct from normal safe configuration.
-- External resets assert asynchronously. Each APB/UART/FIFO reset is released
-  through a two-stage synchronizer in its destination clock domain.
-- UART-only reset preserves CTRL/BAUD but rejects TXDATA/RXDATA accesses while
-  the shared FIFO reset is active. Configuration writes are replayed on recovery.
-- Functional coverage is implemented in UVM covergroups, but merged UCDB/HTML
-  reporting is generated from the current regression summary.
+| Address | Register | Purpose |
+| --- | --- | --- |
+| `0x00` | CTRL | Enable, loopback, IRQ enable |
+| `0x04` | STATUS | FIFO flags, IRQ, frame error, CFG_BUSY, TX_BUSY |
+| `0x08` | BAUD | Simplified bit-tick divider |
+| `0x0c` | TXDATA | Write a TX byte |
+| `0x10` | RXDATA | Read an RX byte |
 
-## Run
+Bit definitions and reset values are in
+[apb_uart_reg_pkg.sv](rtl/apb_uart_reg_pkg.sv). APB has zero wait states.
+Normal configuration changes require TX_BUSY and CFG_BUSY to clear and the
+external RX peer to stay idle. Disable aborts an active frame; reset discards
+queued and active data. Neither operation clearing busy proves delivery.
+CDC checks and out-of-context synthesis are documented, but are not commercial
+CDC signoff or board timing results.
 
-当前完整验收使用独立源码快照：
+No project license has been selected yet; public source visibility is not a
+grant of an open-source license.
 
-```powershell
-pwsh -NoProfile -File scripts/run_acceptance.ps1
-```
+## Report a Problem
 
-入口在运行开始即写 RUNNING，失败写 FAIL，完成才写 PASS。每轮源码、日志、
-UCDB、综合和压力测试分别保存在 reports/acceptance_runs/<run-id>/workspace，
-reports/acceptance_summary.json 指向最近一轮。该目录不纳入 Git，但本地保留。
-源码身份以 SHA-256 为准；未提交修改不会被误写为“等于基线 commit”。
-
-单独运行协议/参数测试和证据门禁反向测试：
-
-```powershell
-pwsh -NoProfile -File scripts/run_contract_tests.ps1
-pwsh -NoProfile -File scripts/run_fifo_unit_tests.ps1
-pwsh -NoProfile -File scripts/run_parameter_regression.ps1
-pwsh -NoProfile -File scripts/test_evidence_gates.ps1
-```
-
-先按 [复现与交付说明](docs/reproduction_and_delivery.md) 配置工具。完整验收
-包含工具/许可预检查和工作流反向测试，共 12 步。expanded 模式扩展压力与
-mutation 种子，每个故障仍要求同测试、同种子的正确基线通过。
-
-当前入口为 [当前架构](docs/current_architecture_and_optimization.md)，图示见
-[架构图](docs/architecture_figures.md)。最近尝试以 acceptance_summary.json 为准；
-最近成功交付以 [发布入口](reports/published/latest.json) 为准。完整包在本地
-deliveries/<runId>，含可搬移校验清单和自动生成的 paper_results.md。
-
-本轮两次完整验收和交付反向检查见 [工程优化结果](docs/engineering_delivery_result.md)。
-
-历史 P0/P1 记录见 docs/p0_p1_finish_result.md；9 月 5 日基线见
-docs/p0_p2_contract_closure.md。后文早期示例报告不作为当前结果。
-
-单独选择 FIFO 深度或关闭白盒探针：
-
-```powershell
-pwsh -NoProfile -File scripts/run_questa.ps1 -Tests uart_fifo_wrap_test -FifoAddrWidth 1
-pwsh -NoProfile -File scripts/run_questa.ps1 -Tests uart_no_probe_test -NoWhitebox
-```
-
-NoWhitebox 模式不实例化 uart_probe_if 或集成白盒 SVA；UART agent 本身始终
-只使用公开接口。可选配置 monitor/checker 在 env 层连接，不参与数据期望生成。
-
-On Windows with ModelSim/Questa in `PATH`:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1
-```
-
-Run a smaller subset:
-
-```powershell
-pwsh -NoProfile -Command '& ./scripts/run_questa.ps1 -Tests @("uart_reg_test","uart_loopback_test")'
-```
-
-Run the reset/CDC test with a non-integer clock ratio and shifted phases:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 `
-  -Tests uart_reset_cdc_test -Seed 52 `
-  -PclkHalfNs 7 -UartHalfNs 11 -PclkPhaseNs 2 -UartPhaseNs 5
-```
-
-Capture a VCD for the loopback path:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_questa.ps1 -Tests uart_loopback_test -Seed 2 -DumpLoopbackVcd
-```
-
-The VCD is written under `reports/` and is ignored by git.
-
-Merge coverage for the exact tests listed in the latest regression summary:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/merge_coverage.ps1
-```
-
-Text reports are written under `reports/coverage/`; the generated HTML entry
-point is `reports/coverage/html/index.html`.
-
-Run the isolated TX-data mutation check:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_mutation_check.ps1
-```
-
-This command passes only when the injected bit error is reported by the
-scoreboard. It uses `work_mutation` and does not replace the normal simulation
-library. See [`docs/bug_closure_case.md`](docs/bug_closure_case.md).
-
-Run the isolated IRQ-control mutation check:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_control_mutation_check.ps1
-```
-
-This check forces IRQ low in a separate simulation library and passes only
-when the IRQ test or assertion reports the injected fault.
-
-Run the declared representative mutation campaign and generate Markdown/JSON results:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_mutation_suite.ps1
-```
-
-Run the complete local acceptance flow:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_acceptance.ps1
-```
-
-The acceptance flow combines negative gate self-tests, independent APB/parameter
-tests, RTL lint, structural and netlist CDC review, OOC synthesis, three-seed
-regression, skewed-clock subsets, coverage gates, and baseline-controlled mutations.
-The regression list and stress profiles come from
-`config/verification_plan.psd1`; RTL coverage thresholds and waivers come from
-`config/rtl_coverage_policy.psd1`.
-
-Run the register-model structural audit:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_reg_model_check.ps1
-```
-
-Run the P2 verification-architecture audit:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_p2_structural_check.ps1
-```
-
-Run the three-seed final regression package (test list comes from the plan):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_final_regression.ps1
-```
-
-The package is written to `reports/final_regression/` and includes per-seed
-summaries, source SHA-256 values, coverage reports, and a reproducibility
-manifest. See [`docs/final_regression_evidence.md`](docs/final_regression_evidence.md).
-
-Run the CDC structural audit:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_cdc_structural_check.ps1
-```
-
-The audit checks project CDC structures and writes
-`reports/cdc_structural_summary.md`. It does not replace commercial CDC signoff;
-see [`docs/cdc_analysis.md`](docs/cdc_analysis.md).
-
-Run zero-warning RTL lint and the structural CDC/RDC audit:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_static_checks.ps1
-```
-
-Run reproducible Vivado out-of-context synthesis on the generic Artix-7 evidence part:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/run_vivado_synth.ps1
-```
-
-The resulting QoR is a post-synthesis baseline. It is not a placed-and-routed
-timing result, a board frequency claim, a bitstream, or commercial CDC signoff.
-
-## Tests
-
-| Test | Main check |
-| --- | --- |
-| `uart_reg_test` | Reset values, register read/write, illegal access |
-| `uart_config_latency_test` | APB configuration-write time versus UART-domain apply time |
-| `uart_config_stress_test` | Back-to-back configuration writes, mailbox busy coalescing, APB/UART independent reset recovery |
-| `uart_ral_test` | RAL access policy, frontdoor access, passive prediction, reset mirror |
-| `uart_loopback_test` | APB TX write, UART loopback, APB RX readback |
-| `uart_baud_loopback_test` | Loopback with `BAUD=4` to check bit tick timing |
-| `uart_baud_timing_test` | Independent TX bit-width checks for BAUD=0/1/4/8 |
-| `uart_irq_test` | IRQ enable/disable, pending RX data, assert and clear behavior |
-| `uart_frame_error_test` | Bad stop-bit rejection, frame-error status, and recovery |
-| `uart_external_rx_test` | External UART RX frame and APB readback |
-| `uart_external_rx_baud_test` | External RX at `BAUD=4` with an independently timed, phase-offset BFM |
-| `uart_rx_fifo_full_test` | RX FIFO full, extra-frame drop, drain, and recovery |
-| `uart_reset_cdc_test` | Mid-traffic dual reset, independent resets, and recovery |
-| `uart_frame_reset_test` | Abort TX/RX frames on reset; reject FIFO accesses during UART-only reset; preserve/replay configuration |
-| `uart_fifo_full_test` | TX FIFO full and overflow error path |
-| `uart_bad_access_test` | TXDATA read, RXDATA empty/read-only errors, bad address |
-| `uart_random_test` | Random data, random gaps, status interleaving |
-| `uart_recover_test` | Disable and re-enable recovery path |
-
-Latest complete acceptance: [`reports/acceptance_summary.json`](reports/acceptance_summary.json).
-The standalone [`reports/regression_summary.md`](reports/regression_summary.md) may be only a debug subset.
-
-Sample loopback log excerpt:
-[`reports/sample_logs/uart_loopback_test_2.log`](reports/sample_logs/uart_loopback_test_2.log)
-
-## Notes
-
-- Coverage notes: [`docs/coverage_summary.md`](docs/coverage_summary.md)
-- Coverage closure: [`docs/coverage_closure.md`](docs/coverage_closure.md)
-- Debug notes: [`docs/debug_notes.md`](docs/debug_notes.md)
-- Mutation case: [`docs/bug_closure_case.md`](docs/bug_closure_case.md)
-- Final regression evidence: [`docs/final_regression_evidence.md`](docs/final_regression_evidence.md)
-- CDC analysis: [`docs/cdc_analysis.md`](docs/cdc_analysis.md)
-- Register model: [`docs/register_model.md`](docs/register_model.md)
-- P2 verification architecture: [`docs/p2_verification_architecture.md`](docs/p2_verification_architecture.md)
-- Architecture optimization: [`docs/architecture_optimization.md`](docs/architecture_optimization.md)
-- Architecture closure and diagrams: [`docs/verification_architecture_closure.md`](docs/verification_architecture_closure.md)
-- P0-P4 optimization closure: [`docs/p0_p4_optimization_closure.md`](docs/p0_p4_optimization_closure.md)
-- Current architecture and latest optimization: [`docs/current_architecture_and_optimization.md`](docs/current_architecture_and_optimization.md)
+Open an [issue](https://github.com/zlsjtj/apb-uart-fifo-uvm/issues) with the command,
+commit, simulator version, seed, and first failing log message. Setup failures
+and small reproducing tests are useful contributions. Please include a failing
+case with behavioral fixes; see the [documentation index](docs/README.md) for
+the relevant tests and reports.

@@ -103,6 +103,8 @@ module async_fifo #(
   end
 
   // synthesis translate_off
+`ifndef __ICARUS__
+  // Icarus runs the public-interface FIFO test but cannot parse these SVA.
   write_gray_single_step:
     assert property (@(posedge wr_clk) disable iff (!wr_rst_n)
       $past(wr_rst_n) |-> $onehot0(wgray ^ $past(wgray)));
@@ -115,5 +117,6 @@ module async_fifo #(
   read_pointer_holds_without_accept:
     assert property (@(posedge rd_clk) disable iff (!rd_rst_n)
       (!rd_en || rd_empty) |=> $stable(rbin));
+`endif
   // synthesis translate_on
 endmodule

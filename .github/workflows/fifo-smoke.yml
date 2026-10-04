@@ -1,0 +1,33 @@
+name: FIFO smoke (Icarus)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fifo:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Icarus
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends iverilog
+      - name: Run FIFO tests and negative controls
+        run: bash scripts/run_fifo_smoke.sh
+      - name: Keep test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fifo-smoke-logs
+          path: |
+            work_fifo_smoke/**/*.log
+            work_fifo_smoke/**/*.txt
+          retention-days: 7

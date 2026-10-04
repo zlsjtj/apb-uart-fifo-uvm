@@ -11,6 +11,7 @@ vc_hdrs.h
 *.log
 !reports/sample_logs/*.log
 *.vcd
+!examples/loopback/loopback.vcd
 *.fsdb
 *.wlf
 *.ucdb

@@ -17,7 +17,10 @@
 
 寄存器层改成组合读数据和组合错误响应，保证完成沿前有效；配置寄存器写入、TX push 和 RX pop 仍在握手沿更新。driver/monitor 改用 clocking block 的 input #1step 采样，错误响应 SVA 也改为同拍检查。
 
-独立的 tb/unit/apb_contract_tb.sv 保留在仓库，连续访问时 PSEL 不插空闲周期，检查默认值、读写、非法地址、受限访问、loopback 出队和 FIFO 回绕。它不调用 UVM 的 APB driver，因此能对 driver 之外的接口行为作第二次核对。
+独立的 [apb_contract_tb.sv](../tb/unit/apb_contract_tb.sv) 保留在仓库，连续访问时 PSEL 不插空闲周期，检查默认值、读写、非法地址、受限访问、loopback 出队和 FIFO 回绕。它不调用 UVM 的 APB driver，因此能对 driver 之外的接口行为作第二次核对。
+
+实现对照：[寄存器响应](../rtl/apb_uart_regs.sv)、[APB clocking block](../tb/interfaces/apb_if.sv)、
+[driver](../tb/uvm/apb_driver.svh) 和 [monitor](../tb/uvm/apb_monitor.svh)。
 
 ## 如何防止同类问题回来
 
@@ -28,13 +31,19 @@ UART_MUTATE_APB_LATE_RESPONSE 会让 APB 响应重新晚一拍。campaign 对同
 - 日志只有检测器名字、但错误来自别处，不算检出。
 - 许可证、加载失败和超时不算检出。
 
-命令：
+在仓库根目录、按 [中文入门](quickstart.md) 配好仿真器和 PowerShell 7 后运行：
+
+```powershell
+pwsh -NoProfile -File scripts/run_contract_tests.ps1
+```
+
+再跑同参数、同 seed 的基线与故障版本对照：
 
 ```powershell
 pwsh -NoProfile -Command '& ./scripts/run_mutation_campaign.ps1 -CaseIds apb_late'
 ```
 
-完整清单在 config/mutation_plan.psd1，还覆盖 TX/RX 数据、FIFO 状态、IRQ、波特率、配置握手、帧错误和同步复位。每项使用独立故障库，baseline 与 mutant 的日志和匹配错误记录写入 mutation_campaign.json。
+完整清单在 [mutation_plan.psd1](../config/mutation_plan.psd1)，还覆盖 TX/RX 数据、FIFO 状态、IRQ、波特率、配置握手、帧错误和同步复位。每项使用独立故障库，baseline 与 mutant 的日志和匹配错误记录写入 `reports/mutation_campaign.json`。这是复现入口，不代表本次文档调整又执行了一轮硬件验收。
 
 ## 论文里可以怎样说明
 
