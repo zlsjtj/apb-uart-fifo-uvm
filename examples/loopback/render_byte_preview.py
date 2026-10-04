@@ -13,6 +13,12 @@ PREFIX = "tb_apb_uart.apb_vif."
 BUS_SIGNALS = ("psel", "penable", "pwrite", "paddr[7:0]", "pwdata[31:0]",
                "prdata[31:0]", "pslverr")
 TX_SIGNAL = "tb_apb_uart.uart_vif.tx_o"
+PALETTES = {
+    "light": {"background": "white", "text": "#222222", "ticks": "black",
+              "grid": "#D9DEE0", "write": "#00718B", "serial": "#A04B00", "read": "#237544"},
+    "dark": {"background": "#0D1117", "text": "#E6EDF3", "ticks": "#E6EDF3",
+             "grid": "#30363D", "write": "#79C0FF", "serial": "#FFA657", "read": "#7EE787"},
+}
 
 
 def known_value(value):
@@ -102,7 +108,10 @@ def annotated_byte(vcd, log, index=1):
             "tx_access_start": writes[index][0], "rx_access_start": reads[index][0]}
 
 
-def render(directory, output):
+def render(directory, output, theme="light"):
+    if theme not in PALETTES:
+        raise ValueError(f"Unknown preview theme: {theme}")
+    colors = PALETTES[theme]
     if output.exists():
         raise FileExistsError(f"Output already exists; choose a new --output path: {output}")
     vcd, source_hash = load_sample(directory)
@@ -111,22 +120,24 @@ def render(directory, output):
     start, end, bit = record["start"], record["end"], record["bit_ticks"]
     byte = f"0x{record['value']:02X}"
     with plt.rc_context({"font.family": "DejaVu Sans", "font.size": 14,
-                         "text.color": "#222222", "axes.labelcolor": "#222222"}):
+                         "text.color": colors["text"], "axes.labelcolor": colors["text"],
+                         "axes.facecolor": colors["background"],
+                         "xtick.color": colors["ticks"], "ytick.color": colors["ticks"]}):
         fig = plt.figure(figsize=(5.4, 3.0), dpi=200)
         try:
             fig.text(0.5, 0.925, f"One byte through loopback: {byte}", ha="center", fontsize=16)
-            for x, label, color in ((0.19, "APB write", "#00718B"),
-                                    (0.5, "Serial TX", "#A04B00"),
-                                    (0.81, "APB read", "#237544")):
+            for x, label, color in ((0.19, "APB write", colors["write"]),
+                                    (0.5, "Serial TX", colors["serial"]),
+                                    (0.81, "APB read", colors["read"])):
                 fig.text(x, 0.82, label, ha="center", color=color)
                 fig.text(x, 0.73, byte, ha="center", fontsize=17, color=color, weight="bold")
             ax = fig.add_axes((0.08, 0.23, 0.88, 0.38))
             ax.set_xlim((start - bit * 0.15) * scale, (end + bit * 0.15) * scale)
-            draw_trace(ax, vcd[TX_SIGNAL].tv, vcd.endtime, scale, "#A04B00")
+            draw_trace(ax, vcd[TX_SIGNAL].tv, vcd.endtime, scale, colors["serial"])
             ax.set_ylim(-0.18, 1.55)
             ax.set_yticks([0, 1])
             for b, label in enumerate(["S", *map(str, range(8)), "P"]):
-                ax.axvline((start + b * bit) * scale, color="#D9DEE0", linewidth=0.6, zorder=0)
+                ax.axvline((start + b * bit) * scale, color=colors["grid"], linewidth=0.6, zorder=0)
                 ax.text((start + (b + 0.5) * bit) * scale, 1.26, label, ha="center", fontsize=15)
             ax.set_xticks([(start + offset * bit) * scale for offset in (0, 3, 6, 10)])
             ax.set_xlabel("Time (us)", fontsize=13, labelpad=2)
@@ -136,11 +147,12 @@ def render(directory, output):
             fig.text(0.5, 0.025, "S: start   0-7: LSB first   P: stop", ha="center", fontsize=14)
             output.parent.mkdir(parents=True, exist_ok=True)
             with output.open("xb") as stream:
-                fig.savefig(stream, format="png", facecolor="white", metadata={
+                fig.savefig(stream, format="png", facecolor=colors["background"], metadata={
                     "Source": "loopback.vcd", "SourceSHA256": source_hash,
                     "VCDTimescale": str(vcd.timescale["timescale"]) + " seconds",
                     "ByteIndex": str(record["index"]), "ByteValue": byte,
                     "Description": "Serial time axis only; APB values sampled at ACCESS starts.",
+                    **({"Theme": theme} if theme != "light" else {}),
                 })
         finally:
             plt.close(fig)
@@ -150,9 +162,10 @@ def render(directory, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True, help="New PNG path (not overwritten)")
+    parser.add_argument("--theme", choices=PALETTES, default="light", help="Display palette only")
     args = parser.parse_args()
     try:
-        source_hash, record = render(Path(__file__).resolve().parent, args.output)
+        source_hash, record = render(Path(__file__).resolve().parent, args.output, args.theme)
     except (ValueError, KeyError, OSError) as error:
         parser.exit(1, f"Byte preview failed: {error}\n")
     print(f"BYTE_PREVIEW_OK {args.output}\nVCD SHA256 {source_hash}")

@@ -120,6 +120,28 @@ class BytePreviewTests(unittest.TestCase):
         for name, original in originals.items():
             self.assertEqual((self.directory / name).read_bytes(), original)
 
+    def test_dark_theme_preserves_data_and_inputs(self):
+        originals = {p.name: p.read_bytes() for p in self.directory.iterdir()}
+        light = self.directory / "light.png"
+        dark = self.directory / "dark.png"
+        self.assertEqual(render(self.directory, light), render(self.directory, dark, "dark"))
+        with Image.open(light) as light_image, Image.open(dark) as dark_image:
+            self.assertEqual(light_image.size, dark_image.size)
+            for field in ("SourceSHA256", "VCDTimescale", "ByteIndex", "ByteValue", "Description"):
+                self.assertEqual(light_image.info[field], dark_image.info[field])
+            self.assertEqual(dark_image.info["Theme"], "dark")
+            self.assertEqual(dark_image.convert("RGB").getpixel((0, 0)), (13, 17, 23))
+        with self.assertRaises(FileExistsError):
+            render(self.directory, dark, "dark")
+        for name, original in originals.items():
+            self.assertEqual((self.directory / name).read_bytes(), original)
+
+    def test_invalid_theme_does_not_create_output(self):
+        output = self.directory / "invalid-theme.png"
+        with self.assertRaisesRegex(ValueError, "Unknown preview theme"):
+            render(self.directory, output, "unknown")
+        self.assertFalse(output.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

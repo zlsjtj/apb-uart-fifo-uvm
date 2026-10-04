@@ -16,7 +16,11 @@ board-level serial operation has not been demonstrated.
 
 ## A Real Loopback Run
 
-<img src="examples/loopback/byte-preview.png" width="540" alt="The second recorded byte, 0x55: APB write and read values match the serial TX frame from 1.26 to 1.66 microseconds. Serial data bits 0 through 7 are sent least significant bit first.">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="examples/loopback/byte-preview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="examples/loopback/byte-preview.png">
+  <img src="examples/loopback/byte-preview.png" width="540" alt="The second recorded byte, 0x55: APB write and read values match the serial TX frame from 1.26 to 1.66 microseconds. Serial data bits 0 through 7 are sent least significant bit first.">
+</picture>
 
 `uart_loopback_test`, seed 2, recorded **2026-10-04**: six bytes
 (`00 55 aa ff 13 37`) sent and read back. The preview follows the second byte,
@@ -25,10 +29,10 @@ board-level serial operation has not been demonstrated.
 
 ## Choose a Run
 
-| Route | Tools | Scope |
-| --- | --- | --- |
-| Free FIFO smoke | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils | Standalone reference-queue test, no UVM or SVA |
-| UVM loopback | Windows, PowerShell 7, licensed ModelSim/Questa | APB/UART agents, predictor, scoreboard, assertions |
+| Route | Tools and scope |
+| --- | --- |
+| [Free FIFO smoke](#free-fifo-smoke) | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils. Standalone reference-queue test, no UVM or SVA. |
+| [UVM loopback](#uvm-loopback) | Windows, PowerShell 7, licensed ModelSim/Questa. APB/UART agents, predictor, scoreboard, assertions. |
 
 ### Free FIFO Smoke
 

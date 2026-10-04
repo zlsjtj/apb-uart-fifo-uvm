@@ -13,7 +13,11 @@ UART 固定为 8N1，没有 16 倍过采样，也没有板级串口实测结论�
 
 ## 先看一轮真实回环
 
-<img src="../examples/loopback/byte-preview.png" width="540" alt="记录中的第二个字节 0x55：APB 写入值、1.26 至 1.66 微秒的串行 TX 帧和 APB 读回值一致，数据位从最低位开始发送。">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../examples/loopback/byte-preview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="../examples/loopback/byte-preview.png">
+  <img src="../examples/loopback/byte-preview.png" width="540" alt="记录中的第二个字节 0x55：APB 写入值、1.26 至 1.66 微秒的串行 TX 帧和 APB 读回值一致，数据位从最低位开始发送。">
+</picture>
 
 这是 2026-10-04 的 `uart_loopback_test`，seed 为 2。发送和读回的字节为
 `00 55 aa ff 13 37`。预览选取第二个字节 `0x55`，S/P 分别表示起始位和停止位，
@@ -22,10 +26,10 @@ UART 固定为 8N1，没有 16 倍过采样，也没有板级串口实测结论�
 
 ## 选一条运行路线
 
-| 路线 | 依赖 | 范围 |
-| --- | --- | --- |
-| 免费 FIFO 自检 | Ubuntu/WSL、Icarus 12.0、Bash、GNU coreutils | 参考队列测试，不含 UVM 和 SVA |
-| UVM 回环 | Windows、PowerShell 7、具备许可的 ModelSim/Questa | APB/UART agent、predictor、scoreboard 和断言 |
+| 路线 | 依赖与范围 |
+| --- | --- |
+| 免费 FIFO 自检 | Ubuntu/WSL、Icarus 12.0、Bash、GNU coreutils。参考队列测试，不含 UVM 和 SVA。 |
+| UVM 回环 | Windows、PowerShell 7、具备许可的 ModelSim/Questa。APB/UART agent、predictor、scoreboard 和断言。 |
 
 ### 免费的 FIFO 自检
 

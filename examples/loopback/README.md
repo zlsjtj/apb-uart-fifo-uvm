@@ -11,6 +11,7 @@ UVM 1.1d. It is one passing test, not the complete regression.
 | [preview.png](preview.png) | Derived preview; the original three files above are unchanged |
 | [render_preview.py](render_preview.py) | Check the sample and plot its actual transitions |
 | [byte-preview.png](byte-preview.png) | Compact view of the second byte, `0x55`, used on the project home page |
+| [byte-preview-dark.png](byte-preview-dark.png) | The same data and layout with a dark display palette |
 | [render_byte_preview.py](render_byte_preview.py) | Match all six APB writes, serial frames and APB reads before annotating one byte |
 
 The scoreboard checked 6 TX bytes and 6 RX bytes, with no UVM warnings, errors,
@@ -25,7 +26,11 @@ does not identify the exact tested source.
 
 ## Follow One Byte
 
-<img src="byte-preview.png" width="540" alt="Recorded byte 0x55 at APB write, serial TX and APB read. The serial frame spans 1.26 to 1.66 microseconds, with data bits transmitted least significant bit first.">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="byte-preview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="byte-preview.png">
+  <img src="byte-preview.png" width="540" alt="Recorded byte 0x55 at APB write, serial TX and APB read. The serial frame spans 1.26 to 1.66 microseconds, with data bits transmitted least significant bit first.">
+</picture>
 
 This view selects byte index 1 (the second byte) from the six-byte recording.
 The serial bit period comes from the logged UART clock and the recorded BAUD
@@ -67,12 +72,16 @@ With Python 3.12 (the tested version), from the repository root:
 python -m pip install -r examples/loopback/requirements.txt
 python examples/loopback/render_preview.py --output work_waveform_preview/preview.png
 python examples/loopback/render_byte_preview.py --output work_waveform_preview/byte-preview.png
+python examples/loopback/render_byte_preview.py --theme dark --output work_waveform_preview/byte-preview-dark.png
 ```
 
 Use an isolated Python environment if needed. No simulator is required to
 plot this saved sample. Success prints `PREVIEW_OK` and the VCD SHA-256;
 the new image goes to the requested path. Existing output files are not
 overwritten: choose a new path for another rendering.
+
+The compact preview follows the page's light/dark theme. `--theme dark` changes
+colors only; byte values, bit timing, labels and geometry are unchanged.
 
 The byte renderer prints `BYTE_PREVIEW_OK`. It checks the same input hashes,
 matches all six write/frame/read values in order, and rejects unknown annotated
