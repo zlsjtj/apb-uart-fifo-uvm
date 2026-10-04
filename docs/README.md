@@ -1,7 +1,36 @@
-# 文档索引
+# Documentation / 文档索引
+
+[English](#english) · [中文](#chinese)
+
+<a id="english"></a>
+
+## Start Here
+
+Start with [one runnable example](../README.md#choose-a-run), then
+[follow one byte through the UVM environment](../README.md#follow-one-byte-through-uvm).
+No commercial simulator is needed to inspect the [recorded loopback](../examples/loopback/README.md).
+
+| What to read | Entry |
+| --- | --- |
+| Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
+| A passing regression that sampled APB too late | [APB debugging case](bug_closure_case.md#english) |
+| Why an empty TX FIFO is not a completed frame | [TX completion case](tx_completion_case.md#english) |
+| Default tests and stress profiles | [Executable test plan](../config/verification_plan.psd1) |
+| Injected faults and their detectors | [Mutation plan](../config/mutation_plan.psd1) |
+| Saved results and source identity | [2026-09-13 manifest](../reports/published/20260913_134519_8d9500ab/acceptance_summary.json) |
+
+The model is fixed 8N1, not a production UART IP. The CI badge covers the free
+FIFO test only. Saved UVM results belong to their dated source snapshots, not
+every later commit. Detailed acceptance instructions and historical notes below
+are in Chinese; the [English README](../README.md) includes simulator setup and
+output paths for the introductory run.
+
+<a id="chinese"></a>
+
+## 中文导航
 
 第一次阅读从 [跑通一个测试](quickstart.md) 开始。想了解测试怎样发现问题，
-先看 [APB 完成沿采样](bug_closure_case.md) 和 [TX 发送完成](tx_completion_case.md)。
+先看 [APB 完成沿采样](bug_closure_case.md#chinese) 和 [TX 发送完成](tx_completion_case.md#chinese)。
 
 ## 设计与测试
 
@@ -51,5 +80,4 @@ GitHub 上能查看轻量 JSON 和结果表；完整日志、UCDB、HTML 和交�
 - [验证环境拆分](p2_verification_architecture.md)、[架构调整](architecture_optimization.md)、[阶段核对](verification_architecture_closure.md)、[P0-P4 记录](p0_p4_optimization_closure.md)。
 - [运行与交付改进计划](engineering_delivery_plan.md)、[两轮验收结果](engineering_delivery_result.md)。
 
-这些记录也适合作为课程或毕设材料的依据。实际支持范围以当前源码、可执行测试计划
-和所引用的那轮结果为准。
+实际支持范围以当前源码、可执行测试计划和所引用的那轮结果为准。

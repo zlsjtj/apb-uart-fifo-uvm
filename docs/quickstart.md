@@ -8,14 +8,17 @@ UART 固定为 8N1，没有 16 倍过采样，也没有板级串口实测结论�
 可以直接看后面的 UVM 回环：APB 写入字节，UART 回环接收，再由 APB
 读回，scoreboard 检查数据和顺序。
 
+[选一条运行路线](#选一条运行路线) · [沿着一个字节读代码](#沿着一个字节读代码) ·
+[APB 回归为什么漏检](bug_closure_case.md#chinese) · [文档索引](README.md#chinese)
+
 ## 先看一轮真实回环
 
-<img src="../examples/loopback/preview.png" width="540" alt="真实回环波形：6 次 TX 入队、串行 TX 活动、6 次 RX 出队。三行采用不同时间窗口，单位为微秒。">
+<img src="../examples/loopback/byte-preview.png" width="540" alt="记录中的第二个字节 0x55：APB 写入值、1.26 至 1.66 微秒的串行 TX 帧和 APB 读回值一致，数据位从最低位开始发送。">
 
 这是 2026-10-04 的 `uart_loopback_test`，seed 为 2。发送和读回的字节为
-`00 55 aa ff 13 37`。三行横轴的范围不同；小三角标出脉冲起点，没有加宽原始脉冲。
-回环在 DUT 内部连接，外部 `rx_i` 保持空闲。
-[原始 VCD、日志、校验值和生成方法](../examples/loopback/README.md) 都在样本目录。
+`00 55 aa ff 13 37`。预览选取第二个字节 `0x55`，S/P 分别表示起始位和停止位，
+数据位 0 到 7 从最低位开始发送。横轴只表示串行 TX 时间，不表示 APB 访问时刻。
+[完整波形、原始 VCD、日志和生成方法](../examples/loopback/README.md) 都在样本目录。
 
 ## 选一条运行路线
 

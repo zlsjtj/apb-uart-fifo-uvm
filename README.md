@@ -7,8 +7,10 @@ and asynchronous TX/RX FIFOs. Follow a byte from an APB write to the serial pin
 and back, then test what happens when a FIFO fills, a frame is malformed, or
 one clock domain resets.
 
-[中文入门](docs/quickstart.md) · [Architecture](docs/architecture_figures.md) ·
-[Loopback sample](examples/loopback/README.md) · [Documentation](docs/README.md)
+[Run an example](#choose-a-run) · [Follow one byte](#follow-one-byte-through-uvm) ·
+[Debugging case](docs/bug_closure_case.md#english) · [中文入门](docs/quickstart.md)
+
+One case worth reading: [an APB regression passed because the DUT and its testbench shared the same sampling mistake](docs/bug_closure_case.md#english).
 
 The DUT is a simplified, fixed-8N1 teaching model. It has no 16x oversampling,
 parity, or configurable stop bits. The project focuses on verification;
@@ -16,13 +18,12 @@ board-level serial operation has not been demonstrated.
 
 ## A Real Loopback Run
 
-<img src="examples/loopback/preview.png" width="540" alt="Recorded loopback: six TX enqueue pulses, serial TX activity, and six RX dequeue pulses. Each row has its own time window in microseconds.">
+<img src="examples/loopback/byte-preview.png" width="540" alt="The second recorded byte, 0x55: APB write and read values match the serial TX frame from 1.26 to 1.66 microseconds. Serial data bits 0 through 7 are sent least significant bit first.">
 
 `uart_loopback_test`, seed 2, recorded **2026-10-04**: six bytes
-(`00 55 aa ff 13 37`) sent and read back. Each row uses a different time window;
-triangles mark pulse starts, not extra events. The external RX pin stays idle
-because the loopback connection is inside the DUT.
-[VCD, log, checksums, and plot script](examples/loopback/README.md).
+(`00 55 aa ff 13 37`) sent and read back. The preview follows the second byte,
+`0x55`; its time axis shows serial TX only, not APB transfer timing.
+[Full waveform, VCD, log, and plot scripts](examples/loopback/README.md).
 
 ## Choose a Run
 
@@ -102,7 +103,8 @@ Without the simulator, inspect the [recorded log and VCD](examples/loopback/READ
    TX bytes with observed frames, and expected RX bytes with successful APB
    reads. Unconsumed expectations also fail the test.
 
-The connections are in [uart_env.svh](tb/uvm/uart_env.svh). For a next test,
+The connections are in [uart_env.svh](tb/uvm/uart_env.svh), with an
+[architecture overview](docs/architecture_figures.md). For a next test,
 try `uart_frame_error_test` or `uart_fifo_wrap_test`; the default 20-test list
 is in [verification_plan.psd1](config/verification_plan.psd1).
 
@@ -116,7 +118,7 @@ The fix made responses valid before the edge and changed BFM sampling to
 `input #1step`. An independent [APB test](tb/unit/apb_contract_tb.sv) checks the
 contract; the `apb_late` mutation puts the defect back to test the detector.
 [Read the case and reproduce the comparison](docs/bug_closure_case.md#english).
-Another case covers [why FIFO empty is not TX complete](docs/tx_completion_case.md).
+Another case covers [why FIFO empty is not TX complete](docs/tx_completion_case.md#english).
 
 ## Recorded Results
 
