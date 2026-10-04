@@ -12,6 +12,7 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 
 | What to read | Entry |
 | --- | --- |
+| Adapt a predictor, an independent timing check, or a baseline-controlled fault test | [Three checking patterns](checking_patterns.md) |
 | Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
 | Interface contract, tested tools and result interpretation | [Verification scope](interface_and_scope.md) |
 | A passing regression that sampled APB too late | [APB debugging case](bug_closure_case.md#english) |

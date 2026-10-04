@@ -4,11 +4,13 @@
 
 **Verify the design. Test the checkers.**
 
-A SystemVerilog/UVM project for APB-UART verification: dual-clock FIFOs,
-monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
+A runnable SystemVerilog/UVM reference for building independent checkers and
+proving that they detect RTL faults, using an APB-UART with dual-clock FIFOs.
 
-[**Run it**](#choose-a-run) ·
-[**Debugging case**](#independent-checks-in-action) · [**中文入门**](docs/quickstart.md)
+**v0.1.0 · 2026-10-04:** [**60/60 UVM runs passed · 13/13 injected RTL faults detected**](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0#verified-for-this-release).
+
+[**Run it**](#choose-a-run) · [**Demo**](#independent-checks-in-action) ·
+[**Patterns**](docs/checking_patterns.md) · [**中文入门**](docs/quickstart.md)
 
 [![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
 
@@ -18,36 +20,40 @@ monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
 
 **Put the bug back. Watch the checker catch it.**
 
-An earlier APB driver and monitor both sampled 2 ns late, hiding a response
-that arrived after the completion edge. An independent test exposed the bug.
-The response was fixed, sampling moved to `input #1step`, and the defect became
-a deliberate fault-injection test.
+The fixed design passes; the same test catches an injected late APB response.
+This **8-second annotated replay** uses recorded waveforms and a real failure
+message. Pauses are extended for reading, not a simulation-speed measurement.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="examples/apb-timing/comparison-dark.png">
-  <img src="examples/apb-timing/comparison.png" width="540" alt="A real same-test, same-seed comparison: at the 195 ns completion edge the fixed BAUD response is sampled as 16, but the injected late response is sampled as 0 and triggers REG_DEFAULT.">
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="examples/apb-timing/comparison-dark.png">
+  <source media="(prefers-reduced-motion: reduce)" srcset="examples/apb-timing/comparison.png">
+  <img src="examples/apb-timing/replay.gif" width="540" alt="Recorded APB comparison: the fixed BAUD response is sampled as 16 before the 195 ns completion edge; the injected late response is sampled as 0 and triggers REG_DEFAULT. The replay highlights the transfer, the samples, and the error message.">
 </picture>
 
 **Fixed baseline: pass. Injected fault: detected.** This comparison was
 recorded on **2026-10-05**, using `uart_reg_test`, seed `1071`.
-[Watch the 8-second replay](examples/apb-timing/README.md#watch-the-comparison) ·
+[Static comparison](examples/apb-timing/README.md) ·
 [Inspect the VCDs and logs](examples/apb-timing/README.md) ·
 [Read the original failure and fix](docs/bug_closure_case.md#english).
+
+The original bug escaped because both driver and monitor sampled 2 ns late.
+An independent test exposed it; the fix aligned the response and BFM with the
+completion edge using `input #1step`.
 
 Another boundary worth checking: [FIFO empty does not mean TX is finished](docs/tx_completion_case.md#english).
 
 ## Patterns to Borrow
 
-- **Predict from observations.** The [predictor](tb/uvm/uart_predictor.svh)
-  uses APB transfers and serial frames, not driver intentions. The
-  [scoreboard](tb/uvm/uart_scoreboard.svh) checks values, ordering, and leftovers.
-- **Test the checker.** The [mutation plan](config/mutation_plan.psd1) pairs
-  each injected RTL fault with a passing same-test, same-seed baseline and a
-  named detector. Build and license errors do not count as detections.
-- **Exercise the boundaries.** The [verification plan](config/verification_plan.psd1)
-  covers FIFO wraparound, skewed clocks, reconfiguration, malformed frames,
-  and reset during traffic. The [APB contract test](tb/unit/apb_contract_tb.sv)
-  checks completion timing outside the UVM driver.
+- **[Build expectations from interface observations](docs/checking_patterns.md#predict-from-observations).**
+  Trace a byte from a completed APB write to the predictor and scoreboard.
+- **[Check APB timing outside the UVM driver](docs/checking_patterns.md#check-the-completion-edge).**
+  Run the independent contract test when driver and monitor might share an assumption.
+- **[Prove that a checker can fail](docs/checking_patterns.md#pair-every-fault-with-a-baseline).**
+  Inject one declared fault, keep the test and seed fixed, and require the named detector.
+
+Each guide includes the code to read, a runnable command, its expected result,
+and what to adapt for another design. More boundary scenarios are in the
+[verification plan](config/verification_plan.psd1).
 
 [Follow one byte through the environment](#follow-one-byte-through-uvm) ·
 [Recorded results](#recorded-results) · [Architecture](#architecture)
