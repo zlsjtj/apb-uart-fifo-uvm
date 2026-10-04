@@ -20,6 +20,22 @@ Edit > Upload an image** to use it for shared links. Merely committing the
 image does not activate it. See GitHub's
 [official instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview).
 
+## README Banner
+
+[1536 x 512 JPEG](readme-banner.jpg)
+
+The README uses a separate 3:1 banner to keep its title, results, and run links
+closer together. The 2:1 social preview above is unchanged. Both are concept
+artwork, not technical diagrams.
+
+The banner was edited with the built-in ImageGen tool on 2026-10-05, using
+`social-preview.jpg` as its reference. The edit kept the graphite, cyan, coral,
+and amber palette, recomposed both FIFO queues for a panoramic frame, and kept
+only the large `APB / UART` text. The original 2172 x 724 output was resized
+proportionally to 1536 x 512 with Sharp 0.35.4 and exported as JPEG
+(quality 92, 4:4:4 chroma), without cropping. No deterministic renderer exists
+for this artwork.
+
 ## Architecture Diagram
 
 [Desktop SVG](architecture.svg) · [Mobile SVG](architecture-mobile.svg) ·

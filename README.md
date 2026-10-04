@@ -1,4 +1,4 @@
-<img src="docs/assets/social-preview.jpg" width="1280" alt="APB / UART UVM Verification. Concept artwork of two layered FIFO queues, not a chip photograph or a literal architecture diagram.">
+<img src="docs/assets/readme-banner.jpg" width="1536" alt="APB / UART. Concept artwork of two layered FIFO queues, not a chip photograph or a literal architecture diagram.">
 
 # APB UART FIFO UVM
 
@@ -25,9 +25,13 @@ This **8-second annotated replay** uses recorded waveforms and a real failure
 message. Pauses are extended for reading, not a simulation-speed measurement.
 
 <picture>
+  <source media="(min-width: 768px) and (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="examples/apb-timing/comparison-wide-dark.png">
+  <source media="(min-width: 768px) and (prefers-reduced-motion: reduce)" srcset="examples/apb-timing/comparison-wide.png">
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="examples/apb-timing/comparison-dark.png">
   <source media="(prefers-reduced-motion: reduce)" srcset="examples/apb-timing/comparison.png">
-  <img src="examples/apb-timing/replay.gif" width="540" alt="Recorded APB comparison: the fixed BAUD response is sampled as 16 before the 195 ns completion edge; the injected late response is sampled as 0 and triggers REG_DEFAULT. The replay highlights the transfer, the samples, and the error message.">
+  <source media="(min-width: 768px) and (prefers-color-scheme: dark)" srcset="examples/apb-timing/replay-wide-dark.gif">
+  <source media="(min-width: 768px)" srcset="examples/apb-timing/replay-wide.gif">
+  <img src="examples/apb-timing/replay.gif" width="900" alt="Recorded APB comparison: the fixed BAUD response is sampled as 16 before the 195 ns completion edge; the injected late response is sampled as 0 and triggers REG_DEFAULT. The replay highlights the transfer, the samples, and the error message.">
 </picture>
 
 **Fixed baseline: pass. Injected fault: detected.** This comparison was

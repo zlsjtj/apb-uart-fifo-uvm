@@ -7,6 +7,8 @@ import shutil
 import tempfile
 import unittest
 
+from PIL import Image
+
 import render_comparison as plot
 
 
@@ -100,6 +102,81 @@ class ComparisonTests(unittest.TestCase):
         (self.root / "comparison.png").touch()
         with self.assertRaisesRegex(ValueError, "overwrite"):
             plot.render(self.root, self.root)
+
+    def test_wide_no_overwrite(self):
+        for name in ("comparison-wide.png", "comparison-wide-dark.png",
+                     "comparison-wide.svg", "replay-wide.gif", "replay-wide-dark.gif"):
+            with self.subTest(name=name):
+                output = self.root / name.replace('.', '_')
+                output.mkdir()
+                (output / name).touch()
+                with self.assertRaisesRegex(ValueError, "overwrite"):
+                    plot.render(output, self.root, layout="wide")
+                self.assertEqual(len(list(output.iterdir())), 1)
+
+    def test_invalid_layout(self):
+        with self.assertRaisesRegex(ValueError, "Unknown layout"):
+            plot.render(self.root / "output", self.root, layout="unknown")
+
+    def test_wide_phase_labels(self):
+        baseline, mutant = plot.check(self.root)
+        for phase in (0, 1, 2):
+            with self.subTest(phase=phase):
+                fig = plot.draw_wide(baseline, mutant, phase=phase)
+                try:
+                    labels = [text.get_text() for text in fig.texts]
+                    for value in ("16", "0"):
+                        self.assertEqual(value in labels, phase >= 1)
+                    for result in ("PASS", "DETECTED", "[REG_DEFAULT]", "BAUD reset value is 0"):
+                        self.assertEqual(result in labels, phase == 2)
+                    self.assertIn("195 ns completion", labels)
+                    self.assertIn("Time (ns)", labels)
+                finally:
+                    plot.plt.close(fig)
+
+    def test_wide_labels_fit(self):
+        baseline, mutant = plot.check(self.root)
+        for dark in (False, True):
+            for phase in (0, 1, 2):
+                with self.subTest(dark=dark, phase=phase):
+                    fig = plot.draw_wide(baseline, mutant, dark, phase)
+                    try:
+                        fig.canvas.draw()
+                        renderer = fig.canvas.get_renderer()
+                        boxes = [text.get_window_extent(renderer) for text in fig.texts]
+                        for index, box in enumerate(boxes):
+                            self.assertGreaterEqual(box.x0, 0)
+                            self.assertGreaterEqual(box.y0, 0)
+                            self.assertLessEqual(box.x1, fig.bbox.width)
+                            self.assertLessEqual(box.y1, fig.bbox.height)
+                            for other in boxes[index + 1:]:
+                                self.assertFalse(box.overlaps(other), "Figure labels overlap")
+                        for ax in fig.axes:
+                            self.assertEqual(tuple(ax.get_xlim()), (180, 210))
+                            self.assertEqual(list(ax.lines[-1].get_xdata()), [195, 195])
+                    finally:
+                        plot.plt.close(fig)
+
+    def test_wide_exports(self):
+        output = self.root / "wide"
+        plot.render(output, self.root, layout="wide")
+        for name in ("comparison-wide.png", "comparison-wide-dark.png"):
+            with Image.open(output / name) as image:
+                self.assertEqual(image.size, (1800, 880))
+        for name in ("replay-wide.gif", "replay-wide-dark.gif"):
+            with Image.open(output / name) as image:
+                self.assertEqual(image.size, (900, 440))
+                self.assertEqual(image.info["loop"], 0)
+                duration = 0
+                for frame in range(image.n_frames):
+                    image.seek(frame)
+                    duration += image.info["duration"]
+                self.assertEqual(duration, 8000)
+                self.assertGreaterEqual(image.n_frames, 3)
+        svg = (output / "comparison-wide.svg").read_text()
+        self.assertIn("<text", svg)
+        self.assertIn("BAUD reset value is 0", svg)
+        self.assertNotIn("<image", svg)
 
 
 if __name__ == "__main__":

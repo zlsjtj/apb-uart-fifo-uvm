@@ -20,6 +20,15 @@ This animation replays the frozen VCD and one actual log message. Pauses are
 extended for reading; it is not a screen recording or a measure of simulation
 speed. The static diagram above shows the final state without animation.
 
+The repository homepage also has a compact desktop layout, keeping the traces,
+both sampled values, and the detector message in one view:
+[light PNG](comparison-wide.png), [dark PNG](comparison-wide-dark.png),
+[editable SVG](comparison-wide.svg), and
+[light](replay-wide.gif) / [dark](replay-wide-dark.gif) replays.
+It uses the same frozen inputs and eight-second sequence. Below 768 CSS pixels,
+the homepage keeps the portrait layout; reduced-motion settings select a static
+image in either layout. These are display variants, not additional test runs.
+
 ## What the Plot Means
 
 - **180 ns:** APB setup for a read of BAUD (`0x08`).
@@ -96,6 +105,12 @@ python -m pip install matplotlib vcdvcd pillow
 python -m unittest discover -s examples/apb-timing -v
 python examples/apb-timing/render_comparison.py --check-only
 python examples/apb-timing/render_comparison.py --output-dir work_apb_figures
+```
+
+To rebuild the desktop variants in a separate directory:
+
+```bash
+python examples/apb-timing/render_comparison.py --layout wide --output-dir work_apb_figures_wide
 ```
 
 The renderer verifies hashes, log outcomes, signal presence, time units, the

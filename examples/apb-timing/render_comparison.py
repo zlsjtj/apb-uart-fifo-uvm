@@ -160,29 +160,104 @@ def draw(baseline, mutant, dark=False, phase=2):
     return fig
 
 
-def render(output, root=ROOT):
+def draw_wide(baseline, mutant, dark=False, phase=2):
+    """Keep the common time axis and both sampled outcomes in one desktop view."""
+    bg, fg, muted = (("#111416", "#f0f3f5", "#bac1c7") if dark else
+                     ("#ffffff", "#202629", "#52616b"))
+    teal, coral = ("#5ed8c8", "#ffab8f") if dark else ("#007b70", "#b34127")
+    plt.rcParams.update({"font.family": "DejaVu Sans", "svg.fonttype": "none"})
+    fig = plt.figure(figsize=(9, 4.4), dpi=100, facecolor=bg)
+    fig.text(.035, .915, "One edge. Two outcomes.", color=fg, fontsize=22, weight="bold")
+    fig.text(.035, .85, "BAUD read / uart_reg_test / seed 1071", color=muted, fontsize=13)
+    positions = [("PCLK", baseline["pclk"], .66, fg, False),
+                 ("PENABLE", baseline["penable"], .52, muted, False),
+                 ("Fixed", baseline["prdata"], .38, teal, True),
+                 ("Late", mutant["prdata"], .24, coral, True)]
+    for label, tv, y, color, bus in positions:
+        ax = fig.add_axes([.19, y, .45, .075], facecolor=bg)
+        ax.set_xlim(180, 210)
+        ax.set_ylim(-.2, 1.2)
+        ax.set_yticks([])
+        ax.set_xticks([180, 195, 210])
+        ax.tick_params(axis="x", colors=muted, labelsize=14, length=0, pad=5,
+                       labelbottom=label == "Late")
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+        fig.text(.035, y + .03, label, color=fg, fontsize=14, weight="bold")
+        if bus:
+            fig.text(.035, y - .01, "PRDATA", color=muted, fontsize=11)
+            for a, b, value in segments(tv):
+                ax.fill_between([a, b], 0, 1, color=color, alpha=.12)
+                ax.plot([a, a, b, b], [0, 1, 1, 0], color=color, lw=1.8)
+                ax.plot([a, b], [0, 0], color=color, lw=1.8)
+                ax.text((a + b) / 2, .5, str(value), color=fg, fontsize=14,
+                        ha="center", va="center", weight="bold")
+        else:
+            parts = segments(tv)
+            ax.step([p[0] for p in parts] + [parts[-1][1]],
+                    [p[2] for p in parts] + [parts[-1][2]],
+                    where="post", color=color, lw=1.8)
+        # Keep the completion marker out of the bus values.
+        spans = ((0, .14), (.86, 1)) if bus else ((0, 1),)
+        for bottom, top in spans:
+            ax.axvline(195, ymin=bottom, ymax=top, color=muted,
+                       linestyle=(0, (3, 3)), linewidth=1.2)
+    fig.text(.415, .775, "195 ns completion", ha="center", color=muted, fontsize=13)
+    fig.text(.415, .125, "Time (ns)", ha="center", color=muted, fontsize=13)
+    fig.add_artist(plt.Line2D([.685, .685], [.22, .77], transform=fig.transFigure,
+                             color=muted, alpha=.3, lw=1))
+    fig.text(.735, .775, "PRE-EDGE SAMPLE", color=muted, fontsize=12, weight="bold")
+    fig.text(.735, .705, "Fixed", color=teal, fontsize=14, weight="bold")
+    fig.text(.735, .49, "Late", color=coral, fontsize=14, weight="bold")
+    if phase >= 1:
+        for trace, y, color, result in ((baseline, .60, teal, "PASS"),
+                                       (mutant, .385, coral, "DETECTED")):
+            sampled = value_at(trace["prdata"], EDGE, before=True)
+            fig.text(.735, y, str(sampled), color=color, fontsize=34, weight="bold")
+            fig.text(.845, y + .015, result if phase == 2 else "sampled",
+                     color=color, fontsize=12, weight="bold")
+    if phase == 2:
+        fig.text(.735, .28, "[REG_DEFAULT]", color=coral, fontsize=13, weight="bold")
+        fig.text(.735, .225, "BAUD reset value is 0", color=fg, fontsize=12)
+    captions = ["1 / Same read. Same completion edge.",
+                "2 / input #1step samples before the edge.",
+                "3 / Fixed passes. Injected fault is detected."]
+    fig.text(.035, .035, captions[phase], color=fg, fontsize=13, weight="bold")
+    return fig
+
+
+def render(output, root=ROOT, layout="portrait"):
+    if layout not in ("portrait", "wide"):
+        raise ValueError(f"Unknown layout: {layout}")
     baseline, mutant = check(root)
-    names = ["comparison.png", "comparison-dark.png", "comparison.svg", "replay.gif"]
+    suffix = "-wide" if layout == "wide" else ""
+    names = [f"comparison{suffix}.png", f"comparison{suffix}-dark.png",
+             f"comparison{suffix}.svg", f"replay{suffix}.gif"]
+    if layout == "wide":
+        names.append("replay-wide-dark.gif")
     if any((output / name).exists() for name in names):
         raise ValueError("Refusing to overwrite existing figures")
     output.mkdir(parents=True, exist_ok=True)
+    draw_layout = draw_wide if layout == "wide" else draw
     for dark in (False, True):
-        fig = draw(baseline, mutant, dark)
-        fig.savefig(output / ("comparison-dark.png" if dark else "comparison.png"), dpi=200)
+        fig = draw_layout(baseline, mutant, dark)
+        theme = "-dark" if dark else ""
+        fig.savefig(output / f"comparison{suffix}{theme}.png", dpi=200)
         if not dark:
-            fig.savefig(output / "comparison.svg")
+            fig.savefig(output / f"comparison{suffix}.svg")
         plt.close(fig)
     # A data/log replay with deliberate pauses, not a screen recording or run timer.
-    fig = draw(baseline, mutant, phase=0)
-    # PillowWriter captures each fully drawn figure; no terminal output is invented.
-    writer = PillowWriter(fps=1)
-    with writer.saving(fig, str(output / "replay.gif"), dpi=100):
-        for phase in (0, 0, 1, 1, 2, 2, 2, 2):
-            frame = draw(baseline, mutant, phase=phase)
-            writer.fig = frame
-            writer.grab_frame(facecolor=frame.get_facecolor())
-            plt.close(frame)
-    plt.close(fig)
+    for dark in ((False, True) if layout == "wide" else (False,)):
+        theme = "-dark" if dark else ""
+        fig = draw_layout(baseline, mutant, dark, phase=0)
+        writer = PillowWriter(fps=1)
+        with writer.saving(fig, str(output / f"replay{suffix}{theme}.gif"), dpi=100):
+            for phase in (0, 0, 1, 1, 2, 2, 2, 2):
+                frame = draw_layout(baseline, mutant, dark, phase=phase)
+                writer.fig = frame
+                writer.grab_frame(facecolor=frame.get_facecolor())
+                plt.close(frame)
+        plt.close(fig)
     print("APB_SAMPLE_PASS baseline=16 mutant=0 at pre-edge 195 ns")
 
 
@@ -190,12 +265,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--check-only", action="store_true")
+    parser.add_argument("--layout", choices=("portrait", "wide"), default="portrait")
     args = parser.parse_args()
     if args.check_only:
         check()
         print("APB_SAMPLE_PASS hashes, reports, transfer, pre-edge values")
     elif args.output_dir:
-        render(args.output_dir)
+        render(args.output_dir, layout=args.layout)
     else:
         parser.error("Choose --output-dir or --check-only")
 
