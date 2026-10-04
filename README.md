@@ -1,36 +1,63 @@
 # APB UART FIFO UVM
 
-SystemVerilog verification across two clock domains.
+**Verify the design. Test the checkers.**
+
+A SystemVerilog/UVM project for APB-UART verification: dual-clock FIFOs,
+monitor-driven prediction, protocol assertions, UVM RAL, and fault injection.
+
+[Quick start](#choose-a-run) · [Results](#recorded-results) ·
+[Debugging case](#independent-checks-in-action) · [中文入门](docs/quickstart.md)
 
 <picture>
   <source media="(max-width: 1023px)" srcset="docs/assets/architecture-mobile.png">
   <img src="docs/assets/architecture.png" width="1200" alt="APB registers send TX bytes through an asynchronous FIFO to UART TX; UART RX sends received bytes through a second FIFO back to APB. Interface monitors feed a predictor and provide actual APB read and TX frame observations to the scoreboard, which compares them with predictions.">
 </picture>
 
-[Run an example](#choose-a-run) · [Architecture](docs/architecture_figures.md) ·
-[Debugging case](docs/bug_closure_case.md#english) · [中文入门](docs/quickstart.md)
+[Architecture](docs/architecture_figures.md) ·
+[Follow one byte](#follow-one-byte-through-uvm) · [Diagram source](docs/assets/README.md)
 
 [![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
 
-[Follow one byte](#follow-one-byte-through-uvm) from an APB write to a serial
-frame and back, then investigate a [real bug that a passing regression
-missed](docs/bug_closure_case.md#english). Tests cover full FIFOs, malformed
-frames, and clock-domain resets.
+## Recorded Results
 
-Fixed-8N1 teaching model, not production UART IP. No 16x oversampling,
-parity, or configurable stop bits; no board-level serial validation.
-The diagram shows the main data and checking paths; [source and scope](docs/assets/README.md).
+**Verification snapshot: 2026-09-13.** Each result links to its saved report.
+
+| Result | What was checked |
+| --- | --- |
+| **60/60 passed** | [UVM regression](reports/published/20260913_134519_8d9500ab/reports/final_regression/final_regression_summary.json): 20 tests across three base seeds |
+| **13/13 detected** | [Injected RTL faults](reports/published/20260913_134519_8d9500ab/reports/mutation_campaign.json), each paired with a passing baseline |
+| **24/24 passed** | [FIFO depth subsets](reports/published/20260913_134519_8d9500ab/reports/parameter_regression/summary.json) across depths 2, 4, 16, 64 |
+| **69/69 hit** | [Declared functional bins](reports/published/20260913_134519_8d9500ab/reports/final_regression/coverage/functional_assertion_gate.json) in the coverage model |
+
+[Full results](reports/published/20260913_134519_8d9500ab/paper_results.md) ·
+[Run manifest and source identity](reports/published/20260913_134519_8d9500ab/acceptance_summary.json) ·
+[Reproduce the campaign](docs/reproduction_and_delivery.md)
+
+## What Makes This Useful
+
+- **Independent expectations.** The [predictor](tb/uvm/uart_predictor.svh)
+  builds expected data from observed APB transfers and serial frames. The
+  [scoreboard](tb/uvm/uart_scoreboard.svh) checks data, order, and leftover expectations.
+- **Tests for the checkers themselves.** The [mutation campaign](config/mutation_plan.psd1)
+  deliberately breaks APB timing, FIFO behavior, and TX completion, then requires
+  the intended detector to report the fault.
+- **Cross-clock and recovery scenarios.** The [test plan](config/verification_plan.psd1)
+  exercises FIFO boundaries, skewed clocks, configuration changes, malformed
+  frames, and resets during traffic.
+- **A UVM environment you can trace.** [Agents, predictor, scoreboard, RAL,
+  and coverage](tb/uvm/uart_env.svh) are connected in one environment, with
+  [a byte-by-byte reading path](#follow-one-byte-through-uvm) and recorded waveforms.
 
 ## Choose a Run
 
 | Route | Tools and scope |
 | --- | --- |
-| [Free FIFO smoke](#free-fifo-smoke) | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils. Standalone reference-queue test, no UVM or SVA. |
+| [Free FIFO smoke](#free-fifo-smoke) | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils. Standalone reference-queue and fault-detection tests. |
 | [UVM loopback](#uvm-loopback) | Windows, PowerShell 7, licensed ModelSim/Questa. APB/UART agents, predictor, scoreboard, assertions. |
 
 ### Free FIFO Smoke
 
-On Ubuntu 24.04 or Ubuntu in WSL, the FIFO test needs no commercial simulator:
+Run the standalone FIFO checks on Ubuntu 24.04 or Ubuntu in WSL:
 
 ```bash
 sudo apt-get update
@@ -49,11 +76,9 @@ detected. It was tested with Icarus 12.0. Logs go into a new directory under
 FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.
 ```
 
-This is a FIFO test, not the UVM regression. Icarus skips the four inline FIFO
-SVA it cannot parse; those remain enabled in ModelSim/Questa. The
-[GitHub Actions workflow](.github/workflows/fifo-smoke.yml) runs the same script
-and retains its logs. The badge above reports this FIFO workflow only, not the
-UVM regression.
+The [GitHub Actions workflow](.github/workflows/fifo-smoke.yml) runs this same
+FIFO-only suite and retains its logs. The badge reports that workflow.
+UVM and SVA run through the ModelSim/Questa route below.
 
 <details>
 <summary>Recorded CI run</summary>
@@ -67,8 +92,9 @@ passed.
 
 Use Windows, PowerShell 7 (`pwsh`), and a licensed ModelSim/Questa installation
 with SystemVerilog, UVM, assertions, and coverage support. The recorded run used
-ModelSim SE-64 10.4 with its bundled UVM 1.1d. Other simulator versions have not
-been validated here. Vivado is only needed for the synthesis/full acceptance flow.
+ModelSim SE-64 10.4 with its bundled UVM 1.1d. Vivado is used by the separate
+synthesis/full acceptance flow. See [tool compatibility](docs/interface_and_scope.md#tool-compatibility)
+for the tested setup.
 
 ```powershell
 git clone https://github.com/zlsjtj/apb-uart-fifo-uvm.git
@@ -128,57 +154,40 @@ The connections are in [uart_env.svh](tb/uvm/uart_env.svh), with an
 try `uart_frame_error_test` or `uart_fifo_wrap_test`; the default 20-test list
 is in [verification_plan.psd1](config/verification_plan.psd1).
 
-## A Passing Regression That Missed a Bug
+<a id="a-passing-regression-that-missed-a-bug"></a>
 
-The DUT used to update PRDATA and PSLVERR **after** the APB completion edge.
-Both driver and monitor sampled 2 ns late, so they shared the same wrong
-assumption. An independent test read BAUD as **0 at the edge, 16 later**.
+## Independent Checks in Action
 
-The fix made responses valid before the edge and changed BFM sampling to
-`input #1step`. An independent [APB test](tb/unit/apb_contract_tb.sv) checks the
-contract; the `apb_late` mutation puts the defect back to test the detector.
-[Read the case and reproduce the comparison](docs/bug_closure_case.md#english).
-Another case covers [why FIFO empty is not TX complete](docs/tx_completion_case.md#english).
+**A 2 ns sampling offset hid an APB timing bug. An independent checker exposed it.**
 
-## Recorded Results
+In the earlier implementation, the DUT updated PRDATA and PSLVERR after the
+completion edge, while both driver and monitor sampled late. A separate test
+read BAUD as **0 at the edge, 16 later** and revealed the shared assumption.
 
-These are the saved results of run `20260913_134519_8d9500ab` on **2026-09-13**,
-not the current CI result. The [run manifest](reports/published/20260913_134519_8d9500ab/acceptance_summary.json)
-records the source SHA-256; the newer loopback sample has a separate
-[source manifest](examples/loopback/manifest.json).
+The fix aligned the response and BFM with the completion edge using
+`input #1step`. The independent [APB contract test](tb/unit/apb_contract_tb.sv)
+and `apb_late` mutation preserve the regression check.
+[Walk through the failure, fix, and fault-injection comparison](docs/bug_closure_case.md#english).
 
-| Check and evidence | Recorded result |
-| --- | --- |
-| [UVM regression](reports/published/20260913_134519_8d9500ab/reports/final_regression/final_regression_summary.json) | 60/60: 20 tests across three base seeds |
-| [FIFO depth subsets](reports/published/20260913_134519_8d9500ab/reports/parameter_regression/summary.json) | 24/24 across depths 2, 4, 16, 64 |
-| [Deliberate RTL faults](reports/published/20260913_134519_8d9500ab/reports/mutation_campaign.json) | 13/13 detected; matching baselines passed |
-| [Declared functional bins](reports/published/20260913_134519_8d9500ab/reports/final_regression/coverage/functional_assertion_gate.json) | 69/69 hit |
+The [TX completion case](docs/tx_completion_case.md#english) follows another
+boundary: a FIFO becoming empty before the final stop bit finishes.
 
-Bin counts describe the declared coverage model, not all possible UART behavior.
-Fault detection covers the 13 declared mutations. See the
-[full result table](reports/published/20260913_134519_8d9500ab/paper_results.md)
-for assertions, RTL coverage checks, and synthesis results. Full raw logs,
-UCDB/HTML, and delivery bundles are local artifacts, not downloadable release
-assets. [Reproduction instructions](docs/reproduction_and_delivery.md) explain
-how to generate and check a bundle.
+<a id="interface-and-limits"></a>
 
-## Interface and Limits
+## Register Interface
 
 | Address | Register | Purpose |
 | --- | --- | --- |
 | `0x00` | CTRL | Enable, loopback, IRQ enable |
 | `0x04` | STATUS | FIFO flags, IRQ, frame error, CFG_BUSY, TX_BUSY |
-| `0x08` | BAUD | Simplified bit-tick divider |
+| `0x08` | BAUD | Bit-tick divider |
 | `0x0c` | TXDATA | Write a TX byte |
 | `0x10` | RXDATA | Read an RX byte |
 
-Bit definitions and reset values are in
-[apb_uart_reg_pkg.sv](rtl/apb_uart_reg_pkg.sv). APB has zero wait states.
-Normal configuration changes require TX_BUSY and CFG_BUSY to clear and the
-external RX peer to stay idle. Disable aborts an active frame; reset discards
-queued and active data. Neither operation clearing busy proves delivery.
-CDC checks and out-of-context synthesis are documented, but are not commercial
-CDC signoff or board timing results.
+The verification target uses zero-wait-state APB and fixed 8N1 framing.
+See [register definitions](rtl/apb_uart_reg_pkg.sv), the
+[interface contract and verification scope](docs/interface_and_scope.md), and
+the loopback [source manifest](examples/loopback/manifest.json).
 
 ## License
 
@@ -192,3 +201,6 @@ commit, simulator version, seed, and first failing log message. Setup failures
 and small reproducing tests are useful contributions. Please include a failing
 case with behavioral fixes; see the [documentation index](docs/README.md) for
 the relevant tests and reports.
+
+**Working on a UVM project?** Star this repository to keep the examples,
+checker patterns, and debugging cases handy.

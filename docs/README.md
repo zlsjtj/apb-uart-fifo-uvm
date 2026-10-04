@@ -13,6 +13,7 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 | What to read | Entry |
 | --- | --- |
 | Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
+| Interface contract, tested tools and result interpretation | [Verification scope](interface_and_scope.md) |
 | A passing regression that sampled APB too late | [APB debugging case](bug_closure_case.md#english) |
 | Why an empty TX FIFO is not a completed frame | [TX completion case](tx_completion_case.md#english) |
 | Default tests and stress profiles | [Executable test plan](../config/verification_plan.psd1) |
