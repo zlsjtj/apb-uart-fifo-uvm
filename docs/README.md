@@ -13,6 +13,7 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 | What to read | Entry |
 | --- | --- |
 | Adapt a predictor, an independent timing check, or a baseline-controlled fault test | [Three checking patterns](checking_patterns.md) |
+| Predict, run and explain existing FIFO, APB and TX checks | [Three hands-on exercises](../examples/learning/README.md) |
 | Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
 | Interface contract, tested tools and result interpretation | [Verification scope](interface_and_scope.md) |
 | A passing regression that sampled APB too late | [APB debugging case](bug_closure_case.md#english) |
@@ -37,6 +38,8 @@ output paths for the introductory run.
 先看 [APB 完成沿采样](bug_closure_case.md#chinese) 和 [TX 发送完成](tx_completion_case.md#chinese)。
 想把检查方法用到自己的项目，可以接着看 [三个检查模式](checking_patterns.md)：
 从接口观测生成期望、独立核对完成沿、用同测试同种子的基线验证故障检出。
+想动手练习，可按顺序完成 [FIFO、APB 和 TX 三项练习](../examples/learning/README.md)，
+它们只依赖 main 已有的测试；工具范围和未合并功能的依赖在练习入口单独说明。
 
 ## 设计与测试
 
