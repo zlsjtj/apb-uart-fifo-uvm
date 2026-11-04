@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-04",
+  "base": "0fe2d953e2c34a5755d41f54af234b5b88096e94",
+  "patch": "Rename subscriber write argument tr to t consistently, matching UVM pure virtual signature",
+  "changedExecutionInputs": [
+    "examples/apb-regblock/regblock_pkg.sv"
+  ],
+  "changedSource": {
+    "bytes": 4241,
+    "sha256": "2953a1eb8abcae043f5c9b3e86128ce6349576c4679228ec50086cd1e06cc38f"
+  },
+  "tool": "Questa 2024.1 / bundled UVM 1.1d",
+  "results": {
+    "probe": "PASS",
+    "apbBaseline": "PASS",
+    "apbFault": "EXPECTED_FAULT_DETECTED",
+    "uartLearningFunctional": "PASS_ZERO_UVM_ERRORS",
+    "uartLearningStrictGate": "FAIL_COLD_TOOL_WARNINGS",
+    "uartLoopback": "PASS_WARM_OPTIMIZED_DESIGN"
+  },
+  "rawLogs": {
+    "apb-baseline.txt": {
+      "bytes": 3486,
+      "sha256": "925a5ddb32389083ea7ed3eab0978805fd637d44c6ded74dee06de90553ecc6d"
+    },
+    "apb-fault.txt": {
+      "bytes": 3785,
+      "sha256": "c04f385ff7859ab390747d0708b8cc7b835593938657aaea38659fe8a5427a1a"
+    },
+    "initial-signature-error.txt": {
+      "bytes": 1947,
+      "sha256": "0c120b5b9223fd007cf3b4f20bb6f2e95cbf2a1c966ceadee025dbb16a6fdeae"
+    },
+    "probe.txt": {
+      "bytes": 1393,
+      "sha256": "7d9ef1ea6f26516643a8214a572a3ffa1ba8b9db4be7ab2881984444d1150072"
+    },
+    "uart-learning.txt": {
+      "bytes": 5411,
+      "sha256": "d861518ea952e7a8085ccb1f806f78cd9fd8cddee8b7e8e685714cf5739b84ef"
+    },
+    "uart-loopback.txt": {
+      "bytes": 4546,
+      "sha256": "e90a2e5136e50e766459abc6735333fdbadafb0a556259e271c086786a04ecd5"
+    },
+    "verilator-baseline.txt": {
+      "bytes": 2247,
+      "sha256": "e1b5eceb3420381c9113b9ffea5374916d60ba611223ae4b7daf7dc5f76d2023"
+    },
+    "verilator-console.txt": {
+      "bytes": 741,
+      "sha256": "e9c50e60da7eb6cda6af54c13d8338b224b753eebbda88fe194444a7aee93661"
+    },
+    "verilator-fault.txt": {
+      "bytes": 2543,
+      "sha256": "fb70da9e295cd5f070774341b8a4e2f532a6a2086e4ba40f27297008b28b6fc0"
+    }
+  },
+  "localUcdb": {
+    "uart_learning_baud_test_1701.ucdb": {
+      "bytes": 60887,
+      "sha256": "38b3f19161be8519c6c3562f4ff69d092d1965bc40be409699319bbbfb388c5a"
+    },
+    "uart_loopback_test_71.ucdb": {
+      "bytes": 61431,
+      "sha256": "79398eb67e52476a900e59d8512d7f3999e2fbb8df1857a5663df2df931510bc"
+    }
+  }
+}

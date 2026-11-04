@@ -12,29 +12,29 @@ package regblock_pkg;
     function new(string name, uvm_component parent);
       super.new(name, parent);
     endfunction
-    function void write(apb_item tr);
+    function void write(apb_item t);
       bit expected_error;
       bit [31:0] expected_data;
       observed++;
-      expected_error = !(tr.addr inside {8'h00, 8'h04, 8'h08}) ||
-                       (tr.kind == apb_item::APB_WRITE && tr.addr == 0);
-      if (tr.slverr !== expected_error)
-        `uvm_error("REGBLOCK_ERROR", $sformatf("addr=%02h expected PSLVERR=%b got=%b", tr.addr, expected_error, tr.slverr))
-      if (tr.kind == apb_item::APB_READ) begin
+      expected_error = !(t.addr inside {8'h00, 8'h04, 8'h08}) ||
+                       (t.kind == apb_item::APB_WRITE && t.addr == 0);
+      if (t.slverr !== expected_error)
+        `uvm_error("REGBLOCK_ERROR", $sformatf("addr=%02h expected PSLVERR=%b got=%b", t.addr, expected_error, t.slverr))
+      if (t.kind == apb_item::APB_READ) begin
         expected_data = 0;
-        case (tr.addr)
+        case (t.addr)
           8'h00: expected_data = 32'h52454731;
           8'h04: expected_data = scratch;
           8'h08: expected_data = control;
           default: expected_data = 0;
         endcase
-        if (tr.rdata !== expected_data)
-          `uvm_error("REGBLOCK_DATA", $sformatf("addr=%02h expected=%08h got=%08h", tr.addr, expected_data, tr.rdata))
+        if (t.rdata !== expected_data)
+          `uvm_error("REGBLOCK_DATA", $sformatf("addr=%02h expected=%08h got=%08h", t.addr, expected_data, t.rdata))
       end
-      if (tr.kind == apb_item::APB_WRITE && !expected_error) begin
-        case (tr.addr)
-          8'h04: scratch = tr.data;
-          8'h08: control = tr.data & 32'h3;
+      if (t.kind == apb_item::APB_WRITE && !expected_error) begin
+        case (t.addr)
+          8'h04: scratch = t.data;
+          8'h08: control = t.data & 32'h3;
           default: ;
         endcase
       end

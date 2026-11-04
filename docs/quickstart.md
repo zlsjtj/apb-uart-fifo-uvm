@@ -78,7 +78,7 @@ bash scripts/run_fifo_smoke.sh
 
 - Windows、Git、PowerShell 7。命令里的 `pwsh` 指 PowerShell 7。
 - 支持 SystemVerilog/UVM、SVA 和 coverage 的 ModelSim/Questa，以及可用许可。
-- 已保存结果使用 ModelSim SE-64 10.4、自带 UVM 1.1d；其他版本尚未验证。
+- 历史结果使用 ModelSim SE-64 10.4、自带 UVM 1.1d；另有 [Questa 2024.1 小范围实跑记录](../reports/learning_update_20261104/questa2024/README.md)，其中首次冷启动工具 warning 的严格门禁仍待处理。
 - 运行下面的 UVM 测试不需要 Vivado。综合和完整验收另需 Vivado，已记录版本为 2023.2。
 
 仓库没有附带商业仿真器或许可证，完整 UART UVM 回归尚未在 Icarus/Verilator 上验证；Verilator 的两项试跑见[记录](verilator_feasibility.md)。

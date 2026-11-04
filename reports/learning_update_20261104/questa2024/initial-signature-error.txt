@@ -1,0 +1,22 @@
+QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024
+Start time: 15:57:58 on Nov 04,2026
+vlog -sv -work logs/apb-regblock/baseline_1702/work -f examples/apb-regblock/filelist.f -l logs/apb-regblock/baseline_1702/compile.log 
+-- Compiling interface apb_if
+-- Compiling package apb_agent_pkg
+-- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
+** Note: (vlog-2286) tb/uvm/apb_agent_pkg.sv(5): Using implicit +incdir+E:/questasim64_2024.1/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
+-- Compiling module regblock
+-- Compiling package regblock_pkg
+-- Importing package apb_agent_pkg
+** Error (suppressible): examples/apb-regblock/regblock_pkg.sv(15): (vlog-2911) Argument name 'tr' for virtual method 'write' in sub class 'regblock_checker' does not match the argument name 't' in superclass 'uvm_subscriber'.
+** Error: examples/apb-regblock/regblock_pkg.sv(7): Sub-class 'regblock_checker' does not override all virtual methods or pure constraints of abstract superclass 'uvm_subscriber'.
+** Error: examples/apb-regblock/regblock_pkg.sv(7): Sub-class 'regblock_checker' does not override virtual method 'write' of abstract superclass 'uvm_subscriber'.
+-- Compiling module tb_regblock
+** Error: examples/apb-regblock/tb_regblock.sv(5): (vlog-13006) Could not find the package (regblock_pkg).  Design read will continue, but expect a cascade of errors after this failure.  Furthermore if you experience a vopt-7 error immediately before this error then please check the package names or the library search paths on the command line.
+End time: 15:57:58 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 4, Warnings: 0
+Exception: E:\UVM\questa2024-checks\scripts\run_apb_regblock.ps1:27
+Line |
+  27 |  … DE -ne 0) { throw 'Compilation failed (never an expected fault result …
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Compilation failed (never an expected fault result)
