@@ -4,6 +4,11 @@ This check applies to the learning/reuse patch based on
 `3c8a074d27746f3570262aa114f72059a3bb5315`, plus the PowerShell runner fixes
 described below. It does not change the v0.1.0 evidence or its reported totals.
 
+The [merge review and evidence table](../reports/learning_update_20261104/README.md)
+separately identify reusable handoff runs, the earlier local attempts and the
+supplemental runner/license checks. A [Release notes draft](release_learning_update_draft.md)
+is prepared for author review.
+
 ## Commands and results
 
 Commands ran from the repository root. Windows used PowerShell 7 and
@@ -28,8 +33,12 @@ Error loading design
 ```
 
 No UVM simulation pass, new UCDB or new coverage result is claimed for these
-local attempts. Verilator was not available in this WSL installation, so the
+initial ModelSim attempts. At that stage Verilator was not available, so the
 [2026-11-02 pilot](verilator_feasibility.md) was not rerun here.
+During the subsequent merge review, Verilator 5.054 was built locally and
+the existing APB UVM paired runner passed its baseline and detected the
+specified fault. The linked merge review separates that new run from the
+reused UART pilot evidence and the blocked ModelSim attempts.
 
 ## Review fixes and static checks
 
@@ -46,8 +55,9 @@ Both adapted fixtures were accepted. Seven altered fixtures were rejected:
 a simulator warning, a watchdog timeout and an incomplete transfer summary.
 These are log-parser checks, not simulated hardware results.
 
-The 26 patched files were compared with the supplied source ZIP after newline
-normalization; only the reviewed PowerShell runner differed. All 173 local
+At initial import, the 26 patched files were compared with the supplied source ZIP
+after newline normalization; the PowerShell runner was the only executable-file
+difference. The local review also changed documentation and added this record. All 173 local
 links in the supplied Markdown changes resolved. Bash and PowerShell syntax
 checks passed. The original UART RTL, default 20-test plan and published
 evidence were unchanged.

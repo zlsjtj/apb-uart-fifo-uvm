@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-04",
+  "tool": "ModelSim SE-64 10.4; bundled FlexNet lmutil 2013",
+  "configuredEntry": "existing local MGLS_LICENSE_FILE; file exists",
+  "qhsimvl": "No licenses for qhsimvl in this license file",
+  "msimhdlsim": "No licenses for msimhdlsim in this license file",
+  "alternateConfiguration": "No LM_LICENSE_FILE or SALT_LICENSE_SERVER configured in process, user or machine scope",
+  "status": "BLOCKED",
+  "configurationChanged": false,
+  "nextAction": "Provide a valid existing ModelSim/Questa license with a required simulation feature, then run the four documented commands."
+}

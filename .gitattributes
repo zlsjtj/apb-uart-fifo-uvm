@@ -9,3 +9,5 @@ examples/apb-timing/*.vcd -text -whitespace
 examples/apb-timing/*_excerpt.txt -text -whitespace
 # Matplotlib emits spaces between SVG path coordinates and line breaks.
 examples/apb-timing/*.svg text eol=lf -whitespace
+# Preserve the byte hashes of the PR learning-update evidence logs.
+reports/learning_update_20261104/**/*.txt -text -whitespace

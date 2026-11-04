@@ -1,0 +1,43 @@
+UVM_INFO /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_root.svh(476) @ 0: reporter [UVM/RELNOTES] 
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  This implementation of the UVM Library deviates from the 1800.2-2020
+  standard.  See the DEVIATIONS.md file contained in the release
+  for more details.
+
+----------------------------------------------------------------
+Accellera:1800.2:UVM:2020.3.1
+
+All copyright owners for this kit are listed in NOTICE.txt
+All Rights Reserved Worldwide
+----------------------------------------------------------------
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+UVM_WARNING /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_root.svh(549) @ 0: reporter [NO_DPI_USED] We are thinking of removing support for UVM_NO_DPI.  Please try this test without it and evaluate the impact
+UVM_INFO /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_root.svh(552) @ 0: reporter [NO_DPI_TSTNAME] UVM_NO_DPI defined--getting UVM_TESTNAME directly, without DPI
+UVM_INFO @ 0: reporter [RNTST] Running test regblock_test...
+UVM_INFO /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_traversal.svh(345) @ 0: reporter [UVM/COMP/NAMECHECK] This implementation of the component name checks requires DPI to be enabled
+UVM_WARNING /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_traversal.svh(314) @ 0: reporter [NO_VISIT_CHECK] Because UVM_REGEX_NO_DPI is defined, no uvm component name constraints will be checked
+UVM_INFO examples/apb-regblock/regblock_pkg.sv(46) @ 420000: uvm_test_top.env.sb [REGBLOCK_SUMMARY] observed=12 expected=12
+UVM_INFO /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_report_server.svh(1009) @ 420000: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :    5
+UVM_WARNING :    2
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[NO_DPI_TSTNAME]     1
+[NO_DPI_USED]     1
+[NO_VISIT_CHECK]     1
+[REGBLOCK_SUMMARY]     1
+[RNTST]     1
+[UVM/COMP/NAMECHECK]     1
+[UVM/RELNOTES]     1
+
+- /tmp/apb-uart-tools/uvm-2020.3.1/src/base/uvm_root.svh:633: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.054 2026-11-01
+- Verilator: $finish at 420ns; walltime 0.027 s; speed 15.293 us/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 16 MB

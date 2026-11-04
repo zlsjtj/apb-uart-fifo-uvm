@@ -1,0 +1,36 @@
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+Start time: 15:12:43 on Nov 04,2026
+vlog -sv -work logs/apb-regblock/fault_1702/work "+define+REGBLOCK_INJECT_FAULT" -f examples/apb-regblock/filelist.f -l logs/apb-regblock/fault_1702/compile.log 
+-- Compiling interface apb_if
+-- Compiling package apb_agent_pkg
+-- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
+** Note: (vlog-2286) Using implicit +incdir+C:/modeltech64_10.4/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
+
+-- Compiling module regblock
+-- Compiling package regblock_pkg
+-- Importing package apb_agent_pkg
+-- Compiling module tb_regblock
+-- Importing package regblock_pkg
+
+Top level modules:
+	tb_regblock
+End time: 15:12:43 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Reading C:/modeltech64_10.4/tcl/vsim/pref.tcl
+
+# 10.4
+
+# vsim -c -lib logs/apb-regblock/fault_1702/work tb_regblock "+UVM_TESTNAME=regblock_test" -sv_seed 1702 -do "run -all; quit -f" -l logs/apb-regblock/fault_1702/run.log 
+# Start time: 15:12:44 on Nov 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# 
+# ** Error: Failure to obtain a Verilog simulation license. Unable to checkout any of these license features:  qhsimvl or msimhdlsim
+# Error loading design
+Error loading design
+# End time: 15:12:46 on Nov 04,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0
+Exception: E:\UVM\sol-learning-review\scripts\run_apb_regblock.ps1:32
+Line |
+  32 |  … or !(Test-Path $log)) { throw 'Simulator failed or run log missing' }
+     |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Simulator failed or run log missing
