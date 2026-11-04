@@ -1,0 +1,95 @@
+QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024
+Start time: 16:26:26 on Nov 04,2026
+vlog -sv -work logs/apb-regblock/fault_1702/work "+define+REGBLOCK_INJECT_FAULT" -f examples/apb-regblock/filelist.f -l logs/apb-regblock/fault_1702/compile.log 
+-- Compiling interface apb_if
+-- Compiling package apb_agent_pkg
+-- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
+** Note: (vlog-2286) tb/uvm/apb_agent_pkg.sv(5): Using implicit +incdir+E:/questasim64_2024.1/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
+-- Compiling module regblock
+-- Compiling package regblock_pkg
+-- Importing package apb_agent_pkg
+-- Compiling module tb_regblock
+-- Importing package regblock_pkg
+
+Top level modules:
+	tb_regblock
+End time: 16:26:26 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Reading pref.tcl
+
+# 2024.1
+
+# vsim -c -lib logs/apb-regblock/fault_1702/work tb_regblock "+UVM_TESTNAME=regblock_test" -sv_seed 1702 -do "run -all; quit -f" -l logs/apb-regblock/fault_1702/run.log 
+# Start time: 16:26:27 on Nov 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
+# Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
+# //  Questa Sim-64
+# //  Version 2024.1 win64 Feb  1 2024
+# //
+# // Unpublished work. Copyright 2024 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.apb_if(fast)
+# Loading mtiUvm.uvm_pkg(fast)
+# Loading work.apb_agent_pkg(fast)
+# Loading work.regblock_pkg(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading work.tb_regblock(fast)
+# Loading E:/questasim64_2024.1/uvm-1.1d\win64\uvm_dpi.dll
+# run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO @ 0: reporter [RNTST] Running test regblock_test...
+# UVM_ERROR examples/apb-regblock/regblock_pkg.sv(32) @ 205000: uvm_test_top.env.sb [REGBLOCK_DATA] addr=04 expected=a5a55a5a got=a5a55a5b
+# UVM_ERROR examples/apb-regblock/regblock_pkg.sv(32) @ 415000: uvm_test_top.env.sb [REGBLOCK_DATA] addr=04 expected=a5a55a5a got=a5a55a5b
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 420000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO examples/apb-regblock/regblock_pkg.sv(46) @ 420000: uvm_test_top.env.sb [REGBLOCK_SUMMARY] observed=12 expected=12
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :    5
+# UVM_WARNING :    0
+# UVM_ERROR :    2
+# UVM_FATAL :    0
+# ** Report counts by id
+# [Questa UVM]     2
+# [REGBLOCK_DATA]     2
+# [REGBLOCK_SUMMARY]     1
+# [RNTST]     1
+# [TEST_DONE]     1
+# ** Note: $finish    : E:/questasim64_2024.1/win64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 420 ns  Iteration: 62  Instance: /tb_regblock
+# End time: 16:26:33 on Nov 04,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0
+EXPECTED_FAULT_DETECTED: two monitored scratch readback mismatches (exit 0)

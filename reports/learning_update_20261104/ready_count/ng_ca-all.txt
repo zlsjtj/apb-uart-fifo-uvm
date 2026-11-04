@@ -1,0 +1,31 @@
+Coverage Report by DU with details
+
+=================================================================================
+=== Design Unit: work.uart_tx
+=================================================================================
+Block Coverage:
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Blocks                          10         8         2    80.00%
+
+================================Block Details================================
+
+Block Coverage for Design Unit work.uart_tx --
+
+    Line(s)      Item                   Hit/Miss     Source 
+    ------       ----                   --------     ------ 
+  File E:/UVM/sol-learning-review/rtl/uart_tx.sv
+    23              1                          1     
+    27-32           1                          1     
+    34-41           1                      **0**     
+    43              1                          1     
+    46              1                          1     
+    48-49           1                          1     
+    52-55           1                          1     
+    61-63           1                          1     
+    65-70           1                          1     
+    76              1                      **0**     
+
+
+Total Coverage By Design Unit (filtered view): 80.00%
+

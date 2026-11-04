@@ -1,0 +1,7 @@
+QuestaSim-64 vcover 2024.1 Coverage Utility 2024.02 Feb  1 2024
+Start time: 17:55:44 on Nov 04,2026
+vcover report -du=work.uart_tx -details -code s -output E:\UVM\review_diagnostics\ready_count_20261104\ready-full-uart-tx.txt E:\UVM\sol-learning-review\reports\gate_selftests\ready-full-clean\reports\final_regression\coverage\regression_merged.ucdb 
+Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
+Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
+End time: 17:55:46 on Nov 04,2026, Elapsed time: 0:00:02
+Errors: 0, Warnings: 0

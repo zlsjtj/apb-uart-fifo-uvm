@@ -1,0 +1,11 @@
+PASS w1_3_5 seed=1401
+PASS w1_7_2 seed=1402
+PASS w2_3_5 seed=1403
+PASS w2_7_2 seed=1404
+PASS w4_3_5 seed=1405
+PASS w4_7_2 seed=1406
+PASS w6_3_5 seed=1407
+PASS w6_7_2 seed=1408
+DETECTED full_stuck_low seed=1401 detector=FIFO_REFERENCE_OVERFLOW
+DETECTED corrupt_read seed=1401 detector=FIFO_REFERENCE_ORDER
+FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.

@@ -1,0 +1,2 @@
+FATAL: examples/apb-regblock/tb_regblock_contract.sv:19: CONTRACT_DATA addr=04 expected=a5a55a5a got=a5a55a5b
+       Time: 175000  Scope: tb_regblock_contract.transfer

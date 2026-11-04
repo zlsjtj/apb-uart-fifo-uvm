@@ -18,7 +18,7 @@ foreach ($dir in @('rtl','tb','scripts','config','constraints','docs','logs')) {
   $null=Get-DeliveryFiles $source
   Copy-Item -LiteralPath $source -Destination $staging -Recurse
 }
-foreach ($file in @('README.md','filelist.f','rtl_filelist.f')) { Copy-Item -LiteralPath (Join-Path $snapshot $file) -Destination $staging }
+foreach ($file in @('README.md','filelist.f','rtl_filelist.f','tb_filelist.f')) { Copy-Item -LiteralPath (Join-Path $snapshot $file) -Destination $staging }
 New-Item -ItemType Directory -Path (Join-Path $staging 'reports') | Out-Null
 foreach ($item in Get-ChildItem -LiteralPath (Join-Path $snapshot 'reports')) {
   if ($item.Name -in @('acceptance_runs','gate_selftests','workflow_selftests')) { continue }

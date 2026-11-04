@@ -1,0 +1,2 @@
+RTL_CONTRACT_PASS: 12 accesses
+examples/apb-regblock/tb_regblock_contract.sv:41: $finish called at 390000 (1ps)

@@ -1,0 +1,132 @@
+QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024
+Start time: 16:25:59 on Nov 04,2026
+vlog -sv -assertdebug "+cover=bcesft" -f rtl_filelist.f -l logs/compile_questa_rtl.log 
+-- Compiling package apb_uart_reg_pkg
+-- Compiling module reset_sync
+-- Compiling module async_fifo
+-- Compiling module uart_tx
+-- Compiling module uart_rx
+-- Compiling module uart_baud_gen
+-- Compiling module apb_uart_serial_core
+-- Compiling module apb_uart_regs
+-- Importing package apb_uart_reg_pkg
+-- Compiling module apb_uart_cfg_cdc
+-- Compiling module tx_completion_cdc
+-- Compiling module apb_uart
+
+Top level modules:
+	apb_uart
+End time: 16:25:59 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024
+Start time: 16:25:59 on Nov 04,2026
+vlog -sv -assertdebug -f tb_filelist.f -l logs/compile_questa.log 
+-- Compiling module async_fifo_sva
+-- Compiling module apb_uart_sva
+-- Importing package apb_uart_reg_pkg
+-- Compiling interface apb_if
+-- Compiling interface uart_if
+-- Compiling interface uart_probe_if
+-- Compiling interface reset_if
+-- Compiling package apb_agent_pkg
+-- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
+** Note: (vlog-2286) tb/uvm/apb_agent_pkg.sv(5): Using implicit +incdir+E:/questasim64_2024.1/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
+-- Compiling package uart_pkg
+-- Importing package apb_agent_pkg
+-- Compiling module tb_apb_uart
+-- Importing package uart_pkg
+
+Top level modules:
+	async_fifo_sva
+	tb_apb_uart
+End time: 16:25:59 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Reading pref.tcl
+
+# 2024.1
+
+# vsim -c tb_apb_uart -voptargs="-access=rw+/tb_apb_uart -debug" "+UVM_TESTNAME=uart_learning_baud_test" "+PCLK_HALF_NS=5" "+UART_HALF_NS=20" "+PCLK_PHASE_NS=0" "+UART_PHASE_NS=0" -sv_seed 1701 -coverage -assertdebug -do "coverage save -onexit reports/uart_learning_baud_test_1701.ucdb; run -all; quit -f" -l logs/uart_learning_baud_test_1701.log -gENABLE_WHITEBOX=1 -gFIFO_ADDR_WIDTH=4 
+# Start time: 16:26:00 on Nov 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
+# Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
+# ** Note: (vopt-143) Recognized 1 FSM in module "uart_tx(fast)".
+# ** Note: (vopt-143) Recognized 1 FSM in module "uart_rx(fast)".
+# //  Questa Sim-64
+# //  Version 2024.1 win64 Feb  1 2024
+# //
+# // Unpublished work. Copyright 2024 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.reset_if(fast)
+# Loading work.uart_if(fast)
+# Loading work.uart_probe_if(fast)
+# Loading work.apb_uart_reg_pkg(fast)
+# Loading work.apb_if(fast)
+# Loading mtiUvm.uvm_pkg(fast)
+# Loading work.apb_agent_pkg(fast)
+# Loading work.uart_pkg(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading work.tb_apb_uart(fast)
+# Loading work.apb_uart(fast)
+# Loading work.async_fifo_sva(fast)
+# Loading E:/questasim64_2024.1/uvm-1.1d\win64\uvm_dpi.dll
+# coverage save -onexit reports/uart_learning_baud_test_1701.ucdb
+#  run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO @ 0: reporter [RNTST] Running test uart_learning_baud_test...
+# [TB_CLOCKS] pclk_half=5ns pclk_phase=0ns uart_half=20ns uart_phase=0ns
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 2220000: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO tb/uvm/uart_config_checker.svh(19) @ 2220000: uvm_test_top.env.cfg_checker [CFG_EVENT_SUMMARY] observed 5 apply events
+# UVM_INFO tb/uvm/uart_predictor.svh(131) @ 2220000: uvm_test_top.env.pred [PRED_SUMMARY] cfg_updates=4 rejected_bad_RX=0 dropped_full_RX=0 occupancy=0
+# UVM_INFO tb/uvm/uart_scoreboard.svh(93) @ 2220000: uvm_test_top.env.sb [SB_SUMMARY] checked TX=0 RX=0 reset_flushes=0
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :    7
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [CFG_EVENT_SUMMARY]     1
+# [PRED_SUMMARY]     1
+# [Questa UVM]     2
+# [RNTST]     1
+# [SB_SUMMARY]     1
+# [TEST_DONE]     1
+# ** Note: $finish    : E:/questasim64_2024.1/win64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 2220 ns  Iteration: 54  Instance: /tb_apb_uart
+# Saving coverage database on exit...
+# End time: 16:26:07 on Nov 04,2026, Elapsed time: 0:00:07
+# Errors: 0, Warnings: 0

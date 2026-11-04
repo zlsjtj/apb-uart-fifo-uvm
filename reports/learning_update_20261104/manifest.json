@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-04",
+  "executionSnapshot": "122d12a91a97a5a0c6c760acef832c23396b446b",
+  "handoffSnapshotDeclared": "da63e4bebedf012470dc90f607c1e5af86c6c3a0",
+  "sourceZip": {
+    "sha256": "6df757ead72800bbe3df2e40083c47b0e303548f6dbcc699835d921da5d18e93",
+    "bytes": 2497159
+  },
+  "handoffZip": {
+    "sha256": "e02b17690bcc8333ce43bfe281f96850ecac581d3e6877ec9a189292a2623761",
+    "bytes": 35616
+  },
+  "statuses": {
+    "uart_learning_baud_test": "PASS_REUSED_IDENTICAL_INPUTS",
+    "uart_loopback_test": "PASS_REUSED_IDENTICAL_INPUTS",
+    "apb_regblock_baseline": "PASS_NEW_RUN",
+    "apb_regblock_fault": "EXPECTED_FAULT_DETECTED_NEW_RUN",
+    "runnerLifecycle": "PASS_10_MOCK_CASES",
+    "modelsimRuntime": "BLOCKED_LICENSE",
+    "fullUartRegressionCoverage": "NOT_RERUN"
+  },
+  "verilator": {
+    "version": "5.054",
+    "commit": "bbb60a403932a9f695cb6ff001ceb73de6ad9234"
+  },
+  "uvm": {
+    "version": "2020.3.1",
+    "commit": "78c06547a2a0a29b3dc9dcafae62b75b2ff61544"
+  },
+  "rawLogs": {
+    "current/apb-verilator-baseline.txt": {
+      "sha256": "78d94cf418a39b4d8e5b8004bd46557efcb0e20855f8bd4945df91d2a3644031",
+      "bytes": 2247
+    },
+    "current/apb-verilator-console.txt": {
+      "sha256": "ffbb1840a9dd845c423b5d2015dc180d61de89b3f7b14c5680c876ab5af7cd4f",
+      "bytes": 919
+    },
+    "current/apb-verilator-fault.txt": {
+      "sha256": "96a1263939716b9342c11bdc21d04a0acc498a9acaa6773671f9f56b6120cf6b",
+      "bytes": 2543
+    },
+    "current/contract-baseline.txt": {
+      "sha256": "eda0cbf6f31f2af9ad42f4af4429c1d80d7dbfb50790e91a98417714ab962e03",
+      "bytes": 112
+    },
+    "current/contract-fault.txt": {
+      "sha256": "c4c6c74796b54760c479d65d4a806fcf3bf488ffa5b0690ae40ababcc5bfbccf",
+      "bytes": 168
+    },
+    "current/fifo-local-summary.txt": {
+      "sha256": "b5746f7c47b6b02b043a95d4cb0b29a5196a9ab56623c01846f1af53cdd049f5",
+      "bytes": 369
+    },
+    "current/questa-learning-console-elevated.txt": {
+      "sha256": "b7b7ffed26a69be0a420a8d098b10eeb405584681d393d89ee82a7ec0a615263",
+      "bytes": 2195
+    },
+    "current/questa-loopback-console.txt": {
+      "sha256": "671b27c07837d8810e0a94517e3e52c83a65acd493c8e3366cc25ae3037f3e51",
+      "bytes": 2042
+    },
+    "current/regblock-baseline-console.txt": {
+      "sha256": "7173ae3e8156e39ace8bc7f8aa4dc59241ef89937ad2a03ebe4b18b0b5cc200f",
+      "bytes": 1664
+    },
+    "current/regblock-fault-console.txt": {
+      "sha256": "a301903d917023bac86e565c81ceffaa759eceb3a341a88d2b03a4992924825e",
+      "bytes": 1684
+    },
+    "current/tool-bootstrap.txt": {
+      "sha256": "49e67cb66d58465c86fb160da80389a70caaa4f499c32cabc4eb7f285e3a5945",
+      "bytes": 810
+    },
+    "historical/apb-uvm-baseline.txt": {
+      "sha256": "d7a45c06a022095aca81cfbc9de6d74685274be5b894871cc3be487af4e7cf08",
+      "bytes": 2254
+    },
+    "historical/apb-uvm-fault.txt": {
+      "sha256": "3211357f0ac7a1054c410d755c13cf8547148853c94895c5e45f904f1426c6d2",
+      "bytes": 2550
+    },
+    "historical/fifo-smoke-summary.txt": {
+      "sha256": "b5746f7c47b6b02b043a95d4cb0b29a5196a9ab56623c01846f1af53cdd049f5",
+      "bytes": 369
+    },
+    "historical/uart-learning.txt": {
+      "sha256": "a714e615fdfa497fe5823158d974bc42171a9b96df0decc24e4da9f8e3e26a83",
+      "bytes": 2647
+    },
+    "historical/uart-loopback.txt": {
+      "sha256": "a660dde423aa5f0f61b04ed16a97ed3606611035ea3f08347e2369828c2b70b0",
+      "bytes": 2643
+    }
+  },
+  "localOnlyArtifacts": {
+    "logs/apb-regblock/verilator_baseline_1702/compile.log": {
+      "sha256": "951155e84849888936eada64582dd4b93c6451f8bc7677eb535db8d80c690879",
+      "bytes": 113427
+    },
+    "logs/apb-regblock/verilator_fault_1702/compile.log": {
+      "sha256": "8bb2ef867462e46ce466ec69905fb29f287f40f16ca6f72e935575b5ce0f8cac",
+      "bytes": 113421
+    },
+    "../review_diagnostics/sol_handoff_20261104/tool-setup.log": {
+      "sha256": "e43b3c3c9047b7244124a11765fe3df00f3697e2e2cd5c025d5c1a5b30c45866",
+      "bytes": 166877
+    },
+    "../review_diagnostics/sol_handoff_20261104/tool-setup-and-apb.log": {
+      "sha256": "88f0420ddf1d0caf0785c9b519cca6404d5e219053b1cfa98935ee4b20f98f7e",
+      "bytes": 85386
+    }
+  },
+  "note": "Local-only paths are relative to the repository root. Bootstrap and metadata-command failures occurred before UVM execution and are retained, not counted as detections."
+}

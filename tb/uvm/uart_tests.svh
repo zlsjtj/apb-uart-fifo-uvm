@@ -5,3 +5,4 @@
 `include "tests/uart_cdc_timing_tests.svh"
 `include "tests/uart_misc_tests.svh"
 `include "tests/uart_completion_tests.svh"
+`include "tests/uart_learning_tests.svh"

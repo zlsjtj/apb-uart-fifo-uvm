@@ -1,0 +1,54 @@
+{
+  "result": "PASS",
+  "total": 12,
+  "cases": [
+    {
+      "name": "legacy functional summary accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "modern functional summary accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "modern misses still rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "modern zero bins still rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "duplicate metric alias rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing assertion row rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "legacy and modern RTL gates agree",
+      "result": "PASS"
+    },
+    {
+      "name": "FSM preserves equal-weight mean not max or bin-weighted mean",
+      "result": "PASS"
+    },
+    {
+      "name": "modern statement miss below original threshold rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "modern FSM miss below original threshold rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "missing modern transition metric rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "inconsistent FSM counts rejected",
+      "result": "PASS"
+    }
+  ]
+}

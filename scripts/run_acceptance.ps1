@@ -58,7 +58,7 @@ try {
   foreach ($dir in @('rtl','tb','scripts','config','constraints','docs')) {
     Copy-Item -LiteralPath (Join-Path $root $dir) -Destination $snapshot -Recurse
   }
-  foreach ($file in @('filelist.f','rtl_filelist.f','README.md')) {
+  foreach ($file in @('filelist.f','rtl_filelist.f','tb_filelist.f','README.md')) {
     Copy-Item -LiteralPath (Join-Path $root $file) -Destination $snapshot
   }
   Assert-SourceIdentity $state.source $snapshot

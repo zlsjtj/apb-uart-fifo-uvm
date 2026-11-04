@@ -12,6 +12,13 @@ proving that they detect RTL faults, using an APB-UART with dual-clock FIFOs.
 [**Run it**](#choose-a-run) · [**Demo**](#independent-checks-in-action) ·
 [**Patterns**](docs/checking_patterns.md) · [**中文入门**](docs/quickstart.md)
 
+**动手起点 / Hands-on:** [三个练习 / Exercises](examples/learning/README.md) ·
+[添加第一个测试 / Add a test](docs/adding_first_test.md) ·
+[复用 APB 寄存器块 / Reuse APB](examples/apb-regblock/README.md)
+
+中文读者可以先做免费的 FIFO 练习，再沿 APB 采样与 TX 完成案例进入 UVM；
+也可以用免费的 APB UVM 示例体验 agent 与检查器；已有许可仿真环境时，可直接运行新增的学习测试。
+
 [![FIFO smoke (Icarus)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml/badge.svg?branch=main)](https://github.com/zlsjtj/apb-uart-fifo-uvm/actions/workflows/fifo-smoke.yml)
 
 <a id="a-passing-regression-that-missed-a-bug"></a>
@@ -67,6 +74,7 @@ and what to adapt for another design. More boundary scenarios are in the
 | Route | Tools and scope |
 | --- | --- |
 | [Free FIFO smoke](#free-fifo-smoke) | Ubuntu/WSL, Icarus 12.0, Bash, GNU coreutils. Standalone reference-queue and fault-detection tests. |
+| [Free UVM APB example](#free-uvm-apb-example) | Linux/WSL, Verilator 5.054, Accellera UVM 2020.3.1, C++ compiler, Make, Python 3 and GNU coreutils. A second DUT using the shared APB agent. |
 | [UVM loopback](#uvm-loopback) | Windows, PowerShell 7, licensed ModelSim/Questa. APB/UART agents, predictor, scoreboard, assertions. |
 
 ### Free FIFO Smoke
@@ -92,7 +100,8 @@ FIFO smoke: 8/8 baselines passed; 2/2 injected faults detected.
 
 The [GitHub Actions workflow](.github/workflows/fifo-smoke.yml) runs this same
 FIFO-only suite and retains its logs. The badge reports that workflow.
-UVM and SVA run through the ModelSim/Questa route below.
+The full UART UVM/SVA acceptance and coverage flow uses ModelSim/Questa below;
+the separate APB UVM example has its own free runner.
 
 <details>
 <summary>Recorded CI run</summary>
@@ -101,6 +110,25 @@ The [2026-10-04 cloud run for `d4d72f3`](https://github.com/zlsjtj/apb-uart-fifo
 passed.
 
 </details>
+
+### Free UVM APB Example
+
+Use the shared APB agent with a small three-register peripheral. The paired runner
+checks 12 completed transfers, then enables a controlled data corruption and requires
+the two expected checker errors. It keeps both runs' logs.
+
+After installing the tools listed above, clone the official UVM library outside this
+repository and run from the repository root:
+
+```bash
+git clone --depth 1 --branch 2020.3.1 https://github.com/accellera-official/uvm-core.git ../uvm-core
+UVM_HOME=../uvm-core bash scripts/run_apb_regblock_verilator.sh
+```
+
+The example uses `UVM_NO_DPI`; the runner permits exactly its two documented UVM
+library warnings and rejects other warning/error outcomes. It produces functional
+checking results without the original Questa coverage/UCDB workflow.
+[Tool setup, register contract, expected output and reuse guide](examples/apb-regblock/README.md).
 
 ### UVM Loopback
 

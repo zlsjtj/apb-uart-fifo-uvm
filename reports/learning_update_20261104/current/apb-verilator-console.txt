@@ -1,0 +1,12 @@
+Verilator 5.054 2026-11-01 rev v5.054
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+bbb60a403932a9f695cb6ff001ceb73de6ad9234
+78c06547a2a0a29b3dc9dcafae62b75b2ff61544
+Verilator 5.054 2026-11-01 rev v5.054
+UVM_HOME=/var/tmp/apb-pr1-tools/uvm-core
+Logs: /mnt/e/UVM/sol-learning-review/logs/apb-regblock/ (seed=1702, build timeout=300s, run timeout=30s)
+Building baseline (seed=1702); log: /mnt/e/UVM/sol-learning-review/logs/apb-regblock/verilator_baseline_1702/compile.log
+PASS: baseline, 12 monitored transfers; /mnt/e/UVM/sol-learning-review/logs/apb-regblock/verilator_baseline_1702/run.log
+Building fault (seed=1702); log: /mnt/e/UVM/sol-learning-review/logs/apb-regblock/verilator_fault_1702/compile.log
+EXPECTED_FAULT_DETECTED: fault, 12 monitored transfers; /mnt/e/UVM/sol-learning-review/logs/apb-regblock/verilator_fault_1702/run.log
+PASS: baseline passed and the specified fault was detected (exit 0)

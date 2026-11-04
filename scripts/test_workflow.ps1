@@ -39,8 +39,12 @@ try {
   'module fixture; endmodule' | Set-Content (Join-Path $fixture 'rtl/fixture.sv')
   'rtl/fixture.sv' | Set-Content (Join-Path $fixture 'filelist.f')
   'rtl/fixture.sv' | Set-Content (Join-Path $fixture 'rtl_filelist.f')
+  '' | Set-Content (Join-Path $fixture 'tb_filelist.f')
   '@{ StressProfiles=@() }' | Set-Content (Join-Path $fixture 'config/verification_plan.psd1')
   $identity=Get-SourceIdentity $fixture
+  'changed testbench list' | Set-Content (Join-Path $fixture 'tb_filelist.f')
+  Reject 'testbench filelist drift rejected' { Assert-SourceIdentity $identity $fixture } 'SOURCE_DRIFT'
+  '' | Set-Content (Join-Path $fixture 'tb_filelist.f')
   $summary=@{result='PASS';runId='fixture';source=$identity;steps=@()}
   Write-EvidenceJson (Join-Path $fixture 'acceptance_summary.json') $summary
   $manifest=@{schemaVersion=1;result='PASS';runId='fixture';sourceSha256=$identity.sha256;files=@(Get-DeliveryFiles $fixture)}

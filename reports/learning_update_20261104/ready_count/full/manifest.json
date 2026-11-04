@@ -1,0 +1,69 @@
+{
+  "base": "d9ebc199d07132b4352f75e243a9a140d5ee6aab",
+  "date": "2026-11-04",
+  "overall": "FAIL_RTL_COVERAGE",
+  "blocker": "UNRESOLVED_COUNTER_MISMATCH",
+  "tool": "Questa Sim-64 2024.1; UVM 1.1d; QUESTA_UVM-1.2.3",
+  "powershell": "7.6.5",
+  "command": "pwsh -NoProfile -File scripts/run_final_regression.ps1",
+  "exitCode": 1,
+  "runDirectory": "E:\\UVM\\sol-learning-review\\reports\\gate_selftests\\ready-full-clean",
+  "sourceExport": "git archive HEAD --format=zip",
+  "sourceExportSha256": "D7A537FE92F5E1160036603E63B0DC0D491097CF7E6EE94A9C7D81F632BBC2B5",
+  "cleanEnvironment": "Fresh Git source export; no compiled work library or UCDBs delivered by Git; no old coverage databases used",
+  "sourceSha256": "8b3601790b45332040e34936e70a3fde94ba16d28e164a4e0017ccc5c1d05f81",
+  "unchangedSourceFiles": 105,
+  "candidateMatchesAfterNewlineNormalization": true,
+  "uniqueTests": 20,
+  "baseSeeds": [
+    101,
+    201,
+    301
+  ],
+  "runs": 60,
+  "runtimePasses": 60,
+  "freshUcdbs": 60,
+  "metrics": [
+    {
+      "metric": "Covergroup Bins",
+      "active": 69,
+      "hits": 69,
+      "misses": 0,
+      "result": "PASS"
+    },
+    {
+      "metric": "Cover Directives",
+      "active": 16,
+      "hits": 16,
+      "misses": 0,
+      "result": "PASS"
+    },
+    {
+      "metric": "Assertions",
+      "active": 66,
+      "hits": 66,
+      "misses": 0,
+      "result": "PASS"
+    }
+  ],
+  "rtlGates": "18/19",
+  "failingGate": {
+    "Module": "uart_tx",
+    "Metric": "Statements",
+    "Minimum": 95.0,
+    "Actual": 92.85,
+    "WaiverIds": [],
+    "Result": "FAIL"
+  },
+  "nativeCoverageSteps": 7,
+  "nativeErrors": 0,
+  "nativeWarnings": 0,
+  "rtlPolicyChanged": false,
+  "waiversAdded": false,
+  "rtlChanged": false,
+  "archive": {
+    "bytes": 3833021,
+    "path": "E:\\UVM\\review_diagnostics\\ready_count_20261104\\ready-full-verified-evidence.zip",
+    "sha256": "79E24E768855692FCC40BF29B579B3C5223F9CB71DFF8322A5453EE3487DAB3E"
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "case": "baseline",
+    "accepted": true,
+    "simulatorMockCalled": true,
+    "message": "PASS: 12 monitored APB transfers checked (exit 0)"
+  },
+  {
+    "case": "specified-fault",
+    "accepted": true,
+    "simulatorMockCalled": true,
+    "message": "EXPECTED_FAULT_DETECTED: two monitored scratch readback mismatches (exit 0)"
+  },
+  {
+    "case": "license-failure-exit-zero",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Simulation did not complete cleanly"
+  },
+  {
+    "case": "nonzero-exit-with-valid-log",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Simulator failed or run log missing"
+  },
+  {
+    "case": "no-log-created",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Simulator failed or run log missing"
+  },
+  {
+    "case": "empty-log",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Exception calling \"Matches\" with \"2\" argument(s): \"Value cannot be null. (Parameter 'input')\""
+  },
+  {
+    "case": "stale-log-not-rewritten",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Simulator failed or run log missing"
+  },
+  {
+    "case": "compile-failure-with-stale-log",
+    "accepted": false,
+    "simulatorMockCalled": false,
+    "message": "Compilation failed (never an expected fault result)"
+  },
+  {
+    "case": "baseline-as-fault",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Expected exactly one UVM_ERROR summary with count 2"
+  },
+  {
+    "case": "fault-as-baseline",
+    "accepted": false,
+    "simulatorMockCalled": true,
+    "message": "Expected exactly one UVM_ERROR summary with count 0"
+  }
+]

@@ -1,10 +1,15 @@
 # Documentation / 文档索引
 
-[English](#english) · [中文](#chinese)
+[English](#english) · [中文](#chinese) · [参与改进 / Contributing](../CONTRIBUTING.md)
 
 <a id="english"></a>
 
 ## Start Here
+
+[Free UVM APB example / 免费 UVM 示例](../examples/apb-regblock/README.md) ·
+[Verilator pilot results / 小范围试跑](verilator_feasibility.md)
+
+[2026-11-04 local checks / 本机复验记录](learning_update_validation.md)
 
 Start with [one runnable example](../README.md#choose-a-run), then
 [follow one byte through the UVM environment](../README.md#follow-one-byte-through-uvm).
@@ -12,6 +17,9 @@ No commercial simulator is needed to inspect the [recorded loopback](../examples
 
 | What to read | Entry |
 | --- | --- |
+| Practice with three guided exercises | [Hands-on learning](../examples/learning/README.md) |
+| Add a registered sequence and test | [Your first UVM test](adding_first_test.md) |
+| Reuse a small APB register block | [APB regblock example](../examples/apb-regblock/README.md) |
 | Adapt a predictor, an independent timing check, or a baseline-controlled fault test | [Three checking patterns](checking_patterns.md) |
 | Hardware data path, UVM connections and configuration CDC | [Architecture](architecture_figures.md) |
 | Interface contract, tested tools and result interpretation | [Verification scope](interface_and_scope.md) |
@@ -32,6 +40,9 @@ output paths for the introductory run.
 <a id="chinese"></a>
 
 ## 中文导航
+
+动手路线：[三个练习](../examples/learning/README.md) → [添加第一个 UVM 测试](adding_first_test.md)；
+想迁移小模块可看 [APB 寄存器块复用示例](../examples/apb-regblock/README.md)。
 
 第一次阅读从 [跑通一个测试](quickstart.md) 开始。想了解测试怎样发现问题，
 先看 [APB 完成沿采样](bug_closure_case.md#chinese) 和 [TX 发送完成](tx_completion_case.md#chinese)。

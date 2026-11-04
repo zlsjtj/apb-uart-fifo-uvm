@@ -1,0 +1,14 @@
+Initial official Verilator v5.054 bootstrap attempt, 2026-11-04.
+The default top-level make target failed before any APB simulation:
+
+help2man --no-info --no-discard-stderr --version-string=- \
+    -n "Create Gantt chart of Verilator multi-threaded execution" bin/verilator_gantt -o verilator_gantt.1
+/bin/sh: 1: help2man: not found
+make: *** [Makefile:208: verilator_gantt.1] Error 127
+make: *** Waiting for unfinished jobs....
+
+This is a tool bootstrap failure, not an RTL fault detection. The subsequent
+attempt uses the same official tag, a persistent build directory and
+`make -C src -j2 opt`, which builds the required optimized tool without the
+unneeded documentation target. The complete initial log is retained locally
+at review_diagnostics/sol_handoff_20261104/tool-setup.log outside the repository.

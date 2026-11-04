@@ -1,0 +1,27 @@
+{
+  "source": "reports\\final_regression\\coverage\\regression_merged.ucdb",
+  "gates": [
+    {
+      "metric": "Covergroup Bins",
+      "active": 69,
+      "hits": 69,
+      "misses": 0,
+      "result": "PASS"
+    },
+    {
+      "metric": "Cover Directives",
+      "active": 16,
+      "hits": 16,
+      "misses": 0,
+      "result": "PASS"
+    },
+    {
+      "metric": "Assertions",
+      "active": 66,
+      "hits": 66,
+      "misses": 0,
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

@@ -34,20 +34,29 @@ crossing, reset distribution, and verification connections.
 | Route | Recorded setup and scope |
 | --- | --- |
 | Standalone FIFO smoke | Icarus 12.0 on Ubuntu 24.04/WSL; Bash and GNU coreutils. Runs the reference-queue test and two fault-detection checks. |
+| Free APB UVM example | Verilator 5.054, Accellera UVM 2020.3.1, Linux/WSL toolchain; 12-transfer baseline and paired data-corruption detection, without UCDB. |
 | UVM simulation | Windows, PowerShell 7, ModelSim SE-64 10.4, bundled UVM 1.1d, and a valid license supporting SystemVerilog, UVM, SVA and coverage. |
+| Selected Questa checks | Questa 2024.1 / bundled UVM 1.1d: BAUD learning, UART loopback and APB baseline/fault passed strict gates from four independent clean libraries. This row covers those four checks; expanded results are below. See the [record](../reports/learning_update_20261104/questa_cold/README.md). |
+| Full Questa regression/coverage | Questa 2024.1: default 20 tests across three seeds passed 60/60; functional/assertion/directive gates passed. Report CLI migration completed, but overall acceptance FAILS the unchanged UART TX statement threshold (92.85% <95%; RTL gates 18/19). See the [record](../reports/learning_update_20261104/questa_full/README.md). |
 | Synthesis/full acceptance | Includes Vivado; recorded version 2023.2. |
 
-Other commercial simulator versions have not been validated here. The full
-UVM environment has not been validated with Icarus or Verilator. Icarus skips
+Commercial simulator versions other than those listed have not been validated here. A separate
+[Verilator pilot](verilator_feasibility.md) records two selected UART tests and
+the [standalone APB example](../examples/apb-regblock/README.md) provides a free
+paired runner. The full UART regression and coverage workflow has not been
+validated with Verilator; Icarus does not run this UVM environment. Icarus skips
 four unsupported inline FIFO SVA; those assertions remain enabled in the
 ModelSim/Questa flow. The homepage CI badge covers only the FIFO workflow.
 
 ## Reading the Results
 
-The homepage numbers refer to saved run `20260913_134519_8d9500ab` on
-**2026-09-13**, with source identity in the
+The homepage headline refers to **v0.1.0, revalidated 2026-10-04**. The
+[Release](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/tag/v0.1.0)
+provides its validation results and evidence downloads. The earlier saved run
+`20260913_134519_8d9500ab` belongs to **2026-09-13**, with source identity in its
 [run manifest](../reports/published/20260913_134519_8d9500ab/acceptance_summary.json).
-They are not a claim that every later commit reran the full acceptance suite.
+`reports/published/latest.json` points to that repository archive, not the latest
+GitHub Release. Neither snapshot claims that every later commit reran acceptance.
 
 The 69/69 bin result describes the declared functional coverage model, not all
 possible UART behavior. The 13/13 fault result covers the declared mutation
@@ -58,9 +67,11 @@ The [2026-10-04 loopback sample](../examples/loopback/README.md) has its own
 manifest, VCD and log. Its compact preview shows serial TX timing; it is not
 an APB completion-edge timing trace.
 
-Lightweight JSON summaries and result tables are committed. Full raw logs,
-UCDB/HTML reports, and delivery bundles are local artifacts, not downloadable
-release assets. Follow [reproduction and delivery](reproduction_and_delivery.md)
-to generate and verify a bundle.
+Lightweight JSON summaries and result tables are committed. The v0.1.0
+[verification evidence ZIP](https://github.com/zlsjtj/apb-uart-fifo-uvm/releases/download/v0.1.0/apb-uart-fifo-uvm-0.1.0-verification.zip)
+contains that Release’s raw logs, coverage databases and source identity; start
+with its `README.md`. New local runs do not upload their artifacts automatically.
+Follow [reproduction and delivery](reproduction_and_delivery.md) to generate and
+verify your own bundle.
 
 [Back to the homepage](../README.md) · [Documentation index](README.md)

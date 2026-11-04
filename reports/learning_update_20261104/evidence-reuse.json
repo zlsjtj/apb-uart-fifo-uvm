@@ -1,0 +1,291 @@
+{
+  "candidate": "122d12a91a97a5a0c6c760acef832c23396b446b",
+  "handoffCommit": "da63e4bebedf012470dc90f607c1e5af86c6c3a0",
+  "comparison": "LF-normalized exact equality; all SV sources, shared classes, both filelists and free APB runner",
+  "matchedFiles": 69,
+  "inputs": [
+    {
+      "path": "examples/apb-regblock/filelist.f",
+      "sha256_lf": "eea8712568673a4365c1a64078072aaba9966e79e9e3ce177d32792a5a307969"
+    },
+    {
+      "path": "examples/apb-regblock/regblock.sv",
+      "sha256_lf": "4f30201d5bd914df72f22f3a6818d7a5fff303faddd0d778ca38323ce3f43dd5"
+    },
+    {
+      "path": "examples/apb-regblock/regblock_pkg.sv",
+      "sha256_lf": "9a0110df01264c65175a03ae8979e698c0ccf2c709b528e9a5805dfe76ce40a5"
+    },
+    {
+      "path": "examples/apb-regblock/tb_regblock.sv",
+      "sha256_lf": "1f744354987f9db8857cb4bb9bc4a84257d4ff241b51fee659c4f437285e5959"
+    },
+    {
+      "path": "examples/apb-regblock/tb_regblock_contract.sv",
+      "sha256_lf": "9ab7728ea73fe5a1c27363072799fd3fa63840e061469da1ec0579633b29acac"
+    },
+    {
+      "path": "rtl/apb_uart.sv",
+      "sha256_lf": "b89a3748a3017e89e63db7e9dda6867220b37718a835c12962aa254bbb652dba"
+    },
+    {
+      "path": "rtl/apb_uart_cfg_cdc.sv",
+      "sha256_lf": "16bd022e9e04482b5b6db3e306a59b3808f33b341b101aee686f9055dfac044d"
+    },
+    {
+      "path": "rtl/apb_uart_reg_pkg.sv",
+      "sha256_lf": "3ce5854577f6dcf4b307216460f09e3400ff0ff34594e132f05a81d6b747c1c8"
+    },
+    {
+      "path": "rtl/apb_uart_regs.sv",
+      "sha256_lf": "2ea42d9eeec3a9e306c1299b77cb6190cbe09e26c57027477c2d60a7a59dee4f"
+    },
+    {
+      "path": "rtl/apb_uart_serial_core.sv",
+      "sha256_lf": "3fd2847dae466634d03b55f1767ed85e77598e03abefb37c5b536741cddbf16c"
+    },
+    {
+      "path": "rtl/apb_uart_sva.sv",
+      "sha256_lf": "897eecc4ff85d94af69a66881a27f9a1eab982a04eb5e770d62af7af1d335dcc"
+    },
+    {
+      "path": "rtl/async_fifo.sv",
+      "sha256_lf": "15f30a26636bd5f3361bedf2342d9d2edc2e5b144eba919c5afec27c5736f360"
+    },
+    {
+      "path": "rtl/async_fifo_sva.sv",
+      "sha256_lf": "aa1cc9ac69e732f6e9648aaf8e1896b681a0631cf8c9f7e76b13860a54db59cb"
+    },
+    {
+      "path": "rtl/reset_sync.sv",
+      "sha256_lf": "7a8918c1860bba636904b33be3dac8fd674bca8dd1dc14c442ada2df21a34eb2"
+    },
+    {
+      "path": "rtl/tx_completion_cdc.sv",
+      "sha256_lf": "bf81dedae38dfacbb9e045fb263d47945e7e3800fe25301ad7eda5064c30559b"
+    },
+    {
+      "path": "rtl/uart_baud_gen.sv",
+      "sha256_lf": "bf44fe0609fe0ed23cf2703ab0106093343be0fdddcca3f3a932056f6f76597e"
+    },
+    {
+      "path": "rtl/uart_rx.sv",
+      "sha256_lf": "4809df5dda65fc953060b65e52b5ccc6a4a7d3cfb063a8b138837637fd628b66"
+    },
+    {
+      "path": "rtl/uart_tx.sv",
+      "sha256_lf": "d13c3827358140c50972b79cdb2e6cc1794988d7e421ed5db57e5139860cafc4"
+    },
+    {
+      "path": "tb/interfaces/apb_if.sv",
+      "sha256_lf": "7e9057e7c4443d3b6d89c03df86537ac94c4cfe8af080dd1269523d159c6dfae"
+    },
+    {
+      "path": "tb/interfaces/reset_if.sv",
+      "sha256_lf": "7020bc4c43a0b295d1c7aa83ef7dbaea8f17639dbf40fe63148a6c230e76da13"
+    },
+    {
+      "path": "tb/interfaces/uart_if.sv",
+      "sha256_lf": "a95ba59366b49155747588179671ba5f04ee0d11a2a16e19c738784f54f23d42"
+    },
+    {
+      "path": "tb/interfaces/uart_probe_if.sv",
+      "sha256_lf": "b94bf7f6613182656a42d8ee808192ef82cb2c3039308e7b76d16014294bd8b3"
+    },
+    {
+      "path": "tb/top/tb_apb_uart.sv",
+      "sha256_lf": "6b3b127157adb7ea0331bc275034f28a97890846d21cbaca0b8bf167ba738931"
+    },
+    {
+      "path": "tb/unit/apb_contract_tb.sv",
+      "sha256_lf": "3c374e4dfe1cea097fae8b149282063ba840063831f3524d956bb8bdd567b377"
+    },
+    {
+      "path": "tb/unit/async_fifo_random_tb.sv",
+      "sha256_lf": "bbe58816d3ed4f8594159e53d256b3f0e3e37f619b298fc9cc6a289ec06f2f7e"
+    },
+    {
+      "path": "tb/unit/toolchain_smoke_tb.sv",
+      "sha256_lf": "a006a383a0cadf5e74e02aa0bc757cddf4c7fadd105bafa3087acadc59d7743f"
+    },
+    {
+      "path": "tb/uvm/apb_agent.svh",
+      "sha256_lf": "3e53deb770ab5b137578d74501e82316a8b4dc4bc58451a76c7c1a8693073d53"
+    },
+    {
+      "path": "tb/uvm/apb_agent_pkg.sv",
+      "sha256_lf": "d86dd3ec9039b625104f85b661b57115c19fcd3e10ceba9026da56dbf84e4e9d"
+    },
+    {
+      "path": "tb/uvm/apb_driver.svh",
+      "sha256_lf": "67fa9ac76d975f5db350c054b87b235e919721e73a286143c4dba9e9b68610df"
+    },
+    {
+      "path": "tb/uvm/apb_item.svh",
+      "sha256_lf": "a2e07368f8b20e063997fac32880b55956ee420f277eaa56e3a70d9e25d4d007"
+    },
+    {
+      "path": "tb/uvm/apb_monitor.svh",
+      "sha256_lf": "375db439a0a12a987e057bf8a324aec2061e2f16d834b53f85c780a232555645"
+    },
+    {
+      "path": "tb/uvm/apb_sequencer.svh",
+      "sha256_lf": "73c1ef403d97d505c4226e6cde99c4d72b558b00f519d1d37a3179020f1cf9bf"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_base_reg_sequences.svh",
+      "sha256_lf": "04947f716668cde960ce3a9849f8117d11e784e049a35699f68c360925871702"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_completion_sequences.svh",
+      "sha256_lf": "0d6cbf5c7a20902f850a7fecac3cc4039337f0f7e7c561eb0e8b96ef93c23c6d"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_functional_sequences.svh",
+      "sha256_lf": "2ae8b611d055d46123199f6b44488821175e8c6b095bf35642221549f65ce81f"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_learning_sequences.svh",
+      "sha256_lf": "ca1ad4f66cbd112b1152b8688592d209d23dcb65937043fbd367741a51e5c3b1"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_misc_sequences.svh",
+      "sha256_lf": "1ca26c58521a5508d3f27f35e64960025ee6495b93d71290ca9ae3abd7641921"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_reset_timing_sequences.svh",
+      "sha256_lf": "40f950a71bbb053674cadf5d128ba76e83b0a57e7bc4c15e1d20e7ba91c8562c"
+    },
+    {
+      "path": "tb/uvm/sequences/uart_rx_fifo_sequences.svh",
+      "sha256_lf": "ea41f0546d4fcc57d1f3fa4cf662635d0129c3cd0cadb1bf8dc227d08c42439a"
+    },
+    {
+      "path": "tb/uvm/tests/uart_base_reg_tests.svh",
+      "sha256_lf": "be3a214d4e997a6eeeb98add1991a2847f58717179d409ee95e09f122e010e59"
+    },
+    {
+      "path": "tb/uvm/tests/uart_cdc_timing_tests.svh",
+      "sha256_lf": "feb49ac194106752865ebf101fe84d2450cd927608156c24062b09d3717da858"
+    },
+    {
+      "path": "tb/uvm/tests/uart_completion_tests.svh",
+      "sha256_lf": "8c8f745fbd803ba4df0d6a877ab5769359f21bb999052064969b2553d65e126d"
+    },
+    {
+      "path": "tb/uvm/tests/uart_functional_tests.svh",
+      "sha256_lf": "a4ad231206a05027e546a03d07ba2df0cb9d31accb93780be872d7039fb798ba"
+    },
+    {
+      "path": "tb/uvm/tests/uart_learning_tests.svh",
+      "sha256_lf": "12642fb5ce7b67f71a1a46ecc813b7f5a5b7064bd0eef9c0aa6540d758ad43a7"
+    },
+    {
+      "path": "tb/uvm/tests/uart_misc_tests.svh",
+      "sha256_lf": "c9a5c8083fb752281b6e4d5cdc191822747c9d94ba47fb128a851a9e8425cc16"
+    },
+    {
+      "path": "tb/uvm/uart_agent.svh",
+      "sha256_lf": "a4481756c8a6a331415e857ec70e3dc3479927049ffa0ac371e6044bf3ddf2b5"
+    },
+    {
+      "path": "tb/uvm/uart_config_checker.svh",
+      "sha256_lf": "9fe23c2d176ed76e3de6c3127b3a36bcc5e2ac5f1cc867a8a832312d56b3c588"
+    },
+    {
+      "path": "tb/uvm/uart_config_monitor.svh",
+      "sha256_lf": "36120cb43ad59dce0343aa52f3b3d8cc6262ecb0c37d4fa1cc165c8ec8b9b1e2"
+    },
+    {
+      "path": "tb/uvm/uart_coverage.svh",
+      "sha256_lf": "771126ea800f698dca6adf644483f689fe4929df1295db59a558222c71343491"
+    },
+    {
+      "path": "tb/uvm/uart_driver.svh",
+      "sha256_lf": "947e4bc34cad1c7df632810da672747a64ec6993c3831b958cf22f901cf63c34"
+    },
+    {
+      "path": "tb/uvm/uart_env.svh",
+      "sha256_lf": "3c80431c55dcda0dded8115abb47d03cfa1bc699e1fed852d137a7abe98a1b09"
+    },
+    {
+      "path": "tb/uvm/uart_env_cfg.svh",
+      "sha256_lf": "75a636e77fb8cb7fa52fda23d2519ae7b417a52096109d06acff29a3befd83fc"
+    },
+    {
+      "path": "tb/uvm/uart_item.svh",
+      "sha256_lf": "fb990f9b821a1f0db2c36070f50cafbb7e5d81b109148add1d89cfcafbd60f5d"
+    },
+    {
+      "path": "tb/uvm/uart_monitor.svh",
+      "sha256_lf": "96a134a7e7183994013ef3fdb047cfdc99e192dc45c8f041ff76da797ff029be"
+    },
+    {
+      "path": "tb/uvm/uart_pkg.sv",
+      "sha256_lf": "82ea867de9feae9a0e3c49c475da78ce04e65cba8cd60f22b978c6c18f7dab1d"
+    },
+    {
+      "path": "tb/uvm/uart_predictor.svh",
+      "sha256_lf": "200cf2e240a5e0c6f532e5810e05604eb1868c16137fa27b831318377b984033"
+    },
+    {
+      "path": "tb/uvm/uart_reg_model.svh",
+      "sha256_lf": "c301dc09435cdeb31863fd95538b69bf784831a05d1d0d1f7e95f41e688834e3"
+    },
+    {
+      "path": "tb/uvm/uart_reset_monitor.svh",
+      "sha256_lf": "0990646b4e849f318638e134f94183da86b9723ffc255f182c9886e51dedd36f"
+    },
+    {
+      "path": "tb/uvm/uart_rx_monitor.svh",
+      "sha256_lf": "abca5831bed1fa485b4ff0ac6a490cf1dd5c0a4c258ad8b2ac094546aa3623e7"
+    },
+    {
+      "path": "tb/uvm/uart_scoreboard.svh",
+      "sha256_lf": "b336cebd758a613b7e6ea8a142f39dee357e0cabfd6a626c751e02dc02f325f9"
+    },
+    {
+      "path": "tb/uvm/uart_sequencer.svh",
+      "sha256_lf": "3c5142d394eb23503408ee589eb05871aee2edf858f29858b76fdc711242e52f"
+    },
+    {
+      "path": "tb/uvm/uart_sequences.svh",
+      "sha256_lf": "1c0d08651179e39b57538114dca8e3437253b54042db6ba66ee4bb0b8df60b2f"
+    },
+    {
+      "path": "tb/uvm/uart_serial_cfg.svh",
+      "sha256_lf": "a17839761981b892bb8da3f874e2afb68c8c15268655c76b9200192cb100907c"
+    },
+    {
+      "path": "tb/uvm/uart_tests.svh",
+      "sha256_lf": "c4021081daed14eb76e7234eeac6d03830b5d25de58f301e7b7f0fd7d1b1c5bc"
+    },
+    {
+      "path": "tb/uvm/uart_virtual_sequencer.svh",
+      "sha256_lf": "8e730247f5e2bb901ed95bf661c99f049944ca961d6d55a49a8b07c4a5c152e5"
+    },
+    {
+      "path": "tb/uvm/uart_virtual_sequences.svh",
+      "sha256_lf": "6c3bdcc28816568e0496a30a5c133fe878cacfdc01ddb6e4cf56bb95fb58298f"
+    },
+    {
+      "path": "filelist.f",
+      "sha256_lf": "1bb1e0756894991da47e32e99a61db7ee639891c4c399eec3efacd7a30fcab72"
+    },
+    {
+      "path": "rtl_filelist.f",
+      "sha256_lf": "db326f7cd319a7bea25a088a03c4269daf9020115e945f79585f0935dc8160d0"
+    },
+    {
+      "path": "scripts/run_apb_regblock_verilator.sh",
+      "sha256_lf": "80acee2895b3d2e5a03d81e789fd001577f880957c46ade669eb3bc6d62c854d"
+    }
+  ],
+  "historicalLogSha256": {
+    "apb-uvm-baseline.log": "d7a45c06a022095aca81cfbc9de6d74685274be5b894871cc3be487af4e7cf08",
+    "apb-uvm-fault.log": "3211357f0ac7a1054c410d755c13cf8547148853c94895c5e45f904f1426c6d2",
+    "fifo-smoke-summary.txt": "b5746f7c47b6b02b043a95d4cb0b29a5196a9ab56623c01846f1af53cdd049f5",
+    "uart-learning.log": "a714e615fdfa497fe5823158d974bc42171a9b96df0decc24e4da9f8e3e26a83",
+    "uart-loopback.log": "a660dde423aa5f0f61b04ed16a97ed3606611035ea3f08347e2369828c2b70b0"
+  }
+}
