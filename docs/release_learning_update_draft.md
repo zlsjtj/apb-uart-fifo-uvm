@@ -26,9 +26,13 @@ UART loopback and the APB baseline/fault pair from four independent clean
 libraries. Modern visibility controls and separate DUT code instrumentation
 resolve the cold-start warnings without suppression. See the
 [Questa record](../reports/learning_update_20261104/questa_cold/README.md).
-The complete Questa 2024.1 coverage-reporting path still needs migration.
-Full UART regression and coverage were not rerun for this
-update. The v0.1.0 validation totals retain their original source and scope.
+The Questa 2024.1 reporting CLI is now migrated. A new default 20-test campaign
+across three base seeds passed 60/60 runtime checks and hit all 69 functional
+bins, 66 assertions and 16 directives. **This release draft remains on hold:**
+the original RTL gate passes 18/19, with UART TX statements at 92.85% versus
+the required 95%. No threshold or waiver was relaxed. See the
+[expanded acceptance record](../reports/learning_update_20261104/questa_full/README.md).
+The v0.1.0 validation totals retain their original source and scope.
 
 [Exercises](../examples/learning/README.md) ·
 [Add a test](adding_first_test.md) ·

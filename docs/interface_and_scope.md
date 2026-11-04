@@ -36,7 +36,8 @@ crossing, reset distribution, and verification connections.
 | Standalone FIFO smoke | Icarus 12.0 on Ubuntu 24.04/WSL; Bash and GNU coreutils. Runs the reference-queue test and two fault-detection checks. |
 | Free APB UVM example | Verilator 5.054, Accellera UVM 2020.3.1, Linux/WSL toolchain; 12-transfer baseline and paired data-corruption detection, without UCDB. |
 | UVM simulation | Windows, PowerShell 7, ModelSim SE-64 10.4, bundled UVM 1.1d, and a valid license supporting SystemVerilog, UVM, SVA and coverage. |
-| Selected Questa checks | Questa 2024.1 / bundled UVM 1.1d: BAUD learning, UART loopback and APB baseline/fault passed strict gates from four independent clean libraries. Full campaign/reporting migration is not claimed. See the [record](../reports/learning_update_20261104/questa_cold/README.md). |
+| Selected Questa checks | Questa 2024.1 / bundled UVM 1.1d: BAUD learning, UART loopback and APB baseline/fault passed strict gates from four independent clean libraries. This row covers those four checks; expanded results are below. See the [record](../reports/learning_update_20261104/questa_cold/README.md). |
+| Full Questa regression/coverage | Questa 2024.1: default 20 tests across three seeds passed 60/60; functional/assertion/directive gates passed. Report CLI migration completed, but overall acceptance FAILS the unchanged UART TX statement threshold (92.85% <95%; RTL gates 18/19). See the [record](../reports/learning_update_20261104/questa_full/README.md). |
 | Synthesis/full acceptance | Includes Vivado; recorded version 2023.2. |
 
 Commercial simulator versions other than those listed have not been validated here. A separate

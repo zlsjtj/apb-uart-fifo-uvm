@@ -1,5 +1,10 @@
 # PR #1 merge review - 2026-11-04
 
+**Current expanded acceptance: FAIL; do not merge yet.** The
+[complete Questa regression and coverage run](questa_full/README.md) passed
+60/60 runtime checks but failed one unchanged RTL coverage threshold.
+The earlier scoped recommendations below are retained as historical context.
+
 Latest tool check: [four independent Questa 2024.1 cold-start checks passed](questa_cold/README.md).
 The license BLOCKED results below concern legacy ModelSim 10.4. The initial
 Questa warning-bearing run and its subsequent fix are recorded separately.

@@ -18,13 +18,28 @@ function Read-CoverageMetric([string]$Module, [string]$Metric) {
   $match = [regex]::Match($reportText, $modulePattern)
   if (-not $match.Success) { throw "Design unit '$Module' is absent from '$ByDuReport'." }
   $label = switch ($Metric) {
-    "Statements" { "Stmts" }
+    "Statements" { "(?:Stmts|Statements)" }
     "Branches"   { "Branches" }
     "FSM"        { "FSMs" }
     default      { throw "Unsupported RTL coverage metric '$Metric'." }
   }
+  if ($Metric -eq 'FSM' -and $match.Value -notmatch '(?m)^\s*FSMs\s+') {
+    $fractions = @()
+    foreach ($part in @('FSM States','FSM Transitions')) {
+      $partRows = [regex]::Matches($match.Value,
+        '(?m)^\s*' + [regex]::Escape($part) + '\s+(\d+)\s+(\d+)\s+(\d+)\s+([\d.]+)%?\s*$')
+      if ($partRows.Count -ne 1) { throw "Metric '$part' for design unit '$Module' was not found uniquely." }
+      $active = [int]$partRows[0].Groups[1].Value
+      $hits = [int]$partRows[0].Groups[2].Value
+      $misses = [int]$partRows[0].Groups[3].Value
+      if ($active -le 0 -or $hits + $misses -ne $active) { throw "Invalid FSM counts for '$Module': $part" }
+      $fractions += 100.0 * $hits / $active
+    }
+    # Legacy FSMs is the equal-weight mean of state and transition coverage.
+    return ($fractions[0] + $fractions[1]) / 2.0
+  }
   $metricMatch = [regex]::Match($match.Value,
-    "(?m)^\s*" + [regex]::Escape($label) + ".*?([0-9]+(?:\.[0-9]+)?)\s*$")
+    "(?m)^\s*" + $label + ".*?([0-9]+(?:\.[0-9]+)?)%?\s*$")
   if (-not $metricMatch.Success) {
     throw "Metric '$Metric' for design unit '$Module' was not found."
   }

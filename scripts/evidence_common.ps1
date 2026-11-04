@@ -81,9 +81,11 @@ function Write-EvidenceJson([string]$Path, $Value) {
 function Assert-CoverageTotals([string]$Text) {
   $rows = @()
   foreach ($name in @('Covergroup Bins','Cover Directives','Assertions')) {
-    $pattern = '(?m)^\s*' + [regex]::Escape($name) + '\s+(\d+)\s+(\d+)\s+(\d+)\s+\d+\s+([\d.]+)'
-    if ($Text -notmatch $pattern) { throw "COVERAGE_MISSING: $name" }
-    $active=[int]$Matches[1]; $hits=[int]$Matches[2]; $misses=[int]$Matches[3]
+    $label = if ($name -eq 'Cover Directives') { '(?:Cover Directives|Directives)' } else { [regex]::Escape($name) }
+    $pattern = '(?m)^\s*' + $label + '\s+(\d+)\s+(\d+)\s+(\d+)\s+\d+\s+([\d.]+)'
+    $summaryRows = [regex]::Matches($Text, $pattern)
+    if ($summaryRows.Count -ne 1) { throw "COVERAGE_MISSING: $name requires exactly one summary row" }
+    $active=[int]$summaryRows[0].Groups[1].Value; $hits=[int]$summaryRows[0].Groups[2].Value; $misses=[int]$summaryRows[0].Groups[3].Value
     if ($active -le 0 -or $hits -ne $active -or $misses -ne 0) { throw "COVERAGE_INCOMPLETE: $name $hits/$active" }
     $rows += [pscustomobject]@{ metric=$name; active=$active; hits=$hits; misses=$misses; result='PASS' }
   }

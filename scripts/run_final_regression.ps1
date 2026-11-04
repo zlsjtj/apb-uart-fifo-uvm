@@ -181,6 +181,10 @@ try {
   $env:GIT_CONFIG_GLOBAL = $savedGitConfigGlobal
 }
 $vlogVersion = @(& vlog -version 2>&1 | Select-Object -First 1) -join " "
+$firstRunLog = Get-Content -Raw (Join-Path 'logs' ("{0}_{1}.log" -f $allRows[0].Test,$allRows[0].Seed))
+$uvmBanner = [regex]::Match($firstRunLog, '(?m)^#\s*(UVM-[\d.]+)\s*$').Groups[1].Value
+$vendorBanner = [regex]::Match($firstRunLog, '\[Questa UVM\]\s+(QUESTA_UVM-[\d.]+)').Groups[1].Value
+$uvmDescription = if ($uvmBanner) { "$uvmBanner; vendor extension: $vendorBanner" } else { 'Not identified; inspect the first simulation log' }
 $seedLiteral = "@(" + (($Seeds | ForEach-Object { $_.ToString() }) -join ", ") + ")"
 $manifestPath = Join-Path $OutputDir "final_regression_manifest.md"
 $manifest = @(
@@ -191,7 +195,7 @@ $manifest = @(
   "- Exact executed source identity: ``$($sourceIdentity.sha256)``",
   "- Source remained unchanged during this run: ``true``",
   "- Simulator: ``$vlogVersion``",
-  "- UVM: ``UVM-1.1d built-in; Questa UVM-1.2.2 reported by simulation log``",
+  "- UVM banner from first simulation log: ``$uvmDescription``",
   "- Command: ``& .\scripts\run_final_regression.ps1 -Seeds $seedLiteral``",
   "- Regression summary: ``$summaryPath``",
   "- Coverage directory: ``$coverageDir``",

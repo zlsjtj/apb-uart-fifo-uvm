@@ -1,5 +1,10 @@
 # Questa 2024.1 cold-start acceptance - 2026-11-04
 
+This four-check result remains valid. The later
+[full 20-test coverage campaign](../questa_full/README.md) resolves the CLI
+migration item below but fails one original RTL coverage gate; it supersedes
+the scoped merge recommendation for the expanded acceptance request.
+
 Recommendation: merge the scoped learning/reuse PR after author review.
 All four requested checks now pass their strict gates from independent clean
 libraries. No warning was suppressed or accepted. The earlier warning-bearing

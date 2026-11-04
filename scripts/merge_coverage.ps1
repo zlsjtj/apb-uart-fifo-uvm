@@ -16,8 +16,14 @@ function Require-Tool($Name) {
 }
 
 function Run-Vcover([string[]]$Arguments) {
-  & vcover @Arguments | Out-Host
-  if ($LASTEXITCODE -ne 0) {
+  $script:vcoverStep++
+  $output = @(& vcover @Arguments 2>&1)
+  $status = $LASTEXITCODE
+  $output | Set-Content -LiteralPath (Join-Path $OutputDir ("vcover_{0:D2}.log" -f $script:vcoverStep)) -Encoding UTF8
+  $output | Out-Host
+  $text = $output -join "`n"
+  if ($status -ne 0 -or $text -match '(?im)^\s*\*\*\s*(?:(?:Warning|Error|Fatal)\b|UI-Msg\s*\((?:Warning|Error|Fatal)\))' -or
+      $text -match '(?im)^\s*(?:Errors|Warnings):\s*[1-9]') {
     throw "vcover failed: vcover $($Arguments -join ' ')"
   }
 }
@@ -56,6 +62,15 @@ if ($ucdbFiles.Count -eq 0) {
 }
 
 New-Item -ItemType Directory -Force $OutputDir | Out-Null
+$script:vcoverStep = 0
+$version = (& vcover -version 2>&1) -join "`n"
+$modernVcover = $version -match '\b(20\d{2})\.\d+\b' -and [int]$Matches[1] -ge 2024
+$outputOption = if ($modernVcover) { '-output' } else { '-file' }
+$totalsOption = if ($modernVcover) { '-summary' } else { '-totals' }
+$duOption = if ($modernVcover) { '-du=*' } else { '-bydu' }
+$htmlOption = if ($modernVcover) { '-output' } else { '-htmldir' }
+$summaryCategories = if ($modernVcover) { @('-cvg','-assert','-directive') } else { @() }
+$assertionCategories = if ($modernVcover) { @('-assert','-directive') } else { @('-assert') }
 $mergedUcdb = Join-Path $OutputDir "regression_merged.ucdb"
 $totalsReport = Join-Path $OutputDir "coverage_totals.txt"
 $functionalReport = Join-Path $OutputDir "functional_coverage.txt"
@@ -66,25 +81,26 @@ $htmlDir = Join-Path $OutputDir "html"
 $manifestPath = Join-Path $OutputDir "coverage_manifest.md"
 
 Run-Vcover (@("merge", "-quiet", $mergedUcdb) + $ucdbFiles)
-Run-Vcover @("report", "-totals", "-code", "bcesft", "-file", $totalsReport, $mergedUcdb)
+Run-Vcover (@("report", $totalsOption, "-code", "bcesft") + $summaryCategories + @($outputOption, $totalsReport, $mergedUcdb))
 $coverageGates = @(Assert-CoverageTotals (Get-Content -Raw $totalsReport))
 Write-EvidenceJson (Join-Path $OutputDir 'functional_assertion_gate.json') @{
   result='PASS'; gates=$coverageGates; source=$mergedUcdb
 }
-Run-Vcover @("report", "-details", "-cvg", "-file", $functionalReport, $mergedUcdb)
-Run-Vcover @("report", "-details", "-code", "bcesft", "-file", $codeReport, $mergedUcdb)
-Run-Vcover @("report", "-details", "-assert", "-file", $assertionReport, $mergedUcdb)
-Run-Vcover @("report", "-bydu", "-code", "bcesft", "-file", $dutByDuReport, $mergedUcdb)
+Run-Vcover @("report", "-details", "-cvg", $outputOption, $functionalReport, $mergedUcdb)
+Run-Vcover @("report", "-details", "-code", "bcesft", $outputOption, $codeReport, $mergedUcdb)
+Run-Vcover (@("report", "-details") + $assertionCategories + @($outputOption, $assertionReport, $mergedUcdb))
+Run-Vcover @("report", $duOption, "-code", "bcesft", $outputOption, $dutByDuReport, $mergedUcdb)
+if (-not $SkipHtml) {
+  New-Item -ItemType Directory -Force $htmlDir | Out-Null
+  Run-Vcover (@("report", "-html", $htmlOption, $htmlDir, "-code", "bcesft", "-cvg", "-details") + $assertionCategories + @($mergedUcdb))
+  if (!(Test-Path (Join-Path $htmlDir 'index.html'))) { throw 'Coverage HTML index missing' }
+}
+
+# Keep complete reports available when a coverage gate rejects the run.
 & (Join-Path $PSScriptRoot "generate_rtl_coverage_gate.ps1") `
   -ByDuReport $dutByDuReport -OutputDir $OutputDir
 if ($LASTEXITCODE -ne 0) {
   throw "RTL-only coverage gate failed."
-}
-
-if (-not $SkipHtml) {
-  New-Item -ItemType Directory -Force $htmlDir | Out-Null
-  Run-Vcover @("report", "-html", "-htmldir", $htmlDir, "-code", "bcesft", "-assert", "-cvg", "-details", $mergedUcdb)
-  if (!(Test-Path (Join-Path $htmlDir 'index.html'))) { throw 'Coverage HTML index missing' }
 }
 
 $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

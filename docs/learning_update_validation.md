@@ -4,7 +4,12 @@ This check applies to the learning/reuse patch based on
 `3c8a074d27746f3570262aa114f72059a3bb5315`, plus the PowerShell runner fixes
 described below. It does not change the v0.1.0 evidence or its reported totals.
 
-**Latest local check:** [four strict Questa 2024.1 cold-start checks passed](../reports/learning_update_20261104/questa_cold/README.md).
+**Latest expanded check:** [full 20-test / three-seed regression and coverage](../reports/learning_update_20261104/questa_full/README.md).
+All 60 runs pass and functional/assertion/directive bins are complete, but
+RTL coverage is 18/19: UART TX statements are 92.85%, below the unchanged
+95% threshold. Overall acceptance is FAIL; PR #1 remains draft.
+
+**Prior local check:** [four strict Questa 2024.1 cold-start checks passed](../reports/learning_update_20261104/questa_cold/README.md).
 The prior [warning-bearing attempt](../reports/learning_update_20261104/questa2024/README.md)
 is retained. Modern visibility and DUT-only code instrumentation resolve its
 two warnings without suppression. Full campaign/reporting compatibility has
