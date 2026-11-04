@@ -51,6 +51,7 @@ $sourceRoot=[IO.Path]::GetFullPath((Join-Path $dir 'source_fixture'))
 New-Item -ItemType Directory -Force (Join-Path $sourceRoot 'rtl') | Out-Null
 '' | Set-Content (Join-Path $sourceRoot 'filelist.f')
 '' | Set-Content (Join-Path $sourceRoot 'rtl_filelist.f')
+'' | Set-Content (Join-Path $sourceRoot 'tb_filelist.f')
 'module fixture; endmodule' | Set-Content (Join-Path $sourceRoot 'rtl/fixture.sv')
 $identity=Get-SourceIdentity $sourceRoot
 'module changed; endmodule' | Set-Content (Join-Path $sourceRoot 'rtl/fixture.sv')

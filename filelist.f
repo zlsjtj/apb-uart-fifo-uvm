@@ -1,22 +1,2 @@
-+incdir+tb/uvm
-+incdir+tb/interfaces
-rtl/apb_uart_reg_pkg.sv
-rtl/reset_sync.sv
-rtl/async_fifo.sv
-rtl/async_fifo_sva.sv
-rtl/uart_tx.sv
-rtl/uart_rx.sv
-rtl/uart_baud_gen.sv
-rtl/apb_uart_serial_core.sv
-rtl/apb_uart_regs.sv
-rtl/apb_uart_cfg_cdc.sv
-rtl/tx_completion_cdc.sv
-rtl/apb_uart.sv
-rtl/apb_uart_sva.sv
-tb/interfaces/apb_if.sv
-tb/interfaces/uart_if.sv
-tb/interfaces/uart_probe_if.sv
-tb/interfaces/reset_if.sv
-tb/uvm/apb_agent_pkg.sv
-tb/uvm/uart_pkg.sv
-tb/top/tb_apb_uart.sv
+-f rtl_filelist.f
+-f tb_filelist.f

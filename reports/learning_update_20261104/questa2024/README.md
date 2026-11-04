@@ -1,5 +1,9 @@
 # Questa 2024.1 local check - 2026-11-04
 
+This is the initial warning-bearing check. The subsequent
+[four independent cold-start checks](../questa_cold/README.md) resolve the
+warning blocker; the original observations below are preserved.
+
 The installed `E:\questasim64_2024.1\win64` tools can run simulations with the
 existing local license configuration. An independent [probe](probe.txt) printed
 `QUESTA_PROBE_PASS`. No license or system PATH setting was changed.

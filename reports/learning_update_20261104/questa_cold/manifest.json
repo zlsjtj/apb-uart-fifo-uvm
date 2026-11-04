@@ -1,0 +1,114 @@
+{
+  "base": "5e9643e6211ec5e6eab0f45304e819f5e42ce006",
+  "date": "2026-11-04",
+  "tool": "Questa 2024.1 / UVM 1.1d",
+  "results": [
+    {
+      "name": "learning",
+      "exitCode": 0,
+      "root": "E:\\UVM\\questa-cold-final-rw\\learning",
+      "coldBeforeStart": true,
+      "console": "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\learning.log"
+    },
+    {
+      "name": "loopback",
+      "exitCode": 0,
+      "root": "E:\\UVM\\questa-cold-final-rw\\loopback",
+      "coldBeforeStart": true,
+      "console": "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\loopback.log"
+    },
+    {
+      "name": "apb-baseline",
+      "exitCode": 0,
+      "root": "E:\\UVM\\questa-cold-final-rw\\apb-baseline",
+      "coldBeforeStart": true,
+      "console": "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\apb-baseline.log"
+    },
+    {
+      "name": "apb-fault",
+      "exitCode": 0,
+      "root": "E:\\UVM\\questa-cold-final-rw\\apb-fault",
+      "coldBeforeStart": true,
+      "console": "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\apb-fault.log"
+    }
+  ],
+  "rawLogs": {
+    "after-code.txt": {
+      "bytes": 7246,
+      "sha256": "bb50fddd1da491b9aeea7f9ad45ad08c20febfa05e83d05fa44643fd48234db0"
+    },
+    "after-summary.txt": {
+      "bytes": 1225,
+      "sha256": "8296e725cb4ea52a3a87c6c45c6489e2a9cb711f85f5643ce599c8d5fd78cf2d"
+    },
+    "apb-baseline.txt": {
+      "bytes": 4361,
+      "sha256": "fe8fb5539aef7bac37b3933a5576b27e32a1a14094af9263ab2200e73f1973fd"
+    },
+    "apb-fault.txt": {
+      "bytes": 4712,
+      "sha256": "87feca32c7aa6796a4a0a046f8d5f39f5a76b8ec459f4cb6e4405e1d53d5fc70"
+    },
+    "before-code.txt": {
+      "bytes": 11726,
+      "sha256": "1bbbf50589b240290240016ddf952e570651fdf1437466cd4a6c0d0e37c8b57b"
+    },
+    "before-summary.txt": {
+      "bytes": 1225,
+      "sha256": "21dca9e17d81d8fed9a98d9b3635241e9493223d5a40a242c592175a2013e2be"
+    },
+    "gates-console.txt": {
+      "bytes": 44,
+      "sha256": "46a22e495258fdd2848f7d09527d27918d4561e2190ec7f9bad0c8040de8269d"
+    },
+    "learning.txt": {
+      "bytes": 6211,
+      "sha256": "a24fe84a21bcdab10e3e02ef0cfca9f1a6109e4d7a6a80272cca5cb1867eea4b"
+    },
+    "loopback-vcd.txt": {
+      "bytes": 3909,
+      "sha256": "3902bc92457f617b26fcd9e9e12170bc5ecccd756a7576f0892cdbb3c3070dc9"
+    },
+    "loopback.txt": {
+      "bytes": 6992,
+      "sha256": "a613963d21015bbce7932ef4bade1c2107c3d66bb5ff93af75340bcec1d485e2"
+    },
+    "workflow-console.txt": {
+      "bytes": 45,
+      "sha256": "87e0346d488d8808eedc05f7364561ed114f715c467634ee01994fad9fdcae35"
+    }
+  },
+  "localUcdb": {
+    "E:\\UVM\\questa-cold-final-rw\\learning\\reports\\uart_learning_baud_test_1701.ucdb": {
+      "bytes": 26949,
+      "sha256": "30ab997579ba8fee8720313c0d148f84932e0f5ec985aa0c1f8d7bb8a5c7ca46"
+    },
+    "E:\\UVM\\questa-cold-final-rw\\loopback\\reports\\uart_loopback_test_71.ucdb": {
+      "bytes": 27381,
+      "sha256": "9117dfdf75433030775c6b813b5fd7d2a6f5b88b34f79df83c249516cd6c8844"
+    }
+  },
+  "scope": "four independently cold checks; not a complete 20-test or coverage-gate campaign",
+  "retainedDiagnostics": {
+    "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\diagnostic.log": {
+      "bytes": 6210,
+      "sha256": "ac10916c0f73d9e5d501881fd8667de3242fabb68442a5151876ae894aebf04b"
+    },
+    "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\rw-diagnostic.log": {
+      "bytes": 6211,
+      "sha256": "d609c3dc3678f7de6a15c20ce1c946d2fd7ac3a7fb8296dac03bd07175742aa6"
+    },
+    "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\read-only-results.json": {
+      "bytes": 904,
+      "sha256": "1388267aae85f6345224b08e0c418cf169bb436feaa9b1b18469b62efdcae1e0"
+    },
+    "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\nested-filelist-verilator.log": {
+      "bytes": 57,
+      "sha256": "e0fa35840fcdcb38bce6c122d7e6a8be58871980ce5c5ddec7ec4006cfa14ec7"
+    },
+    "E:\\UVM\\review_diagnostics\\questa_cold_20261104\\nested-filelist-verilator-final.log": {
+      "bytes": 353195,
+      "sha256": "47a849686d77e85ad2ee965908ce8783558ad59e4438405098fc37d47532dff4"
+    }
+  }
+}

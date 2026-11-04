@@ -1,14 +1,15 @@
 # PR #1 merge review - 2026-11-04
 
-Later tool check: [Questa 2024.1 runtime results](questa2024/README.md).
-The license BLOCKED results below concern ModelSim 10.4. The newer installed
-Questa can run UVM; its cold-start warning gate remains a separate open item.
+Latest tool check: [four independent Questa 2024.1 cold-start checks passed](questa_cold/README.md).
+The license BLOCKED results below concern legacy ModelSim 10.4. The initial
+Questa warning-bearing run and its subsequent fix are recorded separately.
 
 Reviewed head: `122d12a91a97a5a0c6c760acef832c23396b446b`.
 Base: `3c8a074d27746f3570262aa114f72059a3bb5315`.
-At review start, `122d12a` was still the latest PR commit and GitHub reported
-the draft PR mergeable without conflicts. The follow-up contains review
-documentation and evidence only; simulation sources and runners are unchanged.
+At that initial review, `122d12a` was still the latest PR commit and GitHub
+reported the draft PR mergeable without conflicts. Its `0fe2d95` follow-up
+contained documentation/evidence only. Later toolchain fixes and results are
+identified in the linked records above.
 
 Recommendation: merge this scoped learning/reuse update after author review.
 No unresolved code blocker was found. All four requested behaviors have

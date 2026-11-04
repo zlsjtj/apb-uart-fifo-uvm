@@ -53,7 +53,7 @@ function Get-SourceIdentity([string]$Root = (Get-Location).Path) {
     $p = Join-Path $Root $dir
     if (Test-Path $p) { $files += Get-ChildItem -LiteralPath $p -File -Recurse }
   }
-  foreach ($f in @('filelist.f','rtl_filelist.f')) { $files += Get-Item -LiteralPath (Join-Path $Root $f) }
+  foreach ($f in @('filelist.f','rtl_filelist.f','tb_filelist.f')) { $files += Get-Item -LiteralPath (Join-Path $Root $f) }
   $rows = @($files | Sort-Object FullName | ForEach-Object {
     [pscustomobject]@{ path=$_.FullName.Substring($Root.Length).TrimStart('\','/').Replace('\','/'); sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
   })

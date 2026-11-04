@@ -86,10 +86,32 @@ if (-not (Test-Path "work")) {
 
 $compileOptions=@()
 if ($NoWhitebox) { $compileOptions=@('+define+UART_NO_WHITEBOX') }
-vlog -sv -assertdebug +acc +cover=bcesft @compileOptions -f $Filelist -l logs/compile_questa.log | Out-Host
+$compilerVersion = (& vlog -version 2>&1) -join "`n"
+$modernQuesta = $compilerVersion -match '\b(20\d{2})\.\d+\b' -and [int]$Matches[1] -ge 2024
+$simulationOptions = @()
+$compileLogs = @('logs/compile_questa.log')
+if ($modernQuesta -and $Filelist -eq 'filelist.f') {
+  $compileLogs += 'logs/compile_questa_rtl.log'
+  # Instrument DUT RTL only; UVM library code is not part of the RTL coverage gate.
+  vlog -sv -assertdebug +cover=bcesft @compileOptions -f rtl_filelist.f -l logs/compile_questa_rtl.log | Out-Host
+  if ($LASTEXITCODE -eq 0) {
+    vlog -sv -assertdebug @compileOptions -f tb_filelist.f -l logs/compile_questa.log | Out-Host
+  }
+  $simulationOptions = @("-voptargs=-access=rw+/$Top -debug")
+} else {
+  vlog -sv -assertdebug +acc +cover=bcesft @compileOptions -f $Filelist -l logs/compile_questa.log | Out-Host
+}
 if ($LASTEXITCODE -ne 0) {
   Write-EvidenceJson 'reports/regression_summary.json' @{ result='FAIL'; reason='Compilation failed'; source=$sourceIdentity }
   exit $LASTEXITCODE
+}
+foreach ($compileLog in $compileLogs) {
+  $compileText = Get-Content -Raw -LiteralPath $compileLog
+  if ($compileText -match '(?m)^\s*\*\*\s*(Error|Fatal|Warning)(?:\s*\([^)]*\))?:' -or
+      $compileText -notmatch '(?m)^Errors:\s*0,\s*Warnings:\s*0\s*$') {
+    Write-EvidenceJson 'reports/regression_summary.json' @{ result='FAIL'; reason='Compilation did not finish with zero errors and warnings'; source=$sourceIdentity }
+    throw "Compilation gate failed: $compileLog"
+  }
 }
 
 $rows = @()
@@ -127,7 +149,7 @@ foreach ($test in $Tests) {
   }
 
   $whitebox = if ($NoWhitebox) { 0 } else { 1 }
-  vsim -c $Top "-gFIFO_ADDR_WIDTH=$FifoAddrWidth" "-gENABLE_WHITEBOX=$whitebox" "+UVM_TESTNAME=$test" "+PCLK_HALF_NS=$PclkHalfNs" "+UART_HALF_NS=$UartHalfNs" "+PCLK_PHASE_NS=$PclkPhaseNs" "+UART_PHASE_NS=$UartPhaseNs" -sv_seed $seedValue -coverage -assertdebug -do $do -l $logPath | Out-Host
+  vsim -c $Top @simulationOptions "-gFIFO_ADDR_WIDTH=$FifoAddrWidth" "-gENABLE_WHITEBOX=$whitebox" "+UVM_TESTNAME=$test" "+PCLK_HALF_NS=$PclkHalfNs" "+UART_HALF_NS=$UartHalfNs" "+PCLK_PHASE_NS=$PclkPhaseNs" "+UART_PHASE_NS=$UartPhaseNs" -sv_seed $seedValue -coverage -assertdebug -do $do -l $logPath | Out-Host
   $runStatus = $LASTEXITCODE
   $parsed = Parse-UvmLog $logPath
   $outcome = Get-UvmOutcome (Get-Content -Raw $logPath) $runStatus

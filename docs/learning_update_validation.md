@@ -4,10 +4,11 @@ This check applies to the learning/reuse patch based on
 `3c8a074d27746f3570262aa114f72059a3bb5315`, plus the PowerShell runner fixes
 described below. It does not change the v0.1.0 evidence or its reported totals.
 
-**Later local check:** [Questa 2024.1 can run UVM](../reports/learning_update_20261104/questa2024/README.md).
-Its APB pair and UART loopback passed after a subscriber-signature compatibility
-fix. The BAUD simulation completed without UVM errors, but its strict runner
-failed on two cold-optimization tool warnings. That is not a four-command gate pass.
+**Latest local check:** [four strict Questa 2024.1 cold-start checks passed](../reports/learning_update_20261104/questa_cold/README.md).
+The prior [warning-bearing attempt](../reports/learning_update_20261104/questa2024/README.md)
+is retained. Modern visibility and DUT-only code instrumentation resolve its
+two warnings without suppression. Full campaign/reporting compatibility has
+the separate limits listed in the latest record.
 
 The [merge review and evidence table](../reports/learning_update_20261104/README.md)
 separately identify reusable handoff runs, the earlier local attempts and the

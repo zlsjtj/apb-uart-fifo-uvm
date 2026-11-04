@@ -21,10 +21,12 @@ The APB baseline/fault pair was rerun successfully on 2026-11-04 with the same
 tool/library versions and seed 1702; the fault produced exactly two expected
 `REGBLOCK_DATA` mismatches across 12 observed transfers.
 ModelSim 10.4 compilation passed; its local UVM simulation remains blocked by
-license availability. The newer installed Questa 2024.1 ran the APB pair and
-UART loopback successfully after a subscriber-signature compatibility fix;
-the BAUD simulation completed but its strict gate failed on cold-start tool
-warnings. See the [Questa record](../reports/learning_update_20261104/questa2024/README.md).
+license availability. Questa 2024.1 / bundled UVM 1.1d passed BAUD learning,
+UART loopback and the APB baseline/fault pair from four independent clean
+libraries. Modern visibility controls and separate DUT code instrumentation
+resolve the cold-start warnings without suppression. See the
+[Questa record](../reports/learning_update_20261104/questa_cold/README.md).
+The complete Questa 2024.1 coverage-reporting path still needs migration.
 Full UART regression and coverage were not rerun for this
 update. The v0.1.0 validation totals retain their original source and scope.
 

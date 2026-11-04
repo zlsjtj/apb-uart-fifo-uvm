@@ -121,6 +121,7 @@ if ($LASTEXITCODE -ne 0) {
 $sourcePaths = @(
   "filelist.f",
   "rtl_filelist.f",
+  "tb_filelist.f",
   "config/verification_plan.psd1",
   "config/mutation_plan.psd1",
   "config/rtl_coverage_policy.psd1",
