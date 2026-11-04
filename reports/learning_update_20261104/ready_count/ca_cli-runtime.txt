@@ -1,0 +1,31 @@
+# vsim -c -lib probe_ca_cli probe -voptargs="-access=rw+/probe -debug -coverconstruct ca" -coverage -do "coverage save -onexit ca_cli.ucdb; run -all; quit -f" -l ca_cli-run.log 
+# Start time: 17:41:42 on Nov 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
+# Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
+# ** Note: (vopt-143) Recognized 1 FSM in module "uart_tx(fast)".
+# //  Questa Sim-64
+# //  Version 2024.1 win64 Feb  1 2024
+# //
+# // Unpublished work. Copyright 2024 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.probe(fast)
+# Loading work.uart_tx(fast)
+# coverage save -onexit ca_cli.ucdb
+#  run -all
+# PROBE_PASS changes=13
+# ** Note: $finish    : probe.sv(18)
+#    Time: 630 ns  Iteration: 1  Instance: /probe
+# Saving coverage database on exit...
+# End time: 17:41:45 on Nov 04,2026, Elapsed time: 0:00:03
+# Errors: 0, Warnings: 0

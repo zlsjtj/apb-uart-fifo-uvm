@@ -1,0 +1,65 @@
+{
+  "sourceVcd": "E:\\UVM\\ready-count-diagnostic\\reports\\uart_loopback_test_71.vcd",
+  "sha256": "0ea1bf1baa9141015a592dab98f1b44d8a6a71c2f398800859b04bb3a225080a",
+  "timeUnit": "ps",
+  "timeMagnitude": 1,
+  "tickSeconds": "1E-12",
+  "signal": "tb_apb_uart.u_dut.u_serial_core.u_uart_tx.ready_o",
+  "initialValue": "1",
+  "transitionsAfterInitial": 12,
+  "unknownEvents": 0,
+  "events": [
+    [
+      0,
+      "1"
+    ],
+    [
+      860000,
+      "0"
+    ],
+    [
+      1220000,
+      "1"
+    ],
+    [
+      1260000,
+      "0"
+    ],
+    [
+      1620000,
+      "1"
+    ],
+    [
+      1660000,
+      "0"
+    ],
+    [
+      2020000,
+      "1"
+    ],
+    [
+      2060000,
+      "0"
+    ],
+    [
+      2420000,
+      "1"
+    ],
+    [
+      2460000,
+      "0"
+    ],
+    [
+      2820000,
+      "1"
+    ],
+    [
+      2860000,
+      "0"
+    ],
+    [
+      3220000,
+      "1"
+    ]
+  ]
+}

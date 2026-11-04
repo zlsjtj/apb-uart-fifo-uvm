@@ -1,8 +1,11 @@
 # PR #1 merge review - 2026-11-04
 
-**Current expanded acceptance: FAIL; do not merge yet.** The
-[complete Questa regression and coverage run](questa_full/README.md) passed
-60/60 runtime checks but failed one unchanged RTL coverage threshold.
+**Current expanded acceptance: FAIL; do not merge yet.** The latest
+[ready-counter investigation and new clean campaign](ready_count/README.md)
+again passed 60/60 runtime checks but failed the unchanged UART TX statement
+threshold. The original RTL reproducer observes real ready transitions while
+the native statement count stays zero. No original-metric fix has been found.
+The [earlier full campaign](questa_full/README.md) is retained separately.
 The earlier scoped recommendations below are retained as historical context.
 
 Latest tool check: [four independent Questa 2024.1 cold-start checks passed](questa_cold/README.md).

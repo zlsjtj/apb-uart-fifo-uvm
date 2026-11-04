@@ -1,0 +1,9 @@
+QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024
+Start time: 17:52:11 on Nov 04,2026
+vlog -sv -work work E:\UVM\sol-learning-review\reports\learning_update_20261104\ready_count\probe.sv 
+-- Compiling module probe
+
+Top level modules:
+	probe
+End time: 17:52:11 on Nov 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

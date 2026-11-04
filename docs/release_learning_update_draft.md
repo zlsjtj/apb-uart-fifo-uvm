@@ -32,6 +32,12 @@ bins, 66 assertions and 16 directives. **This release draft remains on hold:**
 the original RTL gate passes 18/19, with UART TX statements at 92.85% versus
 the required 95%. No threshold or waiver was relaxed. See the
 [expanded acceptance record](../reports/learning_update_20261104/questa_full/README.md).
+The subsequent [ready-counter investigation](../reports/learning_update_20261104/ready_count/README.md)
+includes another clean 60/60 runtime campaign, with the same failing original
+statement gate. It provides a small original-RTL reproducer but no accepted
+counter fix; replacing statements with block coverage was explicitly rejected.
+Publication remains on hold pending a supported original-metric solution and
+a passing complete campaign.
 The v0.1.0 validation totals retain their original source and scope.
 
 [Exercises](../examples/learning/README.md) ·

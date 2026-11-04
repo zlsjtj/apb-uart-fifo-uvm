@@ -1,0 +1,12 @@
+{
+  "result": "UNRESOLVED_COUNTER_MISMATCH",
+  "behavior": "PASS",
+  "knownReadyEvents": 13,
+  "statementLine": 23,
+  "statementCount": 0,
+  "statementBins": 28,
+  "rtlSha256": "5DDCF81DEF9D49905E2C53D6F72D5848E395CEFB4C51CA122474E591C6080AEE",
+  "probeSha256": "0BBE53242EBFCFA76C05225DE26C1424AD3BD0766EE8A9547B757DA869D2537F",
+  "compiler": "QuestaSim-64 vlog 2024.1 Compiler 2024.02 Feb  1 2024",
+  "outputDirectory": "E:\\UVM\\review_diagnostics\\ready_count_20261104\\published-probe"
+}

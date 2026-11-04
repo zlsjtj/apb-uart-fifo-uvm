@@ -4,10 +4,16 @@ This check applies to the learning/reuse patch based on
 `3c8a074d27746f3570262aa114f72059a3bb5315`, plus the PowerShell runner fixes
 described below. It does not change the v0.1.0 evidence or its reported totals.
 
-**Latest expanded check:** [full 20-test / three-seed regression and coverage](../reports/learning_update_20261104/questa_full/README.md).
-All 60 runs pass and functional/assertion/directive bins are complete, but
-RTL coverage is 18/19: UART TX statements are 92.85%, below the unchanged
-95% threshold. Overall acceptance is FAIL; PR #1 remains draft.
+**Latest expanded check:** [ready-counter investigation and a new clean
+20-test / three-seed campaign](../reports/learning_update_20261104/ready_count/README.md).
+All 60 new runs pass and functional/assertion/directive bins are complete.
+RTL coverage remains 18/19: UART TX statements are 92.85%, below the unchanged
+95% threshold. A minimal unmodified-RTL reproducer confirms ready activity
+with a zero native statement count. A block-coverage alternative was rejected
+because it changes the original metric. The counter is not fixed; acceptance
+remains FAIL/BLOCKED and PR #1 stays draft. The
+[earlier campaign](../reports/learning_update_20261104/questa_full/README.md)
+retains its own source identity and results.
 
 **Prior local check:** [four strict Questa 2024.1 cold-start checks passed](../reports/learning_update_20261104/questa_cold/README.md).
 The prior [warning-bearing attempt](../reports/learning_update_20261104/questa2024/README.md)
