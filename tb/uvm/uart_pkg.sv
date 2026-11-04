@@ -1,5 +1,7 @@
 package uart_pkg;
   import uvm_pkg::*;
+  import apb_agent_pkg::*;
+  export apb_agent_pkg::*;
   import apb_uart_reg_pkg::*;
   `include "uvm_macros.svh"
 
@@ -19,14 +21,9 @@ package uart_pkg;
 
   `include "uart_env_cfg.svh"
   `include "uart_serial_cfg.svh"
-  `include "apb_item.svh"
   `include "uart_reg_model.svh"
   `include "uart_reset_monitor.svh"
   `include "uart_item.svh"
-  `include "apb_sequencer.svh"
-  `include "apb_driver.svh"
-  `include "apb_monitor.svh"
-  `include "apb_agent.svh"
   `include "uart_sequencer.svh"
   `include "uart_virtual_sequencer.svh"
   `include "uart_driver.svh"

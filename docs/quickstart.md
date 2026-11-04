@@ -26,6 +26,13 @@ UART 固定为 8N1，没有 16 倍过采样，也没有板级串口实测结论�
 数据位 0 到 7 从最低位开始发送。横轴只表示串行 TX 时间，不表示 APB 访问时刻。
 [完整波形、原始 VCD、日志和生成方法](../examples/loopback/README.md) 都在样本目录。
 
+## 免费体验 UVM / Free UVM example
+
+新增的 [APB 寄存器块示例](../examples/apb-regblock/README.md) 可以用
+Verilator 5.054 和 Accellera UVM 2020.3.1 运行，直接复用本工程的 APB agent。
+它检查第二个小 DUT 的 12 笔传输，并成对验证正常版本与指定故障。
+这是独立示例的免费路线；完整 UART 回归及覆盖率仍按后文的 Questa 流程运行。
+
 ## 选一条运行路线
 
 | 路线 | 依赖与范围 |
@@ -74,7 +81,7 @@ bash scripts/run_fifo_smoke.sh
 - 已保存结果使用 ModelSim SE-64 10.4、自带 UVM 1.1d；其他版本尚未验证。
 - 运行下面的 UVM 测试不需要 Vivado。综合和完整验收另需 Vivado，已记录版本为 2023.2。
 
-仓库没有附带商业仿真器或许可证，完整 UVM 环境尚未在 Icarus/Verilator 上验证。
+仓库没有附带商业仿真器或许可证，完整 UART UVM 回归尚未在 Icarus/Verilator 上验证；Verilator 的两项试跑见[记录](verilator_feasibility.md)。
 没有这些工具时，也可以看 [回环日志与波形样本](../examples/loopback/README.md)、
 [APB 采样错误案例](bug_closure_case.md#chinese) 和
 [保存的结果](../reports/published/20260913_134519_8d9500ab/paper_results.md)。
