@@ -59,6 +59,9 @@ Each guide includes the code to read, a runnable command, its expected result,
 and what to adapt for another design. More boundary scenarios are in the
 [verification plan](config/verification_plan.psd1).
 
+Try the [three hands-on exercises](examples/learning/README.md): FIFO negative
+controls, APB completion-edge sampling, and TX completion, using the existing checks.
+
 [Follow one byte through the environment](#follow-one-byte-through-uvm) ·
 [Recorded results](#recorded-results) · [Architecture](#architecture)
 
